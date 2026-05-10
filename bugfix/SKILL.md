@@ -89,14 +89,47 @@ Required steps:
 
 Branch format:
 
-bugfix/STR-XXX-short-description
+bugfix/{ticket}-{short-description}
+
+Examples:
+
+- bugfix/STR-142-null-email-validation
+
+- bugfix/PLAT-201-invalid-date-format
+
+- bugfix/fix-missing-user-mapping
 
 Rules:
 
 - lowercase
+
 - hyphen-separated
-- concise
-- derived from bug context
+
+- concise and descriptive
+
+- description must summarize the bug behavior
+
+- avoid generic names like:
+
+  - fix-bug
+
+  - issue-fix
+
+  - quick-patch
+
+Ticket handling:
+
+- if a ticket identifier exists in the initial request, include it
+
+- otherwise omit the ticket portion
+
+The agent should automatically generate a meaningful short description derived from:
+
+- observed failing behavior
+
+- affected domain
+
+- expected correction
 
 ---
 

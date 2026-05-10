@@ -49,6 +49,45 @@ Choose the lowest level capable of reproducing the bug reliably.
 
 ---
 
+## Prefer End-to-End Reproduction for User-Critical Flows
+
+Some bugs are best reproduced through real user workflows.
+
+Prefer end-to-end reproduction when:
+
+- the bug spans multiple systems or layers
+- UI behavior is involved
+- state synchronization is involved
+- timing or async coordination matters
+- the issue cannot be reproduced reliably at lower levels
+- the failure is primarily user-visible
+
+Potential tooling:
+
+- Cypress
+- Playwright
+- Selenium
+- repository-native e2e frameworks
+
+Examples:
+
+- checkout failures
+- authentication/session issues
+- race conditions
+- multi-step form bugs
+- frontend/backend integration regressions
+
+Even when using e2e reproduction:
+
+- keep scope minimal
+- reproduce only the failing behavior
+- avoid broad scenario coverage
+- avoid turning bug reproduction into full regression suites
+
+Prefer the smallest realistic user journey capable of reproducing the issue deterministically.
+
+---
+
 ## Prefer Deterministic Reproduction
 
 Good reproduction:
