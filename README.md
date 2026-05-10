@@ -230,7 +230,99 @@ Especially around:
 
 ---
 
-## 🧭 Future Roadmap
+## 🧭 Complete Roadmap
+
+### 🧠 Product Discovery & Validation
+
+- [ ] `business-idea-validation`  
+  Validate ideas, identify risks, define and explore hypotheses, identify market signals and propose experiments.
+
+- [ ] `product-discovery`  
+  Support user research synthesis, JTBD analysis, pain point identification and opportunity mapping.
+
+- [ ] `experimentation`  
+  Design and validate experiments, MVPs, fake-door tests, smoke tests and A/B testing strategies.
+
+---
+
+### 🏗️ Architecture & Documentation
+
+- [ ] `adr-management`  
+  Create, organize and evolve Architecture Decision Records (ADR) with lifecycle and traceability support.
+
+- [ ] `architecture-review`  
+  Analyze architectural consistency, modularity, boundaries, coupling/cohesion and fitness functions.
+
+- [ ] `documentation-context-sync`  
+  Keep technical documentation, architecture notes and repository context aligned and updated.
+
+---
+
+### 🧪 Development Core Skills
+
+- [x] `bugfix`  
+  Fix bugs through strict RED → GREEN workflows using failing tests first, minimal fixes and isolated commits.
+
+- [ ] `tdd`  
+  Apply strict Test-Driven Development using micro-iterations, fast feedback and disciplined commit flows.
+
+- [ ] `atdd`  
+  Transform acceptance criteria into executable acceptance tests using outside-in development.
+
+- [ ] `refactoring`  
+  Perform safe incremental refactoring inspired by Martin Fowler’s refactoring methodology.
+
+- [ ] `add-tests-to-legacy-code`  
+  Safely introduce characterization tests, protection tests and others "outside" tests into legacy systems before modifications.
+
+- [ ] `feature-development`  
+  Orchestrate full feature implementation workflows across testing, validation and delivery systems.
+
+---
+
+### 🚀 Delivery & DevOps
+
+- [ ] `deployments-delivery-automated-pipelines`  
+  Configure and validate deployments and delivery automated pipelines with quality gates.
+
+- [ ] `ephemeral-environments`  
+  Provision isolated preview environments dynamically for branches, experiments and feature validation.
+
+- [ ] `feature-flags`  
+  Manage feature rollout strategies, dark launches, kill switches and progressive delivery.
+
+---
+
+### 📊 Metrics & Observability
+
+- [ ] `setup-observability`  
+  Configure logs, tracing, metrics, alerting and operational visibility using modern observability practices.
+
+- [ ] `monitor-observability`  
+  Continuously monitor system health, logs, traces, and metrics to proactively detect issues and validate operational quality.
+
+- [ ] `setup-product-metrics`  
+  Define business KPIs, adoption metrics, funnels and product impact indicators.
+
+- [ ] `monitor-product-metrics`  
+  Continuously track, monitor, and analyze product metrics to ensure ongoing business impact and surface actionable insights.
+
+---
+
+### 🧭 Agile Process & Team Practices
+
+- [ ] `agile-planning`  
+  Support incremental planning, scope slicing, risk reduction and iterative delivery strategies.
+
+- [ ] `retrospective-analysis`  
+  Analyze recurring problems, bottlenecks, regressions and team/process improvement opportunities.
+
+- [ ] `engineering-coach`  
+  Act as an AI engineering mentor promoting simplicity, XP values, technical excellence and sustainable delivery.
+
+---
+
+## 🧭 Next Priorities
 
 - [x] Initial skill architecture
 - [x] Bugfix skill
@@ -238,10 +330,7 @@ Especially around:
 - [ ] TDD skill
 - [ ] Legacy code testing skill
 - [ ] AI DevLoop draft
-- [ ] ADR architecture
-- [ ] Documentation strategy
 - [ ] Manifesto website
-- [ ] Real-world pilot project
 
 ---
 
