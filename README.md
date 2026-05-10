@@ -1,16 +1,10 @@
 # Amplified XP & Product Development
 
-<p align="center">
-  <strong>An AI-native framework for software product development.</strong>
-</p>
+**An AI-native framework for software product development.**
 
-<p align="center">
-  Bringing Extreme Programming, Product Thinking, DevOps, Lean and AI Agents together into a single development operating system.
-</p>
+Bringing Extreme Programming, Product Thinking, DevOps, Lean and AI Agents together into a single development operating system.
 
-<p align="center">
-  Draft manifesto • Experimental framework • Open evolution
-</p>
+Draft manifesto • Experimental framework • Open evolution
 
 ---
 
@@ -72,10 +66,12 @@ Structured AI-native engineering skills for tools like:
 - OpenCode
 - future AI coding agents
 
+Implemented skills live under `skills/` (one package per skill) so each workflow can grow or be shared in isolation.
+
 The first implemented skill is:
 
 ```text
-bugfix/
+skills/bugfix/
 ```
 
 A strict bugfix workflow enforcing:
@@ -100,12 +96,13 @@ not:
 Example structure:
 
 ```text
-bugfix/
-├── SKILL.md
-├── references/
-├── examples/
-├── checklists/
-└── playbooks/ (future)
+skills/
+└── bugfix/
+    ├── SKILL.md
+    ├── references/
+    ├── examples/
+    ├── checklists/
+    └── playbooks/ (future)
 ```
 
 ---
