@@ -1,0 +1,39 @@
+# Bibliography — `skills/tdd` skill
+
+This note ties the repository’s **TDD** agent skill to published sources. The skill text under `skills/tdd/` stays implementation-focused and does **not** name these works; humans maintaining the skill can use this page for traceability and deeper reading.
+
+---
+
+## Primary references
+
+- **Beck, Kent.** *Test-Driven Development: By Example.* Addison-Wesley, 2003.  
+  Canonical treatment of the RED–GREEN–REFACTOR rhythm, very small steps, “fake it till you make it,” triangulation, shaping APIs from tests, and test smells as design feedback.
+
+- **Santos, Pedro M.; Consolaro, Marco; Di Gioia, Alessandro.** *Agile Technical Practices Distilled: A Learning Journey in Technical Agility and Lean Software Development.* Packt Publishing, 2019.  
+  Covers TDD as analysis and design, nested feedback loops with acceptance-level tests, strategies in the GREEN phase, continuous refactoring, and collaboration with broader agile technical practice.
+
+---
+
+## Related material (concepts echoed in skill design)
+
+- **Martin, Robert C.** *Clean Code: A Handbook of Agile Software Craftsmanship.* Prentice Hall, 2008.  
+  Often cited in discussions of ultra-short feedback loops and disciplined refactoring alongside tests.
+
+- **Test-Driven Development (community / conference material, e.g. 2021).**  
+  Useful for framing real-world friction (legacy code, team dynamics, tooling) versus kata-style practice; the skill defers legacy and acceptance workflows to other AMPD skills where appropriate.
+
+---
+
+## How this maps to the skill (maintenance hint)
+
+| Skill emphasis | Supported by |
+|----------------|--------------|
+| Short R–G–R cycles, smallest steps | Beck; distilled agile TDD chapters |
+| GREEN strategies (fake / obvious / triangulation) | Beck; distilled “implementation strategies” |
+| Refactor only on green, micro-steps, revert on red | Beck; *Clean Code* refactoring discipline |
+| Tests specify **behavior**, not structure | Beck (tests drive design); distilled outside-in framing |
+| Test doubles only to isolate behavior | Common testing practice summarized in distilled / Beck contexts |
+| Rule of three before extracting duplication | Distilled continuous-refactoring guidance |
+| Double-loop (outer acceptance, inner unit) | Distilled; skill keeps **inner** loop only and composes with ATDD elsewhere |
+
+When evolving `skills/tdd/SKILL.md`, prefer updating this bibliography if new canonical sources are adopted.

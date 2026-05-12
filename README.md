@@ -68,13 +68,14 @@ Structured AI-native engineering skills for tools like:
 
 Implemented skills live under `skills/` (one package per skill) so each workflow can grow or be shared in isolation.
 
-The first implemented skill is:
+Implemented skills include:
 
 ```text
 skills/bugfix/
+skills/tdd/
 ```
 
-A strict bugfix workflow enforcing:
+**Bugfix** — a strict bugfix workflow enforcing:
 
 - RED → GREEN discipline
 - minimal fixes
@@ -82,6 +83,8 @@ A strict bugfix workflow enforcing:
 - deterministic reproduction
 - review-friendly git history
 - no uncontrolled refactoring
+
+**TDD** — strict RED → GREEN → REFACTOR with micro-commits (`test:` / `feat:` / `refactor:`), fast narrow test runs, and squash-to-one-commit before push (see `skills/tdd/SKILL.md`).
 
 ---
 
@@ -97,12 +100,16 @@ Example structure:
 
 ```text
 skills/
-└── bugfix/
+├── bugfix/
+│   ├── SKILL.md
+│   ├── references/
+│   ├── examples/
+│   └── checklists/
+└── tdd/
     ├── SKILL.md
     ├── references/
     ├── examples/
-    ├── checklists/
-    └── playbooks/ (future)
+    └── checklists/
 ```
 
 ---
@@ -260,7 +267,7 @@ Especially around:
 - [x] `bugfix`  
   Fix bugs through strict RED → GREEN workflows using failing tests first, minimal fixes and isolated commits.
 
-- [ ] `tdd`  
+- [x] `tdd` (first draft)  
   Apply strict Test-Driven Development using micro-iterations, fast feedback and disciplined commit flows.
 
 - [ ] `atdd`  

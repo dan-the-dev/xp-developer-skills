@@ -56,6 +56,12 @@ The goal is shared operational context.
 
 ⸻
 
+## Skill bibliography
+
+Human-maintained citations for framework skills (for example the TDD skill) live in the docs folder, for example [tdd-skill-bibliography.md](tdd-skill-bibliography.md). Skill bodies under `skills/` stay free of book titles so agents load operational rules only.
+
+⸻
+
 ## Current Status
 
 Current implementation phase:
@@ -69,12 +75,12 @@ Implemented:
 
 * Initial repository structure
 * README
-* First skill: bugfix
+* Skills: `bugfix`, `tdd` (first draft under `skills/tdd/`)
 
 Next priorities:
 
 * Refactoring skill
-* TDD skill
+* Evolve TDD skill from draft feedback
 * Legacy testing skill
 * AI DevLoop draft
 * Manifesto website
