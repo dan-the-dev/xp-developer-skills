@@ -1,18 +1,36 @@
-# Narrative example — one R-G-R cycle (language-agnostic)
+# Narrative example — test list and one R-G-R cycle (language-agnostic)
 
 This is a **story**, not live code. Replace names with project-native files and commands.
 
 ---
 
-## Increment
+## Feature slice
 
-Validate that an order total **includes** a shipping line when weight exceeds a threshold.
+Order totals should reflect **shipping** when weight exceeds a threshold.
 
 ---
 
+## Test list (first step)
+
+Created **before** the first RED:
+
+```markdown
+## Test list — shipping by weight
+
+- [ ] total includes shipping line when weight > 10kg
+- [ ] total excludes shipping when weight ≤ 10kg
+- [ ] boundary: exactly 10kg (document expected rule)
+```
+
+Work proceeds **one open item at a time**. New ideas append new lines.
+
+---
+
+## First cycle (first list item)
+
 ### RED (local commit `test:`)
 
-- Add one test that asserts **observable** totals (not internal shipping flags): e.g. `order total includes shipping when weight > 10kg`.
+- Write **only** enough test to fail for the first bullet (Law 2) — e.g. assert **observable** total with weight 11kg.
 - Run focused test command → **fails** (shipping not applied).
 - Commit **tests only**:
 
@@ -20,11 +38,11 @@ Validate that an order total **includes** a shipping line when weight exceeds a 
 test: add spec for shipping over 10kg threshold
 ```
 
----
+Mark the list item in progress in the summary; mark **[x] done** only after GREEN passes.
 
 ### GREEN (local commit `feat:`)
 
-- Implement the minimum in the domain module (e.g. add shipping line when rule matches). It is acceptable to **fake** a constant shipping amount first if that is the smallest step; follow with another RED if triangulation is needed.
+- Production code **only** to pass this test (Law 3), e.g. minimal rule in order total path; **fake** a fixed shipping amount if that is smallest.
 - Run the same focused command → **passes**.
 - Commit **production files only**:
 
@@ -32,38 +50,26 @@ test: add spec for shipping over 10kg threshold
 feat: apply shipping line when weight exceeds 10kg
 ```
 
----
-
 ### REFACTOR (local commit `refactor:`)
 
-Goal: clarify threshold comparison and names; **behavior unchanged**.
+Goal: clarify threshold naming; **stay in** order-total / shipping helper code touched by GREEN — no unrelated modules.
 
-- Extract helper for threshold: **one** extraction → run tests → green.
-- Rename for clarity: **one** rename → run tests → green.
-- If any step fails: **undo** that step, take a smaller change, repeat.
-
-Commit only when the refactor slice is complete and still green:
+- One extraction → run tests → green.
+- One rename → run tests → green.
+- On any red: **undo** last edit.
 
 ```text
 refactor: clarify shipping threshold helper naming
 ```
 
----
+Update test list: first bullet **[x] done**.
 
 ### Squash then push
 
-Squash the three commits into one titled like GREEN:
-
-```text
-feat: apply shipping line when weight exceeds 10kg
-```
-
-Body may mention the new spec and refactor note.
-
-Push **once** with the squashed commit on the branch.
+Squash the three commits; title aligns with GREEN `feat:`. Push once.
 
 ---
 
-### Next cycle
+## Next cycles
 
-Pick the **next** behavior (e.g. boundary at exactly 10kg) and repeat the same micro-commit and squash pattern.
+Pick the **next open** list item (e.g. weight ≤ 10kg), repeat R–G–R + squash. When **all** bullets are **[x]** and tests are green, the **slice is complete**.

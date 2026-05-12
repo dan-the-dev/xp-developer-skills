@@ -1,6 +1,6 @@
 # Bibliography — `skills/tdd` skill
 
-This note ties the repository’s **TDD** agent skill to published sources. The skill text under `skills/tdd/` stays implementation-focused and does **not** name these works; humans maintaining the skill can use this page for traceability and deeper reading.
+This note ties the repository’s **TDD** agent skill to published sources. The skill text under `skills/tdd/` avoids **book titles** in the body; it may name **public formulations** when they are part of the workflow (e.g. the Three Laws, commonly attributed to Robert C. Martin). Humans maintaining the skill use this page for traceability and deeper reading.
 
 ---
 
@@ -19,6 +19,9 @@ This note ties the repository’s **TDD** agent skill to published sources. The 
 - **Martin, Robert C.** *Clean Code: A Handbook of Agile Software Craftsmanship.* Prentice Hall, 2008.  
   Often cited in discussions of ultra-short feedback loops and disciplined refactoring alongside tests.
 
+- **Martin, Robert C.** — **The Three Laws of TDD** (widely reproduced essays and talks).  
+  The skill encodes these laws literally: no production without a failing test; minimal test to fail; minimal production to pass the current failing test.
+
 - **Test-Driven Development (community / conference material, e.g. 2021).**  
   Useful for framing real-world friction (legacy code, team dynamics, tooling) versus kata-style practice; the skill defers legacy and acceptance workflows to other AMPD skills where appropriate.
 
@@ -35,5 +38,7 @@ This note ties the repository’s **TDD** agent skill to published sources. The 
 | Test doubles only to isolate behavior | Common testing practice summarized in distilled / Beck contexts |
 | Rule of three before extracting duplication | Distilled continuous-refactoring guidance |
 | Double-loop (outer acceptance, inner unit) | Distilled; skill keeps **inner** loop only and composes with ATDD elsewhere |
+| **Test list** as backlog of cases | Beck’s task/test list habit in *TDD by Example*; planning chapters in *Agile Technical Practices Distilled* |
+| **Three Laws** rhythm | Robert C. Martin’s formulation; summarized alongside Beck-style R–G–R in many TDD courses and articles |
 
 When evolving `skills/tdd/SKILL.md`, prefer updating this bibliography if new canonical sources are adopted.

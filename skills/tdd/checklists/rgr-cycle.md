@@ -1,6 +1,23 @@
-# RED → GREEN → REFACTOR cycle checklist
+# TDD checklist — feature slice and R–G–R
 
-Use before squash and push.
+Use for the **whole slice** (test list) and each **cycle** before squash and push.
+
+---
+
+## Test list (before first RED)
+
+- [ ] Test list written for this feature slice (all cases you can name now)
+- [ ] List visible in the working summary (or agreed repo location)
+- [ ] Next open item chosen before writing the next failing test
+- [ ] New discoveries **appended** to the list as new lines
+
+---
+
+## Three Laws (every cycle)
+
+- [ ] **Law 1**: No production code except to satisfy a **current** failing test
+- [ ] **Law 2**: Test code added only up to the point of **failure** (compile/type error counts)
+- [ ] **Law 3**: Production code only enough to **pass that one** failing test (fake / obvious / triangulation OK)
 
 ---
 
@@ -29,6 +46,7 @@ Use before squash and push.
 - [ ] **One small mechanical step** at a time; **tests run after each step**
 - [ ] If any test fails: **reverted** or reset to last green before proceeding
 - [ ] Behavior unchanged (structure, names, extraction, duplication removal)
+- [ ] **Proximity**: changes focused on code touched for this list item; no opportunistic distant cleanups
 - [ ] Staged changes are refactor-only
 - [ ] Commit: `refactor: …` (or omit if truly nothing to improve)
 
@@ -43,9 +61,14 @@ Use before squash and push.
 
 ---
 
+## Slice complete
+
+- [ ] Every test list item **done** (or explicitly removed by agreement)
+- [ ] Suite green
+
+---
+
 ## Discipline
 
-- [ ] No production code before RED exists
-- [ ] No more test than needed to fail; no more code than needed to pass
 - [ ] Fastest practical test command used after each RED, GREEN, and refactor micro-step
 - [ ] Tests assert **behavior**, not private implementation details

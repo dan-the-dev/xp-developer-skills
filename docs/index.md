@@ -58,7 +58,7 @@ The goal is shared operational context.
 
 ## Skill bibliography
 
-Human-maintained citations for framework skills (for example the TDD skill) live in the docs folder, for example [tdd-skill-bibliography.md](tdd-skill-bibliography.md). Skill bodies under `skills/` stay free of book titles so agents load operational rules only.
+Human-maintained citations for framework skills (for example the TDD skill) live in the docs folder, for example [tdd-skill-bibliography.md](tdd-skill-bibliography.md). Skill bodies under `skills/` avoid book titles; they may still name standard rules (e.g. the Three Laws) where those are part of the workflow.
 
 ⸻
 

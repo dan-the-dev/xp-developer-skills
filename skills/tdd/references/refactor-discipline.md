@@ -26,6 +26,20 @@ Never “fix forward” under failing tests during a refactor pass unless you ar
 
 ---
 
+## Refactor proximity (stay in scope)
+
+Refactoring effort should concentrate on **production and test code directly involved in the current change** (the types, functions, and files you touched to satisfy the latest failing test and its immediate collaborators).
+
+- **High willingness**: same module/file as the GREEN change, immediate helpers introduced for that behavior, tests that directly assert the new case.
+- **Medium willingness**: one hop out (e.g. small shared helper used only here) when duplication is obvious and tests still stay fast to run.
+- **Low willingness**: distant modules, “while we are here” cleanups, global renames, cross-cutting style changes unrelated to making the current test list item pass.
+
+The farther from the change, the **less** refactoring you do unless a **separate** item on the test list or another approved workflow demands it. This limits scope creep and avoids large opportunistic refactors that are not justified by the current RED.
+
+If a distant improvement is desirable, **add it to the test list or a backlog** instead of folding it into the current cycle.
+
+---
+
 ## What counts as refactor
 
 - Renaming for clarity

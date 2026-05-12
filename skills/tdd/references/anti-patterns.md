@@ -4,6 +4,22 @@ Symptoms to avoid when applying strict TDD.
 
 ---
 
+## Test list
+
+- **No list**: jumping into RED without inventory (except a deliberate minimal two-line list).
+- **Stale list**: not marking done, not adding new cases when discovered.
+- **Done without tests**: checking off list items before an automated test passes.
+
+---
+
+## Three Laws
+
+- **Speculative production**: classes, helpers, or config “for later” with no failing test.
+- **Big-bang test**: writing a large test before seeing the first failure signal.
+- **Extra production**: behavior, APIs, or optimizations not required by the **current** failing test.
+
+---
+
 ## Process
 
 - **Big upfront tests**: a large test before any green path exists — shrink the example or add a **starter** case.
@@ -11,6 +27,13 @@ Symptoms to avoid when applying strict TDD.
 - **Green without refactor discipline**: piling conditionals; skipping the refactor step habitually.
 - **Refactor in RED**: changing structure while a failing test represents incomplete behavior (finish GREEN first unless the team explicitly uses a different discipline).
 - **Refactor without guardrails**: multiple edits before running tests; **continuing** after a failure instead of reverting the last step.
+
+---
+
+## Refactor scope
+
+- **Drive-by refactors** in modules far from the code that turned the last test green.
+- **Global** renames or style sweeps bundled into a feature slice without their own list items or workflow.
 
 ---
 
