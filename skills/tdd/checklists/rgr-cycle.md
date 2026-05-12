@@ -6,10 +6,12 @@ Use for the **whole slice** (test list) and each **cycle** before squash and pus
 
 ## Test list (before first RED)
 
-- [ ] Test list written for this feature slice (all cases you can name now)
-- [ ] List visible in the working summary (or agreed repo location)
-- [ ] Next open item chosen before writing the next failing test
-- [ ] New discoveries **appended** to the list as new lines
+- [ ] **Markdown file** created at resolved path (project convention **or** `test-lists/<slug>.md` at repo root)
+- [ ] Filename stem matches **branch and/or feature** (kebab-case; see [test-list.md](../references/test-list.md))
+- [ ] File is **tracked** (not only in chat); folder exists
+- [ ] File lists **behavior cases only** — no refactor-only or tech-debt lines (use `-follow-ups.md` or closing reply for those)
+- [ ] Next open `[ ]` line chosen before writing the next failing test
+- [ ] New **behavior** discoveries **appended** as new `[ ]` lines
 
 ---
 

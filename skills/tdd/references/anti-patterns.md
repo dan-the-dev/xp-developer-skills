@@ -6,9 +6,11 @@ Symptoms to avoid when applying strict TDD.
 
 ## Test list
 
-- **No list**: jumping into RED without inventory (except a deliberate minimal two-line list).
-- **Stale list**: not marking done, not adding new cases when discovered.
-- **Done without tests**: checking off list items before an automated test passes.
+- **No on-disk file**: list only in chat, or path not under version control.
+- **Wrong content**: refactor, tech-debt, or “cleanup” lines on the **behavior** test list — use `<stem>-follow-ups.md` or the closing reply instead.
+- **No list**: jumping into RED without a file (except a deliberate minimal two-line file for a trivial slice).
+- **Stale file**: not marking `[x]`, not appending new **behavior** lines when discovered.
+- **Done without tests**: checking off lines before an automated test passes.
 
 ---
 

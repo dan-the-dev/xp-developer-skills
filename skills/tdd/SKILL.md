@@ -1,6 +1,6 @@
 ---
 name: tdd
-description: Applies strict Test-Driven Development with a maintained upfront test list per feature, Robert C. Martin’s Three Laws, micro-iterations, refactor proximity to the changed code, fast feedback, and git micro-commits (test:/feat:/refactor:) squashed per cycle before push. Use for test-first feature slices, strict R-G-R, or when the user asks for a test list plus disciplined commits.
+description: Applies strict Test-Driven Development with a repo-local Markdown test list (default `test-lists/<slug>.md` unless the project defines another folder), Robert C. Martin’s Three Laws, micro-iterations, refactor proximity, fast feedback, and git micro-commits (test:/feat:/refactor:) squashed per cycle before push. Use for test-first feature slices, strict R-G-R, or when the user asks for a tracked test list plus disciplined commits.
 allowed-tools: Read, Edit, MultiEdit, Bash, Grep, Glob
 ---
 
@@ -10,13 +10,13 @@ allowed-tools: Read, Edit, MultiEdit, Bash, Grep, Glob
 
 Turn requirements into **concrete automated examples** before production code exists: each example is a **small** failing test, then the smallest code that passes, then structure improvements **without** changing behavior.
 
-**First step of every feature:** create and maintain a **test list** (all cases you can think of for that slice, updated as you learn). **Last step:** every list item is **done** and the suite is green — then the feature work for that slice is finished.
+**First step of every feature:** create a **Markdown test list file** in the repo (path rules in [references/test-list.md](references/test-list.md)) listing every **behavior** you will prove with tests; keep the file updated. **Last step:** every line in that file is done and the suite is green — then the slice is finished.
 
 Implement using **short** RED → GREEN → REFACTOR cycles. Each cycle targets the **smallest** increment that still moves the design forward.
 
 Optimize for:
 
-- a visible **test list** as the backbone of progress
+- a **tracked Markdown file** for the test list (repo-visible “done” definition)
 - **strict** adherence to the **Three Laws of TDD**
 - one failing test at a time
 - fastest possible feedback (narrowest test run)
@@ -31,15 +31,19 @@ This skill covers **only** the **inner** unit-level TDD loop. It does **not** sp
 
 ## Test list (mandatory)
 
+The test list lives in a **tracked `.md` file** in the project. It contains **only** behaviors that will become automated tests — **not** deferred refactors (those go to a **follow-ups** file or the closing reply; see [references/test-list.md](references/test-list.md)).
+
 Before the **first** RED for a feature slice:
 
-1. Write a **test list**: every test case / scenario you can already name (happy paths, edges, errors, invariants).
-2. During development: **mark items done** when a real automated test exists and passes for that case (after its R–G–R, per your commit rules); **add** new lines when ideas appear.
-3. The slice is **complete** when the list has **no remaining open items** (all done) and tests are green.
+1. **Choose folder**: use a path the project already defines for this kind of artifact; if none, use `test-lists/` at the repo root.
+2. **Create the file** with a name derived from the **branch and/or feature** (kebab-case, coherent slug — details in reference).
+3. Write every behavior case you can already name (happy paths, edges, errors, invariants) as `[ ]` checklist lines.
+4. During development: flip lines to `[x]` when a real automated test exists and passes for that case; **append** new `[ ]` lines for newly discovered **behavior** only.
+5. The slice is **complete** when every behavior line is `[x]` (or explicitly removed by agreement) and tests are green.
 
-The list is the **authoritative backlog** of examples for that slice. Do not treat “no list” as done.
+Do **not** add refactor-only or “nice cleanup” items to this file — they would prevent a clear “feature done” signal.
 
-Details: [references/test-list.md](references/test-list.md).
+See [references/test-list.md](references/test-list.md) for folder resolution, naming, and follow-ups.
 
 ---
 
@@ -177,7 +181,8 @@ This preserves local narrative during development and **reviewer-friendly** hist
 
 ## Anti-patterns (TDD-specific)
 
-- Skipping the **test list** or starting RED before the list exists (except a trivial two-line list).
+- Skipping the **on-disk** test list file or starting RED before it exists (except a trivial file with two lines).
+- Putting **refactor / tech-debt** items on the test list (use `-follow-ups.md` or the closing reply instead).
 - Marking list items **done** without an automated test that passes.
 - Violating any of the **Three Laws** (speculative production code, oversized tests, extra production beyond current RED).
 - Writing production code before a failing test exists.
@@ -203,9 +208,11 @@ This preserves local narrative during development and **reviewer-friendly** hist
 
 ### Feature slice (test list)
 
-- Test list existed **before** first RED and was **updated** throughout.
-- **Every** list item is **done** (implemented with passing tests) or explicitly removed by agreement.
+- Test list **file** exists at `<repo-relative-path>.md` **before** first RED and was updated throughout.
+- File contains **behavior cases only** (no refactor wishlist mixed in).
+- **Every** checklist line is **done** (implemented with passing tests) or explicitly removed by agreement.
 - Suite green; no undeclared extra behavior.
+- Deferred refactors (e.g. skipped for proximity) recorded in **`<stem>-follow-ups.md`** or listed in the **final user reply**, not in the test list.
 
 ---
 
@@ -214,8 +221,12 @@ This preserves local narrative during development and **reviewer-friendly** hist
 ```markdown
 ## Feature: <name>
 
-### Test list
-- [ ] / [x] <case lines; keep in sync>
+### Test list file
+- Path: `<e.g. test-lists/order-shipping-threshold.md>`
+- Branch / slug used for name: <optional>
+
+### Test list (excerpt; source of truth is the file)
+- [ ] / [x] <mirror or say “see file”>
 
 ### TDD cycle summary (latest increment)
 
@@ -241,7 +252,8 @@ This preserves local narrative during development and **reviewer-friendly** hist
 - Push: <branch>, single commit after squash
 
 ### Slice status
-- Test list: <all done | N open>
+- Test list file: `<path>` — all `[x]` | N open
+- Follow-ups (refactor / tech debt): `<path-to-follow-ups.md or "in closing reply">`
 ```
 
 ---

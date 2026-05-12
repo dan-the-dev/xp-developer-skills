@@ -34,9 +34,9 @@ Refactoring effort should concentrate on **production and test code directly inv
 - **Medium willingness**: one hop out (e.g. small shared helper used only here) when duplication is obvious and tests still stay fast to run.
 - **Low willingness**: distant modules, “while we are here” cleanups, global renames, cross-cutting style changes unrelated to making the current test list item pass.
 
-The farther from the change, the **less** refactoring you do unless a **separate** item on the test list or another approved workflow demands it. This limits scope creep and avoids large opportunistic refactors that are not justified by the current RED.
+The farther from the change, the **less** refactoring you do unless another **approved** workflow (ticket, tech-debt pass) explicitly schedules it. Proximity-skipped cleanups do **not** belong on the **behavior test list** — record them in **`<stem>-follow-ups.md`** (see [test-list.md](test-list.md)) or in the closing reply.
 
-If a distant improvement is desirable, **add it to the test list or a backlog** instead of folding it into the current cycle.
+If a distant improvement is desirable, **add it to the follow-ups file** next to the test list, **or** your team’s external backlog — **not** the behavior test list file, which must stay a **done** signal for the slice.
 
 ---
 

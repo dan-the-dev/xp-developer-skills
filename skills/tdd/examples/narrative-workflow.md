@@ -10,19 +10,25 @@ Order totals should reflect **shipping** when weight exceeds a threshold.
 
 ---
 
-## Test list (first step)
+## Test list file (first step)
 
-Created **before** the first RED:
+Create **`test-lists/order-shipping-by-weight.md`** at the repo root **unless** the project documents another folder for this kind of artifact. The file must exist **before** the first RED.
+
+Contents:
 
 ```markdown
-## Test list — shipping by weight
+# Test list — shipping by weight
+
+## Cases
 
 - [ ] total includes shipping line when weight > 10kg
 - [ ] total excludes shipping when weight ≤ 10kg
 - [ ] boundary: exactly 10kg (document expected rule)
 ```
 
-Work proceeds **one open item at a time**. New ideas append new lines.
+If you skip a distant refactor (proximity), add it to **`test-lists/order-shipping-by-weight-follow-ups.md`** — not to this list.
+
+Work proceeds **one open `[ ]` line at a time**. New **behavior** lines append here; refactor notes go to follow-ups or the closing reply.
 
 ---
 
