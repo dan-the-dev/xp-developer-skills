@@ -9,9 +9,10 @@ Use for the **whole slice** (test list) and each **cycle** before squash and pus
 - [ ] **Markdown file** created at resolved path (project convention **or** `test-lists/<slug>.md` at repo root)
 - [ ] Filename stem matches **branch and/or feature** (kebab-case; see [test-list.md](../references/test-list.md))
 - [ ] File is **tracked** (not only in chat); folder exists
-- [ ] File lists **behavior cases only** — no refactor-only or tech-debt lines (use `-follow-ups.md` or closing reply for those)
-- [ ] Next open `[ ]` line chosen before writing the next failing test
-- [ ] New **behavior** discoveries **appended** as new `[ ]` lines
+- [ ] **Cases** list **behavior only** — no refactor-only or tech-debt lines (use `-follow-ups.md` or closing reply for those)
+- [ ] Template includes optional **Deferred behavior** / **Removed** sections when needed
+- [ ] Next open `[ ]` line in **Cases** chosen before writing the next failing test
+- [ ] New **behavior** discoveries **appended** to **Cases**; deferred/out-of-scope handled per [test-list.md](../references/test-list.md)
 
 ---
 
@@ -26,7 +27,7 @@ Use for the **whole slice** (test list) and each **cycle** before squash and pus
 ## RED
 
 - [ ] Single focused failing test added or extended
-- [ ] Failure observed and matches intent (including compile-as-RED if applicable)
+- [ ] Failure observed and is the **intended** signal (not flake, timeout, or wrong assertion)
 - [ ] Only test (and test-local fixtures) staged
 - [ ] Commit: `test: …`
 
@@ -38,7 +39,7 @@ Use for the **whole slice** (test list) and each **cycle** before squash and pus
 - [ ] Same narrow test scope passes
 - [ ] No drive-by refactor mixed in
 - [ ] Only production files for this fix staged
-- [ ] Commit: `feat: …`
+- [ ] Commit: `feat: …` **or** `fix: …` (use **fix** when the RED test encodes a bug/regression in existing behavior)
 
 ---
 
@@ -47,9 +48,9 @@ Use for the **whole slice** (test list) and each **cycle** before squash and pus
 - [ ] All relevant tests green **before** starting
 - [ ] **One small mechanical step** at a time; **tests run after each step**
 - [ ] If any test fails: **reverted** or reset to last green before proceeding
-- [ ] Behavior unchanged (structure, names, extraction, duplication removal)
+- [ ] Behavior unchanged (structure, names, extraction, duplication removal in **production and/or tests**)
 - [ ] **Proximity**: changes focused on code touched for this list item; no opportunistic distant cleanups
-- [ ] Staged changes are refactor-only
+- [ ] Staged changes are refactor-only (may be **test-only** files)
 - [ ] Commit: `refactor: …` (or omit if truly nothing to improve)
 
 ---
@@ -57,7 +58,7 @@ Use for the **whole slice** (test list) and each **cycle** before squash and pus
 ## Squash and push
 
 - [ ] Squash micro-commits for **this** cycle into one
-- [ ] Final title aligns with GREEN `feat:` intent
+- [ ] Final title aligns with GREEN subject (`feat:` or `fix:`)
 - [ ] Tests re-run after squash
 - [ ] Single push of the squashed commit (per branch policy)
 
@@ -65,7 +66,9 @@ Use for the **whole slice** (test list) and each **cycle** before squash and pus
 
 ## Slice complete
 
-- [ ] Every test list item **done** (or explicitly removed by agreement)
+- [ ] Every **Cases** line `[x]` with **test reference** or documented in **Removed**
+- [ ] No orphan `[ ]` in **Cases** unless intentionally blocked — then resolve per test-list lifecycle
+- [ ] **Deferred behavior** rows closed (implemented, removed, or ticketed per agreement)
 - [ ] Suite green
 
 ---
@@ -73,4 +76,5 @@ Use for the **whole slice** (test list) and each **cycle** before squash and pus
 ## Discipline
 
 - [ ] Fastest practical test command used after each RED, GREEN, and refactor micro-step
-- [ ] Tests assert **behavior**, not private implementation details
+- [ ] Tests assert **behavior** at a **stable seam**; avoid over-mocking (see [behavior-and-tests.md](../references/behavior-and-tests.md))
+- [ ] Tests use clear structure (AAA, names); minimal logic in tests (see [test-quality.md](../references/test-quality.md))

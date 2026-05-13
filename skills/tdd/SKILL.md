@@ -1,6 +1,6 @@
 ---
 name: tdd
-description: Applies strict Test-Driven Development with a repo-local Markdown test list (default `test-lists/<slug>.md` unless the project defines another folder), Robert C. Martin’s Three Laws, micro-iterations, refactor proximity, fast feedback, and git micro-commits (test:/feat:/refactor:) squashed per cycle before push. Use for test-first feature slices, strict R-G-R, or when the user asks for a tracked test list plus disciplined commits.
+description: Applies strict Test-Driven Development with a repo-local Markdown test list (default `test-lists/<slug>.md` unless the project defines another folder), Robert C. Martin’s Three Laws, deterministic tests and stable seams (unit vs narrow integration), Arrange–Act–Assert test shape, micro-iterations, refactor proximity (production and test code), fast feedback, and git micro-commits (`test:` / `feat:` or `fix:` / `refactor:`) squashed per cycle before push. Use for test-first feature slices, strict R-G-R, or when the user asks for a tracked test list plus disciplined commits.
 allowed-tools: Read, Edit, MultiEdit, Bash, Grep, Glob
 ---
 
@@ -23,6 +23,7 @@ Optimize for:
 - reversible steps
 - commits that tell the story of the cycle
 - tests that describe **behavior**, not internals
+- **deterministic** tests and **stable seams** (see behavior reference)
 - **refactors scoped** to code near the current change
 
 This skill covers **only** the **inner** unit-level TDD loop. It does **not** specify acceptance-test (outer-loop) workflows, legacy rescue, branching policy, CI, or bugfix-only rules — compose with other skills for those.
@@ -104,9 +105,11 @@ Never assume a specific framework; inspect the project first.
 
 Tests specify **observable outcomes** and stable seams — not private helpers, internal call order, or incidental structure. Assertions should remain valid across **equivalent** implementations.
 
-If refactoring breaks a test without changing behavior, the test was **implementation-coupled**; fix the test’s assertions or setup, not the production semantics.
+Structure and readability: **Arrange–Act–Assert**, spec-like names, and **no heavy logic in tests** — see [references/test-quality.md](references/test-quality.md).
 
-See [references/behavior-and-tests.md](references/behavior-and-tests.md).
+**Determinism** (time, randomness, I/O, globals) and **choosing unit vs narrow integration** at a stable seam — see [references/behavior-and-tests.md](references/behavior-and-tests.md).
+
+If refactoring breaks a test without changing behavior, the test was **implementation-coupled**; fix the test’s assertions or setup, not the production semantics.
 
 ---
 
@@ -115,7 +118,7 @@ See [references/behavior-and-tests.md](references/behavior-and-tests.md).
 - One new behavior or one new edge case per failing test, **chosen from the test list** (or added to the list first if newly discovered).
 - Prefer writing the test against the **API you wish existed**; then implement to match.
 - If a test is hard to write, **shrink** the example or treat it as a coupling smell (see behavior reference).
-- After RED, run tests and confirm failure for the **intended** reason (or the narrowest signal the runner gives).
+- After RED, run tests and confirm failure for the **intended** reason (or the narrowest signal the runner gives) — not a timeout, order flake, or missing fixture (see [references/behavior-and-tests.md](references/behavior-and-tests.md)).
 - After GREEN, run the same scope and confirm **pass**.
 - From RED to GREEN, use **fake it**, **obvious implementation**, or **triangulation** as appropriate (see [references/micro-iterations.md](references/micro-iterations.md)).
 
@@ -125,7 +128,7 @@ See [references/behavior-and-tests.md](references/behavior-and-tests.md).
 
 During REFACTOR:
 
-- apply **one small** mechanical change at a time (rename, extract, move, delete duplication)
+- apply **one small** mechanical change at a time (rename, extract, move, delete duplication) in **production and/or test code** (helpers, builders, duplicated setup) — see [references/refactor-discipline.md](references/refactor-discipline.md)
 - **run tests after every change** (same scope first, then wider if shared code moved)
 - if **any** test fails: **revert** that change (or reset to last green), then take a **smaller** step
 - do not slip in behavior changes “while you are here”
@@ -141,15 +144,15 @@ Use **three separate commits** per completed R-G-R cycle, with **these Conventio
 
 | Step      | Stage        | Commit prefix | Purpose |
 |-----------|--------------|----------------|---------|
-| RED       | tests only   | `test: …`     | Failing test proving missing behavior. |
-| GREEN     | production   | `feat: …`     | Smallest change to satisfy the test. |
-| REFACTOR  | any refactor | `refactor: …` | Structure/readability; **same behavior**; tests **remain green** throughout. |
+| RED       | tests only   | `test: …`     | Failing test proving missing or wrong behavior. |
+| GREEN     | production   | `feat: …` **or** `fix: …` | **feat:** smallest change for **new** behavior. **fix:** smallest change when the failing test encodes a **bug** or **regression** in existing behavior (Law 3 unchanged). |
+| REFACTOR  | any refactor | `refactor: …` | Structure/readability; **same behavior**; tests **remain green**; may be **test-only** files if production is already clean. |
 
 Rules:
 
 - RED commit: **only** test files (and test-only fixtures if the repo already separates them).
 - GREEN commit: **only** production code required to pass.
-- REFACTOR commit: **no** behavior change; if types/docs must adjust, follow team conventions for commit type or split commits.
+- REFACTOR commit: **no** behavior change; may include **only** test files when cleaning helpers or duplication; if types/docs must adjust, follow team conventions for commit type or split commits.
 
 If a cycle truly requires **no** refactor (rare but valid), you may omit the REFACTOR commit and still complete the squash step for RED+GREEN only.
 
@@ -164,7 +167,7 @@ When a **full** RED → GREEN → REFACTOR cycle is complete for the current inc
 
 Squashed commit message:
 
-- **Title**: align with the **GREEN** `feat:` subject (same intent, may polish wording).
+- **Title**: align with the **GREEN** subject — **`feat:`** for new behavior, **`fix:`** when GREEN was a bug/regression fix (same intent, may polish wording).
 - **Body**: optional bullets summarizing tests added and notable refactor notes; keep the feature description primary.
 
 This preserves local narrative during development and **reviewer-friendly** history upstream.
@@ -176,6 +179,7 @@ This preserves local narrative during development and **reviewer-friendly** hist
 - Prefer single-test or single-file runs immediately after RED, GREEN, and **each** refactor micro-step.
 - Widen scope when touching shared modules or contracts; run a broader slice regularly as integration insurance.
 - Never start the next RED while previous tests are failing.
+- Keep tests **deterministic** at each step (see [references/behavior-and-tests.md](references/behavior-and-tests.md)).
 
 ---
 
@@ -183,10 +187,13 @@ This preserves local narrative during development and **reviewer-friendly** hist
 
 - Skipping the **on-disk** test list file or starting RED before it exists (except a trivial file with two lines).
 - Putting **refactor / tech-debt** items on the test list (use `-follow-ups.md` or the closing reply instead).
-- Marking list items **done** without an automated test that passes.
+- Marking list items **done** without a **passing** automated test **and** a **test reference** on the list line.
+- A “RED” commit where tests pass (or failure unrelated to the intended case).
 - Violating any of the **Three Laws** (speculative production code, oversized tests, extra production beyond current RED).
 - Writing production code before a failing test exists.
-- A “RED” commit where tests pass (or wrong failure reason).
+- **False RED**: wrong failure reason (flake, timeout, env) mistaken for behavior gap — confirm intended signal.
+- **Over-mocked tests** that lock implementation instead of asserting behavior at a stable seam.
+- **Heavy logic in tests** (conditionals/loops) obscuring why RED happened.
 - Over-sized steps (multiple behaviors in one test).
 - Mixing RED+GREEN or GREEN+REFACTOR in one commit during the cycle.
 - Refactoring while tests are red, or **continuing** after a refactor step broke tests without reverting.
@@ -203,14 +210,14 @@ This preserves local narrative during development and **reviewer-friendly** hist
 - Failing test observed (**RED** verified).
 - Minimal implementation passes (**GREEN** verified).
 - Refactor completed with **tests green after every micro-step** (**REFACTOR** verified), **within proximity** of the change.
-- Three semantic micro-commits present (`test:`, `feat:`, `refactor:`) unless refactor legitimately skipped.
+- Three semantic micro-commits present (`test:`, `feat:` or `fix:`, `refactor:`) unless refactor legitimately skipped.
 - Squash performed; **one** commit represents the cycle on push.
 
 ### Feature slice (test list)
 
 - Test list **file** exists at `<repo-relative-path>.md` **before** first RED and was updated throughout.
-- File contains **behavior cases only** (no refactor wishlist mixed in).
-- **Every** checklist line is **done** (implemented with passing tests) or explicitly removed by agreement.
+- **Cases**: behavior-only lines; each `[x]` includes a **test reference** and passing tests; each remaining `[ ]` at end of slice is a **blocker** — either implement, move to **Deferred behavior** with closure plan, or move to **Removed** with reason (see [references/test-list.md](references/test-list.md)).
+- **Deferred behavior** / **Removed** sections: no silent scope or vague deferred rows at slice end.
 - Suite green; no undeclared extra behavior.
 - Deferred refactors (e.g. skipped for proximity) recorded in **`<stem>-follow-ups.md`** or listed in the **final user reply**, not in the test list.
 
@@ -226,7 +233,7 @@ This preserves local narrative during development and **reviewer-friendly** hist
 - Branch / slug used for name: <optional>
 
 ### Test list (excerpt; source of truth is the file)
-- [ ] / [x] <mirror or say “see file”>
+- `[x]` lines must show test back-reference, e.g. `- [x] … — \`src/foo.spec.ts::case name\``
 
 ### TDD cycle summary (latest increment)
 
@@ -244,11 +251,11 @@ This preserves local narrative during development and **reviewer-friendly** hist
 
 ### Micro-commits (local)
 1. test: …
-2. feat: …
+2. feat: … **or** fix: …
 3. refactor: …
 
 ### Squash
-- Final commit title: feat: …
+- Final commit title: feat: … **or** fix: … (match GREEN)
 - Push: <branch>, single commit after squash
 
 ### Slice status
@@ -263,6 +270,7 @@ This preserves local narrative during development and **reviewer-friendly** hist
 ### References
 
 - [references/test-list.md](references/test-list.md)
+- [references/test-quality.md](references/test-quality.md)
 - [references/micro-iterations.md](references/micro-iterations.md)
 - [references/behavior-and-tests.md](references/behavior-and-tests.md)
 - [references/refactor-discipline.md](references/refactor-discipline.md)
@@ -279,4 +287,4 @@ This preserves local narrative during development and **reviewer-friendly** hist
 
 ## Resource usage
 
-Open reference files when execution details (test list, laws, squash mechanics, refactor scope) are unclear or contentious.
+Open reference files when execution details (test list, test shape, laws, squash mechanics, refactor scope) are unclear or contentious.

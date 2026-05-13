@@ -26,6 +26,16 @@ Contents:
 - [ ] boundary: exactly 10kg (document expected rule)
 ```
 
+After the first R–G–R cycle for the first bullet, update the **Cases** section to:
+
+```markdown
+## Cases
+
+- [x] total includes shipping line when weight > 10kg — `src/orders/order-total.spec.ts::includes shipping when weight above 10kg`
+- [ ] total excludes shipping when weight ≤ 10kg
+- [ ] boundary: exactly 10kg (document expected rule)
+```
+
 If you skip a distant refactor (proximity), add it to **`test-lists/order-shipping-by-weight-follow-ups.md`** — not to this list.
 
 Work proceeds **one open `[ ]` line at a time**. New **behavior** lines append here; refactor notes go to follow-ups or the closing reply.
@@ -58,7 +68,7 @@ feat: apply shipping line when weight exceeds 10kg
 
 ### REFACTOR (local commit `refactor:`)
 
-Goal: clarify threshold naming; **stay in** order-total / shipping helper code touched by GREEN — no unrelated modules.
+Goal: clarify threshold naming; **stay in** order-total / shipping helper code touched by GREEN — no unrelated modules. **Test-only** tidy (rename helper in spec file) is allowed here too.
 
 - One extraction → run tests → green.
 - One rename → run tests → green.
@@ -68,7 +78,7 @@ Goal: clarify threshold naming; **stay in** order-total / shipping helper code t
 refactor: clarify shipping threshold helper naming
 ```
 
-Update test list: first bullet **[x] done**.
+Update test list: first bullet **`[x]`** with test back-reference after GREEN passes.
 
 ### Squash then push
 

@@ -68,6 +68,54 @@ Never use the **test list** file as a dumping ground for refactor ideas.
 
 ---
 
+## Lifecycle: discovery, deferred behavior, and out of scope
+
+### Discovery during development
+
+New **behavior** must appear on the list **before** it ships:
+
+- **Append** a new `[ ]` line as soon as the case is known (even mid-slice).
+- Implement it with the usual R–G–R cycle.
+
+Do not merge “surprise” behavior without a list line.
+
+### Deferred behavior (still behavior, not refactor)
+
+Sometimes a behavior is agreed **not in this slice** but must stay visible (e.g. “multi-currency totals” while you only ship single-currency now). Use a dedicated subsection — **not** the refactor follow-ups file:
+
+```markdown
+## Deferred behavior (not in this slice)
+
+- [ ] <case> — target: <ticket or future slice>; agreed <date>
+```
+
+**Slice complete** requires either: every line in **Cases** is `[x]` or removed, **and** every **Deferred behavior** line is resolved (moved to **Cases** and implemented, moved to **Removed**, or given an explicit follow-up ticket with owner) — do not leave ambiguous “maybe later” rows without agreement.
+
+### Removed / out of scope
+
+When a listed case is dropped:
+
+```markdown
+## Removed / out of scope
+
+- <case> — removed <date>; reason: …; agreed by: <role or name>
+```
+
+That preserves audit trail without fake `[x]` markers.
+
+---
+
+## Traceability: done means linked to a test
+
+When you mark a line `[x]`, add a **pointer** to the automated test that proves it (so review and future readers can verify):
+
+- Preferred: `` `path/to/spec.ts::describe or test name` `` on the same line or the line below.
+- Or: link to test file + line or test id per project convention.
+
+**Do not** mark `[x]` without at least one **concrete** test reference and a **passing** suite for that test.
+
+---
+
 ## Format (in the repo file)
 
 ```markdown
@@ -79,20 +127,26 @@ Updated: <optional ISO date>
 ## Cases
 
 - [ ] <behavior / scenario in plain language>
-- [x] <another case — done when test exists and passes>
-```
+- [x] <behavior> — `src/orders/order.spec.ts::includes shipping when weight above threshold`
 
-Optional: `## Removed / out of scope` with dated one-line reasons for dropped lines.
+## Deferred behavior (not in this slice)
+
+<!-- optional; see lifecycle above -->
+
+## Removed / out of scope
+
+<!-- optional; see lifecycle above -->
+```
 
 ---
 
 ## Rules of use
 
 1. **Create the file first** — before the first RED for the slice (Law 2 still applies: first test is minimal).
-2. **Pick one open `[ ]` line** — implement exactly one minimal failing test for it.
-3. After R–G–R for that case, flip the line to `[x]` in the **same** commit wave as documentation hygiene allows (or immediately after squash per team habit — but the file must stay **true**).
-4. **Append** new `[ ]` lines when new **behavior** is discovered.
-5. **Slice complete** when every behavior line is `[x]` (or explicitly removed) and tests are green.
+2. **Pick one open `[ ]` line** in **Cases** — implement exactly one minimal failing test for it.
+3. After R–G–R for that case, flip the line to `[x]` **with a test reference** (see traceability).
+4. **Append** new `[ ]` lines in **Cases** when new **behavior** is discovered; use **Deferred behavior** or **Removed** per lifecycle rules — never hide scope in refactor follow-ups.
+5. **Slice complete** when every **Cases** line is `[x]` or documented in **Removed**, deferred rows are **closed per agreement**, and tests are green.
 
 ---
 
@@ -106,6 +160,8 @@ The file is **planning and scope** for **behavior**. Each cycle still obeys the 
 
 - No on-disk file (list only in chat).
 - Test list file in `.gitignore` (it should be **versioned** unless the project forbids it — then escalate to the user).
-- **Refactor / tech-debt** lines mixed into the test list (pollutes “done”).
-- Marking `[x]` before an automated test exists and passes.
+- **Refactor / tech-debt** lines mixed into **Cases** (pollutes “done”).
+- Marking `[x]` **without** a test reference or before tests pass.
 - Stale file (not updated as cases complete or new behavior appears).
+- Silent removal of lines without **Removed / out of scope** (or equivalent) record.
+- Leaving **Deferred behavior** rows vague at slice end.

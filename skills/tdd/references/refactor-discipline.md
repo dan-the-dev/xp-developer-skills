@@ -1,6 +1,6 @@
 # Refactor discipline — tests never break
 
-REFACTOR happens only on a **fully green** baseline. During refactoring, **behavior must not change**; tests are the guardrail.
+REFACTOR happens only on a **fully green** baseline. During refactoring, **behavior must not change**; tests are the guardrail. **Test code** (helpers, builders, duplication in specs) is refactored with the **same** micro-step discipline as production code.
 
 ---
 
@@ -42,10 +42,15 @@ If a distant improvement is desirable, **add it to the follow-ups file** next to
 
 ## What counts as refactor
 
-- Renaming for clarity
+- Renaming for clarity (production **or** tests)
 - Moving code without changing observable outcomes
 - Extracting methods/classes/modules
+- **Test code**: builders, object mothers, shared setup helpers, duplicate assertion extraction — same micro-step and revert rules as production
 - Removing duplication when the pattern is clear (see **rule of three** in [micro-iterations.md](micro-iterations.md))
+
+### Test-only refactor commit
+
+If production is already clean but **test** setup or names need improvement, a **`refactor:`** commit may contain **only test files** (and test-only helpers). Laws still apply: **green** before starting; **no** behavior change.
 
 What is **not** refactor here:
 

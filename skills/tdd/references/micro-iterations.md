@@ -2,6 +2,8 @@
 
 Work from a **test list** per feature (see [test-list.md](test-list.md)); each micro-cycle still moves **one** list item toward a single failing test.
 
+Pick the **smallest test that still asserts behavior at a stable seam** — unit or narrow integration — without over-mocking (see [behavior-and-tests.md](behavior-and-tests.md)).
+
 TDD works best when each failing test is **easy to reason about** and **fast to run**. Aim for cycles short enough that **write test → see fail → minimal code → see pass** stays a tight habit (often seconds to a few minutes, depending on stack).
 
 ---

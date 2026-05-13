@@ -39,6 +39,8 @@ This note ties the repository’s **TDD** agent skill to published sources. The 
 | Rule of three before extracting duplication | Distilled continuous-refactoring guidance |
 | Double-loop (outer acceptance, inner unit) | Distilled; skill keeps **inner** loop only and composes with ATDD elsewhere |
 | **Test list** as backlog of cases | Beck’s task/test list habit in *TDD by Example*; planning chapters in *Agile Technical Practices Distilled*; repo file convention is AMPD skill policy |
+| **Determinism / stable seams** | Common TDD teaching; aligns with fast feedback and trustworthy RED |
+| **AAA / readable tests** | Widely taught practice (e.g. industry checklists); supports Law 2 clarity |
 | **Three Laws** rhythm | Robert C. Martin’s formulation; summarized alongside Beck-style R–G–R in many TDD courses and articles |
 
 When evolving `skills/tdd/SKILL.md`, prefer updating this bibliography if new canonical sources are adopted.

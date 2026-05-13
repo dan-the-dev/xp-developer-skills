@@ -4,6 +4,33 @@ Tests drive **design and analysis** by pinning **observable behavior**: inputs, 
 
 ---
 
+## Determinism and isolation (default RED path)
+
+TDD only works if RED and GREEN are **trustworthy**. Prefer tests that are **fast** and **order-independent** unless the behavior under test is inherently concurrent.
+
+Control or fake:
+
+- **Clocks and time** — inject a clock or freeze time; no real sleeps as assertions.
+- **Randomness** — fixed seed or injected generator.
+- **Network and external I/O** — no real network/files in the default unit loop unless this test **is** an integration test at an owned boundary (see below).
+- **Global / process / env state** — reset or isolate per test per project patterns.
+- **Parallelism** — avoid shared mutable statics; follow the runner’s isolation rules.
+
+After RED, confirm the failure is the **intended** signal (missing behavior, wrong value), not a **timeout**, ordering flake, or environment drift.
+
+---
+
+## Choosing the seam: unit vs narrow integration
+
+Still **one failing test at a time** and still **Three Laws** — but pick the **smallest test that asserts behavior at a stable seam**:
+
+- **Unit** (fast, in-memory): logic and pure transformations; collaborators are **real** when cheap or **doubles** at **owned** boundaries.
+- **Narrow integration**: **one** real module boundary (e.g. repository with in-memory DB, HTTP handler with test client) when behavior is **wiring** or serialization — avoid duplicating that in over-mocked units.
+
+**Over-mocking** (many mocks, strict call sequences unrelated to the specified behavior) often **locks implementation** and violates “tests decoupled from internals.” Prefer a **real** collaborator or a **dumb fake** at a **thin seam** you own; reserve mocks for **command-style** interactions the product contract actually specifies.
+
+---
+
 ## What to assert
 
 - **Public outcomes**: return values, state visible through the module’s API, emitted events, messages sent **only** when the behavior under test is “commands / side effects” and the project already uses interaction-style assertions.
@@ -48,3 +75,5 @@ Use doubles only to **isolate behavior** or replace slow/non-deterministic colla
 - Do not mock **third-party** types directly unless the codebase already wraps them; prefer a thin owned seam.
 
 Doubles should stay **dumb and obvious**; complex logic inside a double is a smell.
+
+For structure and AAA, see [test-quality.md](test-quality.md).
