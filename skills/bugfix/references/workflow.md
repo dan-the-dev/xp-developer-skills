@@ -75,6 +75,7 @@ Understand:
 - expected behavior
 - affected scope
 - runtime conditions
+- the **invariant or contract** that is violated (one sentence) — distinct from the **symptom** (crash, log, wrong UI)
 
 Prefer:
 
@@ -107,7 +108,7 @@ The test must:
 
 - fail before fix exists
 - fail for correct reason
-- express expected behavior clearly
+- express **expected behavior** clearly — i.e. assert the **correct outcome or invariant** when fixed, not only that an error or exception occurred
 - remain deterministic
 
 ---

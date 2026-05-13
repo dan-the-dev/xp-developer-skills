@@ -74,6 +74,26 @@ Avoid:
 - vague assertions
 - indirect validation
 - assertions unrelated to behavior
+- assertions that only check “an error happened” without stating the **correct outcome or invariant** once fixed
+
+---
+
+## Symptom fixes (silencing vs restoring invariants)
+
+A **symptom** is what users or logs show (crash, 500, wrong label). The **invariant** is what the system should **guarantee** (correct totals, auth rules, ordering, idempotency, etc.).
+
+**Symptom fix** (reject):
+
+- swallowing exceptions, returning `null`/`0`/`""` to hide the failure, or adding a guard that skips bad input **without** making wrong cases correct
+- loosening assertions or removing expectations so the test passes without proving the contract
+- changes that stop the noise but leave **wrong results** for other inputs in the same code path
+
+**Correct fix**:
+
+- the failing test encodes the **expected observable behavior** (or public contract) under the failing conditions
+- production change **restores that contract** with minimal edits
+
+If you cannot state the invariant in one sentence, the bug is not understood enough to fix safely — return to reproduction and clarification.
 
 ---
 

@@ -16,7 +16,8 @@ A bugfix is complete only if ALL items are satisfied.
 
 - [ ] Bug behavior understood
 - [ ] Expected behavior identified
-- [ ] Automated reproduction exists
+- [ ] **Invariant / contract** stated in one line (what must hold when fixed)
+- [ ] Automated reproduction exists and asserts that invariant (not only “throws” or “fails”)
 - [ ] Failing test confirmed (RED)
 
 ---
@@ -32,6 +33,7 @@ A bugfix is complete only if ALL items are satisfied.
 ## GREEN Fix
 
 - [ ] Minimal fix applied
+- [ ] Fix restores the **violated invariant**, not only silences the symptom
 - [ ] No unrelated edits
 - [ ] No refactoring performed
 - [ ] Existing conventions respected
@@ -40,7 +42,7 @@ A bugfix is complete only if ALL items are satisfied.
 
 ## Verification
 
-- [ ] Failing test now passes
+- [ ] Failing test now passes **without** weakened assertions
 - [ ] Related regressions checked
 - [ ] Validation executed incrementally
 - [ ] No flaky behavior observed
@@ -77,3 +79,4 @@ A bugfix is complete only if ALL items are satisfied.
 - [ ] Reviewability preserved
 - [ ] Changes reversible
 - [ ] Skill stop condition respected
+- [ ] **Root cause** (one short paragraph) and **recurrence prevention** (one short paragraph) recorded in the bugfix summary output
