@@ -138,8 +138,8 @@ Current execution priorities:
 [x] Initial repository structure
 [x] Initial README
 [x] Bugfix skill
-[ ] TDD skill
-[ ] ATDD skill
+[x] TDD skill
+[x] ATDD skill
 [ ] Refactoring skill
 [ ] Legacy code testing skill
 [ ] Initial AI DevLoop draft

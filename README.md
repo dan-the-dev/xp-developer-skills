@@ -73,6 +73,7 @@ Implemented skills include:
 ```text
 skills/bugfix/
 skills/tdd/
+skills/atdd/
 ```
 
 **Bugfix** — a strict bugfix workflow enforcing:
@@ -85,6 +86,8 @@ skills/tdd/
 - no uncontrolled refactoring
 
 **TDD** — strict RED → GREEN → REFACTOR with micro-commits (`test:` / `feat:` / `refactor:`), fast narrow test runs, and squash-to-one-commit before push (see `skills/tdd/SKILL.md`).
+
+**ATDD** — pragmatic Discuss → Distill → Develop: agree examples in an example catalog, automate at the right layer (contract, API, or E2E; Gherkin optional), then implement outside-in while composing with inner TDD (see `skills/atdd/SKILL.md`).
 
 ---
 
@@ -105,7 +108,12 @@ skills/
 │   ├── references/
 │   ├── examples/
 │   └── checklists/
-└── tdd/
+├── tdd/
+│   ├── SKILL.md
+│   ├── references/
+│   ├── examples/
+│   └── checklists/
+└── atdd/
     ├── SKILL.md
     ├── references/
     ├── examples/
