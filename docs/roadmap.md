@@ -140,7 +140,7 @@ Current execution priorities:
 [x] Bugfix skill
 [x] TDD skill
 [x] ATDD skill
-[ ] Refactoring skill
+[x] Refactoring skill
 [ ] Legacy code testing skill
 [ ] Initial AI DevLoop draft
 [ ] Manifesto website
