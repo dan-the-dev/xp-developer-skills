@@ -142,7 +142,7 @@ Current execution priorities:
 [x] ATDD skill
 [x] Refactoring skill
 [x] Legacy code testing skill
-[ ] Manifesto file
+[x] Manifesto file
 
 ⸻
 
