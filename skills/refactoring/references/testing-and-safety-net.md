@@ -47,3 +47,9 @@ In TDD, the **test list** and RED–GREEN give new behavior; **REFACTOR** is exa
 ## Flaky tests
 
 If the suite flaps **before** refactoring, **stabilize or quarantine** flakiness first. Refactoring on a flaky baseline teaches the team to ignore red — that erodes the whole practice.
+
+---
+
+## No tests at all?
+
+If there is **no** automated coverage for the surface you must change, you are in **legacy** territory: use **`skills/legacy-testing`** (characterization, seams) before relying on this document’s discipline.

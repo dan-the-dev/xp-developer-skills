@@ -75,6 +75,7 @@ skills/bugfix/
 skills/tdd/
 skills/atdd/
 skills/refactoring/
+skills/legacy-testing/
 ```
 
 **Bugfix** — a strict bugfix workflow enforcing:
@@ -91,6 +92,8 @@ skills/refactoring/
 **ATDD** — pragmatic Discuss → Distill → Develop: agree examples in an example catalog, automate at the right layer (contract, API, or E2E; Gherkin optional), then implement outside-in while composing with inner TDD (see `skills/atdd/SKILL.md`).
 
 **Refactoring** — Fowler-style behavior-preserving changes: two hats, baby steps, green between steps, revert on red, named refactorings and clear commits (see `skills/refactoring/SKILL.md`).
+
+**Legacy testing** — Feathers-style work on code without tests: change algorithm (pinch points, seams, characterization, sprout/wrap), then compose with TDD, refactoring, or bugfix (see `skills/legacy-testing/SKILL.md`).
 
 ---
 
@@ -121,7 +124,12 @@ skills/
 │   ├── references/
 │   ├── examples/
 │   └── checklists/
-└── refactoring/
+├── refactoring/
+│   ├── SKILL.md
+│   ├── references/
+│   ├── examples/
+│   └── checklists/
+└── legacy-testing/
     ├── SKILL.md
     ├── references/
     ├── examples/

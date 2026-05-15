@@ -22,7 +22,7 @@ Optimize for:
 - **Clarity** — better names, clearer boundaries, less accidental duplication
 - **Reviewability** — commits readers can trust as “structure only”
 
-This skill is for **dedicated** refactoring sessions and for the **REFACTOR** phase inside TDD. It does **not** replace **bugfix** (fix wrong behavior), **feature** work (new behavior), or **legacy test rescue** — compose with those skills ([references/two-hats-and-scope.md](references/two-hats-and-scope.md)).
+This skill is for **dedicated** refactoring sessions and for the **REFACTOR** phase inside TDD. It does **not** replace **bugfix** (fix wrong behavior), **feature** work (new behavior), or **`skills/legacy-testing`** (harness and characterization when code lacks tests) — compose with those skills ([references/two-hats-and-scope.md](references/two-hats-and-scope.md)).
 
 ---
 
@@ -57,7 +57,7 @@ Do **not** swap hats mid-commit. If you need both, **finish** one slice (includi
 | **`skills/tdd`** | Inner loop; REFACTOR step is this same discipline at tight proximity ([`refactor-discipline.md`](../tdd/references/refactor-discipline.md)) |
 | **`skills/bugfix`** | Fix **wrong** behavior first; refactoring is not a substitute for reproduction + RED |
 | **`skills/atdd`** | Acceptance defines *what*; refactoring does not change *what* |
-| **Future: legacy tests** | Without tests, **characterization** or narrow harness before large refactors |
+| **`skills/legacy-testing`** | Without tests, **characterization** and **seams** before large refactors ([`SKILL.md`](../legacy-testing/SKILL.md)) |
 
 **Tests and design (Cupac):** Prefer tests **coupled to behavior**, not **structure**, so internal moves do not break the suite for the wrong reason ([references/tests-and-design.md](references/tests-and-design.md)).
 
@@ -84,7 +84,7 @@ Never “fix” production under failing tests during a refactor pass unless you
 
 - **Prefer** adding or tightening tests **before** large refactors (same hat as “add tests” if tests assert behavior).
 - **Prefer** a **scope limit**: refactor only in modules already well covered.
-- **Defer** sweeping changes without tests to a **protected** session (characterization / legacy skill) — do not pretend Fowler steps are magic.
+- **Defer** sweeping changes without tests to a **protected** session — use `skills/legacy-testing` (Feathers: seams, characterization) before large refactors.
 
 ---
 

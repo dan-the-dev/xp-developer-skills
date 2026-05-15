@@ -23,7 +23,7 @@ This note ties the repository’s **TDD** agent skill to published sources. The 
   The skill encodes these laws literally: no production without a failing test; minimal test to fail; minimal production to pass the current failing test.
 
 - **Test-Driven Development (community / conference material, e.g. 2021).**  
-  Useful for framing real-world friction (legacy code, team dynamics, tooling) versus kata-style practice; the skill defers legacy and acceptance workflows to other AMPD skills where appropriate.
+  Useful for framing real-world friction (legacy code, team dynamics, tooling) versus kata-style practice; this skill defers acceptance workflows to **`skills/atdd`** and **untested-area** work to **`skills/legacy-testing`** (Feathers).
 
 ---
 
@@ -37,7 +37,8 @@ This note ties the repository’s **TDD** agent skill to published sources. The 
 | Tests specify **behavior**, not structure | Beck (tests drive design); distilled outside-in framing |
 | Test doubles only to isolate behavior | Common testing practice summarized in distilled / Beck contexts |
 | Rule of three before extracting duplication | Distilled continuous-refactoring guidance |
-| Double-loop (outer acceptance, inner unit) | Distilled; skill keeps **inner** loop only and composes with ATDD elsewhere |
+| Double-loop (outer acceptance, inner unit) | Distilled; skill keeps **inner** loop only and composes with **`skills/atdd`** |
+| Code **without** tests at change seam | **Feathers**; compose with **`skills/legacy-testing`** before relying on RED–GREEN alone |
 | **Test list** as backlog of cases | Beck’s task/test list habit in *TDD by Example*; planning chapters in *Agile Technical Practices Distilled*; repo file convention is AMPD skill policy |
 | **Determinism / stable seams** | Common TDD teaching; aligns with fast feedback and trustworthy RED |
 | **AAA / readable tests** | Widely taught practice (e.g. industry checklists); supports Law 2 clarity |

@@ -141,10 +141,8 @@ Current execution priorities:
 [x] TDD skill
 [x] ATDD skill
 [x] Refactoring skill
-[ ] Legacy code testing skill
-[ ] Initial AI DevLoop draft
-[ ] Manifesto website
-[ ] First pilot project
+[x] Legacy code testing skill
+[ ] Manifesto file
 
 ⸻
 

@@ -25,7 +25,7 @@ Ties the **Fowler-style refactoring** skill to published sources. The skill body
 ## Related material
 
 - **Feathers, Michael.** *Working Effectively with Legacy Code.*  
-  For thin safety nets: introducing seams and tests before larger refactorings (overlaps future “legacy tests” skill).
+  For code **without** tests: seams, characterization, sprout/wrap before larger refactorings — see **`skills/legacy-testing`**.
 
 - **Wake, William C.** *Refactoring Workbook.*  
   Practice-oriented exercises.
