@@ -26,7 +26,7 @@ Optimize for:
 - **deterministic** tests and **stable seams** (see behavior reference)
 - **refactors scoped** to code near the current change
 
-This skill covers **only** the **inner** unit-level TDD loop. It does **not** specify acceptance-test (outer-loop) workflows, **legacy code without tests**, branching policy, CI, or bugfix-only rules — compose with other skills for those (e.g. `skills/atdd`, `skills/refactoring` for stand-alone Fowler-style refactor sessions, `skills/legacy-testing` for Feathers-style harness and characterization).
+This skill covers **only** the **inner** unit-level TDD loop. It does **not** specify acceptance-test (outer-loop) workflows, **legacy code without tests**, branching policy, CI, bugfix-only rules, or **time-boxed experiments** — compose with other skills for those (e.g. `skills/atdd`, `skills/spike` on an isolated `spike/` branch before delivery, `skills/refactoring` for stand-alone Fowler-style refactor sessions, `skills/legacy-testing` for Feathers-style harness and characterization).
 
 ---
 

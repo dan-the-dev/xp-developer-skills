@@ -12,7 +12,7 @@ Turn **business intent** into **concrete, automated examples** before (or as) th
 
 **First step of every capability slice:** agree **examples** (scenarios, tables, or outcomes) and record them in a **tracked artifact** in the repo (path rules in [references/example-catalog.md](references/example-catalog.md)).
 
-**Distill step:** turn the highest-value examples into **at least one failing automated acceptance check** at the right layer (see [references/environments-and-test-pyramid.md](references/environments-and-test-pyramid.md)) — unless the slice is explicitly **example-only** (spike, UI mock) with a written deferral.
+**Distill step:** turn the highest-value examples into **at least one failing automated acceptance check** at the right layer (see [references/environments-and-test-pyramid.md](references/environments-and-test-pyramid.md)) — unless the slice is explicitly **example-only** (UI mock) with a written deferral. For **feasibility unknowns**, use **`skills/spike`** on a `spike/` branch first, then return here after promotion.
 
 **Develop step:** make acceptance green using **outside-in** work; use **strict TDD** (`skills/tdd`) for inner-loop programmer tests.
 

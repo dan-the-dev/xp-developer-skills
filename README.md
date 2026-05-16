@@ -76,6 +76,7 @@ skills/tdd/
 skills/atdd/
 skills/refactoring/
 skills/legacy-testing/
+skills/spike/
 ```
 
 **Bugfix** — a strict bugfix workflow enforcing:
@@ -94,6 +95,8 @@ skills/legacy-testing/
 **Refactoring** — Fowler-style behavior-preserving changes: two hats, baby steps, green between steps, revert on red, named refactorings and clear commits (see `skills/refactoring/SKILL.md`).
 
 **Legacy testing** — Feathers-style work on code without tests: change algorithm (pinch points, seams, characterization, sprout/wrap), then compose with TDD, refactoring, or bugfix (see `skills/legacy-testing/SKILL.md`).
+
+**Spike** — time-boxed experiments on an isolated `spike/` branch: disposable code, prove an idea or library fit, optional ad hoc checks only; explicit promotion to ATDD/TDD/legacy (see `skills/spike/SKILL.md`).
 
 ---
 
@@ -129,7 +132,12 @@ skills/
 │   ├── references/
 │   ├── examples/
 │   └── checklists/
-└── legacy-testing/
+├── legacy-testing/
+│   ├── SKILL.md
+│   ├── references/
+│   ├── examples/
+│   └── checklists/
+└── spike/
     ├── SKILL.md
     ├── references/
     ├── examples/

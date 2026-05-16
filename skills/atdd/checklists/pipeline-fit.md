@@ -12,7 +12,7 @@ Answer **before** Distill. Pick the **highest** layer that still meets trust and
 | Can the business rule be verified via **HTTP/API** without a browser? | **API acceptance** |
 | Is logic inside one deployable with a clear **module seam**? | **In-process acceptance** |
 | Is the capability **only** visible through UI with no lower seam? | **E2E / browser** |
-| Is this a **spike** with no automation yet? | Discuss-only + defer (documented) |
+| Is feasibility still unknown (library, integration, performance)? | **`skills/spike`** on `spike/` branch first, then ATDD after promotion |
 
 ---
 

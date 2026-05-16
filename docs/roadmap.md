@@ -92,7 +92,7 @@ They are operational engineering workflows.
 * add-tests-to-legacy-code (repo implementation: **`skills/legacy-testing/`**)
     Safely introduce characterization tests and protection tests into legacy systems before modifications.
 * spike
-    Time-boxed technical experiments with explicit promotion to delivery skills (ATDD/TDD/legacy); implementation: **`skills/spike/`** (planned).
+    Time-boxed experiments on isolated `spike/` branches; disposable code; promotion to ATDD/TDD/legacy. Implementation: **`skills/spike/`**.
 * feature-development
     Orchestrate full feature implementation workflows across testing, validation and delivery systems.
 
@@ -144,20 +144,20 @@ They are operational engineering workflows.
 - [x] ATDD skill (`skills/atdd/`)
 - [x] Refactoring skill (`skills/refactoring/`)
 - [x] Legacy code testing skill (`skills/legacy-testing/`)
+- [x] Spike skill (`skills/spike/`)
 - [x] Manifesto (`docs/manifesto.md`)
 
 ### Next: Agent harness (ordering: skills → subagents)
 
 Canonical behavior stays in **`skills/*/SKILL.md`**. **Slash commands are out of scope** for now—skills are sufficient for agents to load the right workflow. **Subagents** are goal-oriented delegation (isolated context) with short prompts that **read and follow** the relevant `SKILL.md` files—no duplicate long procedures in agent files.
 
-1. **Skills** — finish the missing workflow package:
-   - [ ] **Spike** — add `skills/spike/` (charter, time box, spike report, explicit promotion to `skills/atdd` / `skills/tdd` / `skills/legacy-testing` as appropriate).
+1. **Skills** — core delivery and spike packages are in place; further skills remain in the [Development Core Skills](#development-core-skills) backlog (e.g. feature-development).
 
 2. **Subagents** (e.g. `.cursor/agents/`, mirrored `.claude/agents/`). Five goal agents; each subagent **uses skills** as the source of truth:
    - [ ] **`new-feature`** — Deliver a production-bound feature: optional preparatory **`skills/refactoring`** if tests are green and structure blocks work; **`skills/legacy-testing`** first if the area is untested; then **`skills/atdd`** when acceptance/examples matter, **`skills/tdd`** for inner implementation; use **`skills/spike`** only for exploration, then **promote** to delivery skills.
    - [ ] **`bugfix`** — Read and follow **`skills/bugfix/SKILL.md`**; subagent value = **isolated context** for heavy repro logs and strict RED→GREEN separation from the parent thread, plus parallel use while parent plans/reviews.
    - [ ] **`legacy-refactor`** — **Phase 1:** `skills/legacy-testing` (harness, characterization). **Phase 2:** `skills/refactoring` (small, green steps). New feature behavior only after an explicit hat/skill switch (e.g. to `tdd` / `atdd`).
-   - [ ] **`spike`** — Read and follow **`skills/spike/SKILL.md`** after it exists.
+   - [ ] **`spike`** — Read and follow **`skills/spike/SKILL.md`** (isolated `spike/` branch, disposable code, spike report).
    - [ ] **`pr-reviewer`** — Read-first review (e.g. `readonly: true` where supported): tests, hat discipline, alignment with **`docs/manifesto.md`** and applicable skills.
 
 Optional: root **`AGENTS.md`** as a short index (skills + subagent routing) once subagent files exist.
