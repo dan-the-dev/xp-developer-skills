@@ -11,3 +11,5 @@
 - Forget to mark parent `increments/…` line `[x]`
 - **Circular oracle** — expected output computed only by calling production code under test for the same requirement
 - Continue to next increment without user ask
+- **Done after one verify step** when the project defines more (delivery-process §2)
+- Skipping **change-surface search** after factory/API/rename changes (§3)

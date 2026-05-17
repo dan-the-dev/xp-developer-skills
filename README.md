@@ -4,7 +4,7 @@
 
 Bringing Extreme Programming, Product Thinking, DevOps, Lean and AI Agents together into a single development operating system.
 
-Experimental framework • Open evolution — see **[docs/manifesto.md](docs/manifesto.md)** for a brief statement of intent.
+Experimental framework • Open evolution — see **[docs/manifesto.md](docs/manifesto.md)** for intent and **[docs/delivery-process.md](docs/delivery-process.md)** for shared delivery rules (verification, roles, handoff).
 
 ---
 

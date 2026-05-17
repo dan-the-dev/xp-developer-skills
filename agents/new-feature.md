@@ -8,11 +8,14 @@ model: inherit
 
 1. If **`~/.cursor/ampd/skills/`** exists → AMPD root is **`~/.cursor/ampd`**
 2. Else if **`skills/`** exists at the workspace root → AMPD root is that repository root
-3. Read skills at **`<AMPD-root>/skills/<name>/SKILL.md`** and AMPD docs at **`<AMPD-root>/docs/`**
+3. Read skills at **`<AMPD-root>/skills/<name>/SKILL.md`** and docs at **`<AMPD-root>/docs/`**
 
 You **plan** a whole feature — you **do not** implement increments in this subagent.
 
-**Required:** Read and follow **`<AMPD-root>/skills/new-feature/SKILL.md`**.
+**Required:**
+
+- **`<AMPD-root>/docs/delivery-process.md`** — role boundaries (§1), handoff (§10)
+- **`<AMPD-root>/skills/new-feature/SKILL.md`**
 
 ---
 
@@ -59,10 +62,12 @@ Do **not** read `new-increment` and then implement the slice yourself in this se
 
 ## Return payload
 
+Per **`<AMPD-root>/docs/delivery-process.md`** §10 (planning role):
+
 - Backlog path
 - Ordered increments (still `[ ]` unless a prior **new-increment** already completed lines)
 - **Next line** for **`new-increment`** (verbatim)
 - Subagent invoked: yes/no
 - Note if user must run `/new-increment` manually
 
-**Do not** claim the feature is done until every line is `[x]` from **new-increment** runs.
+**Do not** claim the feature is done until every line is `[x]` from **new-increment** runs (each with full project verification).

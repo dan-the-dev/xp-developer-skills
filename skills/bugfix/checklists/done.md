@@ -45,6 +45,8 @@ A bugfix is complete only if ALL items are satisfied.
 - [ ] Failing test now passes **without** weakened assertions
 - [ ] Related regressions checked
 - [ ] Validation executed incrementally
+- [ ] **All applicable project verify steps** for this scope run and passed ([`docs/delivery-process.md`](../../../docs/delivery-process.md) §2)
+- [ ] Change-surface search done if fix touched construction/import/API (§3)
 - [ ] No flaky behavior observed
 
 ---

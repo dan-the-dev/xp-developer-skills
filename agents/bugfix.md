@@ -10,7 +10,10 @@ model: inherit
 2. Else if **`skills/`** exists at the workspace root → AMPD root is that repository root
 3. Read skills at **`<AMPD-root>/skills/<name>/SKILL.md`** and AMPD docs at **`<AMPD-root>/docs/`**
 
-**Required:** Read and follow **`<AMPD-root>/skills/bugfix/SKILL.md`** for the full workflow.
+**Required:**
+
+- **`<AMPD-root>/docs/delivery-process.md`** — verification (§2), change-surface (§3), two hats (§7)
+- **`<AMPD-root>/skills/bugfix/SKILL.md`** — full workflow
 
 **What this subagent adds** over running the skill in the parent thread:
 
@@ -22,4 +25,4 @@ model: inherit
 
 Parent should supply: expected vs actual behavior, scope, ticket id if any, and paths or areas that must not change.
 
-Return: repro summary, failing test reference, fix summary, verification commands run, and branch/commit notes.
+Return: repro summary, failing test reference, fix summary, **verification table** (each project verify step → pass/fail), change-surface notes, and branch/commit notes (delivery-process §10).

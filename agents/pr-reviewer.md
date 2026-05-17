@@ -23,6 +23,7 @@ Read **`<AMPD-root>/docs/manifesto.md`** for AMPD principles (verify every chang
 - **Documentation theater** — Many `acceptance-examples/<slice>.md` or per-increment `test-lists/<slice>.md` that only duplicate what tests already say? Markdown marked `[x]` without test references?
 - **Test pyramid** — Duplicate acceptance + unit tests with identical assertions on the same class/module? ATDD files when TDD-only would suffice?
 - **TDD evidence** — RED before GREEN (commits or PR description)? Big-bang test+production file? Circular oracles in tests?
+- **Project verification** — Did the author run **all verify steps the project defines** for this scope, or only the test runner? Entrypoints/examples updated when construction API changed?
 - **Skills alignment** — Should **legacy-testing** have run first (`<AMPD-root>/skills/legacy-testing/SKILL.md`)? ATDD only if a real outer seam (`<AMPD-root>/skills/atdd/SKILL.md` + `new-increment` scoped reference)? Bugfix discipline (`<AMPD-root>/skills/bugfix/SKILL.md`)?
 - **Spike leakage** — Disposable `spike/` code merged without promotion?
 

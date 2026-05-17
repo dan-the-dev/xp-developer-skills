@@ -20,27 +20,33 @@ Mark the parent backlog line **`[x]`** and **stop** — unless the user explicit
 
 ## Workflow
 
+Shared delivery rules: [`docs/delivery-process.md`](../../docs/delivery-process.md).
+
 1. Lock scope to **one** `[ ]` backlog line; branch e.g. `feat/<feature>-<increment-slug>`.
-2. Read README/Makefile/`AGENTS.md` for the **canonical test command** (e.g. `make test`, `npm test`).
+2. **Discover project verification** for the language/module you will touch (§2) — README, CI, scripts, Makefile, or equivalent; do not assume one command.
 3. **Choose layer** — [references/scoped-atdd-tdd.md](references/scoped-atdd-tdd.md) (TDD-only vs ATDD+TDD).
 4. **Artifacts** — [references/artifact-policy.md](references/artifact-policy.md): one feature test list; no per-increment markdown sprawl.
-5. **RED → GREEN → REFACTOR** per behavior; **one failing test at a time**; run tests between steps.
-6. Update parent `increments/…` to `[x]` with link to test list section (and acceptance section if used).
-7. **Cleanup** redundant slice-only markdown if created by mistake.
-8. Return handoff; do not start the next increment.
+5. **RED → GREEN → REFACTOR** per behavior; **one failing check at a time**; run verification between steps (§6).
+6. If construction/import/API changed, **search and update all call sites** in scope (§3).
+7. Update parent `increments/…` to `[x]` with link to test list section (and acceptance section if used).
+8. **Cleanup** redundant slice-only markdown if created by mistake.
+9. **Run all applicable project verify steps**; none may be skipped because another already passed (§2).
+10. **Return payload** (§10); do not start the next increment.
 
-Prep if needed: **`skills/legacy-testing`**, **`skills/refactoring`**, **`skills/spike`** — then resume.
+Prep if needed: **`skills/legacy-testing`** (invalid harness), **`skills/refactoring`**, **`skills/spike`** — then resume.
 
 ---
 
 ## Definition of done
 
-- One backlog line only; tests green for **this** scope
+- One backlog line only; **all project verify steps** for this scope passed (§2 in delivery-process)
 - RED observed before each production change (see scoped reference)
-- Test list lines `[x]` only with passing tests referenced
+- Test list lines `[x]` only with passing checks referenced
 - No duplicate acceptance + unit tests for the same behavior
+- Change-surface complete if APIs/seams changed (§3)
 - Parent increment line `[x]`
 - No behavior from **future** increments
+- Return payload delivered (§10)
 
 Checklist: [checklists/increment-done.md](checklists/increment-done.md).
 
@@ -61,6 +67,7 @@ See [references/anti-patterns.md](references/anti-patterns.md).
 
 ## Additional resources
 
+- [`docs/delivery-process.md`](../../docs/delivery-process.md)
 - [references/scoped-atdd-tdd.md](references/scoped-atdd-tdd.md)
 - [references/artifact-policy.md](references/artifact-policy.md)
 - [references/anti-patterns.md](references/anti-patterns.md)

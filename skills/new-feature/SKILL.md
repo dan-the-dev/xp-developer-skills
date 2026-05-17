@@ -18,6 +18,8 @@ Plan a **whole feature** as **ordered, releasable increments**. **Do not impleme
 
 ## Workflow
 
+Shared delivery rules: [`docs/delivery-process.md`](../../docs/delivery-process.md) (planning role — §1, §10).
+
 1. Clarify capability and whole-feature definition of done.
 2. If feasibility unknown → **`skills/spike`** on `spike/…` branch; promote before slicing.
 3. Write **ordered** increment lines in `increments/<stem>.md` (all `[ ]` initially).

@@ -22,6 +22,7 @@ Location: **`agents/`** (symlinked at **`.claude/agents/`** for Claude Code). Cu
 ## Docs
 
 - [`docs/manifesto.md`](docs/manifesto.md)
+- [`docs/delivery-process.md`](docs/delivery-process.md) — shared delivery rules (verification, roles, return payload)
 - [`docs/roadmap.md`](docs/roadmap.md)
 
 ## Install

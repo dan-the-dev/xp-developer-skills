@@ -65,8 +65,10 @@ Do **not** swap hats mid-commit. If you need both, **finish** one slice (includi
 
 ## Workflow (language-agnostic)
 
+Shared delivery rules: [`docs/delivery-process.md`](../../docs/delivery-process.md) (§7 two hats, §9 step size, §2 verification).
+
 1. **Goal** — one sentence: *what* will be easier after this (e.g. “extract pricing so policies are isolated”).
-2. **Baseline** — checkout branch; **all relevant tests green** (fix unrelated reds first or narrow scope).
+2. **Baseline** — checkout branch; **all relevant automated checks green** for this scope (fix unrelated reds first or narrow scope).
 3. **Plan** — name 1–3 **Fowler-style** refactorings you will compose ([references/catalog-and-composing-refactorings.md](references/catalog-and-composing-refactorings.md)).
 4. **Loop** until goal met:
    - pick the **smallest** next mechanical step
@@ -104,9 +106,12 @@ Full list: [references/anti-patterns.md](references/anti-patterns.md).
 ## Definition of done (session)
 
 - Stated goal achieved or **explicitly** reduced with follow-up note
-- **All** exercised tests green after final step
+- **All applicable project verify steps** for this scope run and passed ([`docs/delivery-process.md`](../../docs/delivery-process.md) §2)
+- **All** exercised automated checks green after final mechanical step
+- Change-surface complete if moved/renamed APIs (§3)
 - Commits are **refactor-only** (or documented hat-switch)
 - No accidental behavior drift (same scenarios / contracts as baseline)
+- Return payload includes verification table (§10)
 
 Checklists: [checklists/before-refactor.md](checklists/before-refactor.md), [checklists/one-mechanical-step.md](checklists/one-mechanical-step.md), [checklists/session-done.md](checklists/session-done.md).
 

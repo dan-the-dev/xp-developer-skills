@@ -8,6 +8,8 @@ allowed-tools: Read, Edit, MultiEdit, Bash, Grep, Glob
 
 ## Mission
 
+Shared delivery rules at boundaries: [`docs/delivery-process.md`](../../docs/delivery-process.md) (§2 verification, §3 change-surface, §7 two hats).
+
 Fix bugs safely using a strict RED → GREEN workflow.
 
 The goal is:
@@ -333,14 +335,16 @@ Never:
 
 ## Verification Strategy
 
-Prefer incremental validation:
+**Discover** all verify steps the **current project** defines for the language/module you touched — then run **each applicable step** before claiming done (delivery-process §2). Do not stop after only the test runner if the project defines compile, typecheck, lint, integration, or other gates.
 
-1. focused test
-2. local module/package
-3. service/application
-4. full suite only when justified
+Prefer incremental validation **within** that set:
 
-Avoid expensive full-suite runs unless necessary.
+1. focused automated check
+2. local module/package verify step
+3. service/application verify step
+4. full project verify only when justified
+
+Avoid expensive full runs after every micro-edit unless the project requires it; run the **full applicable set** at the bugfix boundary.
 
 ---
 
@@ -352,6 +356,8 @@ A bugfix is complete only when:
 - RED state confirmed
 - minimal fix applied (restores the contract; not a symptom-only silencing)
 - GREEN state confirmed
+- **all applicable project verify steps** for this scope passed
+- change-surface complete if construction/import/API changed
 - related regressions checked
 - two isolated commits exist
 - branch pushed upstream

@@ -6,7 +6,7 @@
 
 1. **Amplify, don’t bypass** — AI should strengthen tests, refactoring, delivery, and clarity—not skip them for speed.
 2. **Skills over prompts** — Reusable **operational workflows** (versioned, composable), not one-off chat magic.
-3. **Verify every change** — If it isn’t testable, reviewable, and incremental, it isn’t done.
+3. **Verify every change** — If it isn’t testable, reviewable, and incremental, it isn’t done. Run **all verify steps the current project defines** for the scope you touched — not only the test runner ([`delivery-process.md`](delivery-process.md)).
 4. **Simplicity first** — Prefer small steps, honest commits, and validated learning over big designs and speculation.
 5. **Human + machine** — Product judgment, risk, and ethics stay human; repetition, consistency, and guardrails scale with tooling.
 

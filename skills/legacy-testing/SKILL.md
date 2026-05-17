@@ -76,12 +76,17 @@ More: [references/aligned-practices.md](references/aligned-practices.md).
 
 ## Language-agnostic execution
 
+Shared delivery rules: [`docs/delivery-process.md`](../../docs/delivery-process.md) (especially §8 harness, §2 verification, §3 change-surface).
+
 Inspect the repo for:
 
 - test runner, module layout, DI patterns, build/link seams
+- **all verify steps** the project defines for the current language/module — not only the test runner
 - existing “golden” or snapshot tests (possibly abuse-prone — use thoughtfully)
 
 Prefer **narrowest** tests that still **encode the legacy contract** you are about to touch.
+
+**Pre-harnessed:** If automated checks already exist, are valid, and cover the change path → say so explicitly; do not run Feathers phases for theater. If harness is **invalid** (compile/type errors, wrong construction API) → fix harness **before** feature or large refactor work.
 
 ---
 
@@ -107,10 +112,12 @@ Full list: [references/anti-patterns.md](references/anti-patterns.md).
 
 ## Definition of done (typical slice)
 
-- Change point and test point documented (short note in PR or `legacy-harness/` doc folder if team uses one)
+- Change point and test point documented (short note in PR or team doc folder if used)
 - Dependencies broken **only as much** as needed for the next test
 - Characterization (and/or bug) tests **green** on baseline
-- Production change (if any) passes tests; refactor commits separate per `skills/refactoring`
+- **All applicable project verify steps** for this scope run and passed ([`docs/delivery-process.md`](../../docs/delivery-process.md) §2)
+- Change-surface complete if seams/factories/APIs changed (§3)
+- Production change (if any) passes checks; refactor commits separate per `skills/refactoring`
 
 Checklists: [checklists/before-change.md](checklists/before-change.md), [checklists/one-intervention.md](checklists/one-intervention.md), [checklists/session-done.md](checklists/session-done.md).
 

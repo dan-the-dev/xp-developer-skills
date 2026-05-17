@@ -8,6 +8,8 @@ allowed-tools: Read, Edit, MultiEdit, Bash, Grep, Glob
 
 ## Mission
 
+Shared delivery rules at slice boundaries: [`docs/delivery-process.md`](../../docs/delivery-process.md) (§2 verification, §3 change-surface, §6 RED→GREEN).
+
 Turn requirements into **concrete automated examples** before production code exists: each example is a **small** failing test, then the smallest code that passes, then structure improvements **without** changing behavior.
 
 **First step of every feature:** create a **Markdown test list file** in the repo (path rules in [references/test-list.md](references/test-list.md)) listing every **behavior** you will prove with tests; keep the file updated. **Last step:** every line in that file is done and the suite is green — then the slice is finished.
@@ -222,6 +224,8 @@ This preserves local narrative during development and **reviewer-friendly** hist
 - Test list **file** exists at `<repo-relative-path>.md` **before** first RED and was updated throughout.
 - **Cases**: behavior-only lines; each `[x]` includes a **test reference** and passing tests; each remaining `[ ]` at end of slice is a **blocker** — either implement, move to **Deferred behavior** with closure plan, or move to **Removed** with reason (see [references/test-list.md](references/test-list.md)).
 - **Deferred behavior** / **Removed** sections: no silent scope or vague deferred rows at slice end.
+- **All applicable project verify steps** for this scope run and passed ([`docs/delivery-process.md`](../../docs/delivery-process.md) §2) — not only the test runner.
+- Change-surface complete if construction/import/API changed (§3).
 - Suite green; no undeclared extra behavior.
 - Deferred refactors (e.g. skipped for proximity) recorded in **`<stem>-follow-ups.md`** or listed in the **final user reply**, not in the test list.
 
