@@ -77,6 +77,8 @@ skills/atdd/
 skills/refactoring/
 skills/legacy-testing/
 skills/spike/
+skills/new-feature/
+skills/new-increment/
 ```
 
 **Bugfix** — a strict bugfix workflow enforcing:
@@ -97,6 +99,14 @@ skills/spike/
 **Legacy testing** — Feathers-style work on code without tests: change algorithm (pinch points, seams, characterization, sprout/wrap), then compose with TDD, refactoring, or bugfix (see `skills/legacy-testing/SKILL.md`).
 
 **Spike** — time-boxed experiments on an isolated `spike/` branch: disposable code, prove an idea or library fit, optional ad hoc checks only; explicit promotion to ATDD/TDD/legacy (see `skills/spike/SKILL.md`).
+
+**New feature** — slice a whole capability into ordered increments (`increments/<stem>.md`); e.g. FizzBuzz as one feature with separate increments per rule (see `skills/new-feature/SKILL.md`).
+
+**New increment** — deliver one increment with full ATDD + TDD for that slice only (see `skills/new-increment/SKILL.md`).
+
+### Subagents
+
+Goal-oriented agents in **`.claude/agents/`**: `new-feature`, `new-increment`, `bugfix`, `legacy-refactor`, `spike`, `pr-reviewer`. Each reads the matching **`skills/*/SKILL.md`**. See **`AGENTS.md`**.
 
 ---
 

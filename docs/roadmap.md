@@ -93,8 +93,12 @@ They are operational engineering workflows.
     Safely introduce characterization tests and protection tests into legacy systems before modifications.
 * spike
     Time-boxed experiments on isolated `spike/` branches; disposable code; promotion to ATDD/TDD/legacy. Implementation: **`skills/spike/`**.
+* new-feature (implemented — **`skills/new-feature/`**)
+    Slice a **whole capability** into ordered, **releasable increments** (e.g. increment backlog in repo); delegate each slice to **new-increment**. Does not implement every increment in one pass.
+* new-increment (implemented — **`skills/new-increment/`**)
+    Deliver **one** releasable increment: full **`skills/atdd`** + **`skills/tdd`** cycle for that slice only (scoped examples + test list).
 * feature-development
-    Orchestrate full feature implementation workflows across testing, validation and delivery systems.
+    Umbrella for delivery orchestration; in practice **new-feature** + **new-increment** (when implemented).
 
 ⸻
 
@@ -137,30 +141,32 @@ They are operational engineering workflows.
 
 ### Done (skills & docs baseline)
 
-- [x] Initial repository structure
-- [x] Initial README
-- [x] Bugfix skill (`skills/bugfix/`)
-- [x] TDD skill (`skills/tdd/`)
-- [x] ATDD skill (`skills/atdd/`)
-- [x] Refactoring skill (`skills/refactoring/`)
-- [x] Legacy code testing skill (`skills/legacy-testing/`)
-- [x] Spike skill (`skills/spike/`)
-- [x] Manifesto (`docs/manifesto.md`)
+* [x] Initial repository structure
+* [x] Initial README
+* [x] Bugfix skill (`skills/bugfix/`)
+* [x] TDD skill (`skills/tdd/`)
+* [x] ATDD skill (`skills/atdd/`)
+* [x] Refactoring skill (`skills/refactoring/`)
+* [x] Legacy code testing skill (`skills/legacy-testing/`)
+* [x] Spike skill (`skills/spike/`)
+* [x] New feature skill (`skills/new-feature/`)
+* [x] New increment skill (`skills/new-increment/`)
+* [x] Manifesto (`docs/manifesto.md`)
 
-### Next: Agent harness (ordering: skills → subagents)
+### Agent harness (skills → subagents)
 
 Canonical behavior stays in **`skills/*/SKILL.md`**. **Slash commands are out of scope** for now—skills are sufficient for agents to load the right workflow. **Subagents** are goal-oriented delegation (isolated context) with short prompts that **read and follow** the relevant `SKILL.md` files—no duplicate long procedures in agent files.
 
-1. **Skills** — core delivery and spike packages are in place; further skills remain in the [Development Core Skills](#development-core-skills) backlog (e.g. feature-development).
+1. **Skills** — core delivery, spike, and increment orchestration in place; see [Development Core Skills](#development-core-skills) for further backlog.
 
-2. **Subagents** (e.g. `.cursor/agents/`, mirrored `.claude/agents/`). Five goal agents; each subagent **uses skills** as the source of truth:
-   - [ ] **`new-feature`** — Deliver a production-bound feature: optional preparatory **`skills/refactoring`** if tests are green and structure blocks work; **`skills/legacy-testing`** first if the area is untested; then **`skills/atdd`** when acceptance/examples matter, **`skills/tdd`** for inner implementation; use **`skills/spike`** only for exploration, then **promote** to delivery skills.
-   - [ ] **`bugfix`** — Read and follow **`skills/bugfix/SKILL.md`**; subagent value = **isolated context** for heavy repro logs and strict RED→GREEN separation from the parent thread, plus parallel use while parent plans/reviews.
-   - [ ] **`legacy-refactor`** — **Phase 1:** `skills/legacy-testing` (harness, characterization). **Phase 2:** `skills/refactoring` (small, green steps). New feature behavior only after an explicit hat/skill switch (e.g. to `tdd` / `atdd`).
-   - [ ] **`spike`** — Read and follow **`skills/spike/SKILL.md`** (isolated `spike/` branch, disposable code, spike report).
-   - [ ] **`pr-reviewer`** — Read-first review (e.g. `readonly: true` where supported): tests, hat discipline, alignment with **`docs/manifesto.md`** and applicable skills.
+2. **Subagents** — implemented in **`.claude/agents/`** (read by Cursor and Claude Code). Index: **`AGENTS.md`**.
 
-Optional: root **`AGENTS.md`** as a short index (skills + subagent routing) once subagent files exist.
+   * [x] **`new-feature`** — `new-feature.md` → **`skills/new-feature`**
+   * [x] **`new-increment`** — `new-increment.md` → **`skills/new-increment`** (+ atdd, tdd)
+   * [x] **`bugfix`** — `bugfix.md` → **`skills/bugfix`**
+   * [x] **`legacy-refactor`** — `legacy-refactor.md` → legacy-testing, then refactoring
+   * [x] **`spike`** — `spike.md` → **`skills/spike`**
+   * [x] **`pr-reviewer`** — `pr-reviewer.md` (`readonly: true`) → manifesto + skills
 
 ⸻
 
