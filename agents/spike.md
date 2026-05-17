@@ -4,7 +4,13 @@ description: Time-boxed spike on isolated spike/ branch; disposable code; spike 
 model: inherit
 ---
 
-**Required:** Read and follow **`skills/spike/SKILL.md`**.
+## Resolve AMPD root
+
+1. If **`~/.cursor/ampd/skills/`** exists → AMPD root is **`~/.cursor/ampd`**
+2. Else if **`skills/`** exists at the workspace root → AMPD root is that repository root
+3. Read skills at **`<AMPD-root>/skills/<name>/SKILL.md`** and AMPD docs at **`<AMPD-root>/docs/`**
+
+**Required:** Read and follow **`<AMPD-root>/skills/spike/SKILL.md`**.
 
 **Non-negotiables:**
 
@@ -13,6 +19,6 @@ model: inherit
 - **No** delivery test pyramid, test lists, or example catalogs unless a one-off check proves the charter faster.
 - Produce a **spike report**: verdict, evidence, recommendation (**discard** | **promote** | follow-up spike).
 
-**Promotion** means a **new** delivery workflow — **`skills/atdd`**, **`skills/tdd`**, **`skills/legacy-testing`** — not continuing on the spike branch as production.
+**Promotion** means a **new** delivery workflow — **`<AMPD-root>/skills/atdd/SKILL.md`**, **`<AMPD-root>/skills/tdd/SKILL.md`**, **`<AMPD-root>/skills/legacy-testing/SKILL.md`** — not continuing on the spike branch as production.
 
 Return the spike report structure from the skill to the parent.

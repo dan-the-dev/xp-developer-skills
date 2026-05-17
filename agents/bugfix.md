@@ -4,7 +4,13 @@ description: Strict bugfix workflow in isolated context. Use for regressions, wr
 model: inherit
 ---
 
-**Required:** Read and follow **`skills/bugfix/SKILL.md`** for the full workflow.
+## Resolve AMPD root
+
+1. If **`~/.cursor/ampd/skills/`** exists → AMPD root is **`~/.cursor/ampd`**
+2. Else if **`skills/`** exists at the workspace root → AMPD root is that repository root
+3. Read skills at **`<AMPD-root>/skills/<name>/SKILL.md`** and AMPD docs at **`<AMPD-root>/docs/`**
+
+**Required:** Read and follow **`<AMPD-root>/skills/bugfix/SKILL.md`** for the full workflow.
 
 **What this subagent adds** over running the skill in the parent thread:
 

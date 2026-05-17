@@ -1,5 +1,5 @@
 ---
-name: bugfix-tdd
+name: bugfix
 description: Use when fixing bugs, regressions, failing tests, or unexpected behavior. Applies a strict test-first bugfix workflow with minimal safe changes, isolated commits, and language-agnostic verification strategies.
 allowed-tools: Read, Edit, MultiEdit, Bash, Grep, Glob
 ---

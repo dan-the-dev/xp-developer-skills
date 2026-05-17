@@ -106,7 +106,18 @@ skills/new-increment/
 
 ### Subagents
 
-Goal-oriented agents in **`.claude/agents/`**: `new-feature`, `new-increment`, `bugfix`, `legacy-refactor`, `spike`, `pr-reviewer`. Each reads the matching **`skills/*/SKILL.md`**. See **`AGENTS.md`**.
+Goal-oriented agents in **`agents/`** (also **`.claude/agents/`**): `new-feature`, `new-increment`, `bugfix`, `legacy-refactor`, `spike`, `pr-reviewer`. Each reads the matching skill under **`skills/`**. See **`AGENTS.md`**.
+
+### Install for Cursor (all projects)
+
+1. Clone this repository
+2. Run **`./scripts/install-cursor.sh`**
+3. Restart Cursor
+4. Use subagents: `/bugfix`, `/new-feature`, `/pr-reviewer`, etc.
+
+Installed to **`~/.cursor/ampd/`**. Skills and agents are linked for auto-discovery under **`~/.cursor/skills/`** and **`~/.cursor/agents/`**. To update: `git pull` in the clone, then re-run the install script.
+
+Details: **[INSTALL.md](INSTALL.md)**
 
 ---
 

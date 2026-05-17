@@ -4,9 +4,15 @@ description: Whole feature or epic — slice into ordered releasable increments 
 model: inherit
 ---
 
+## Resolve AMPD root
+
+1. If **`~/.cursor/ampd/skills/`** exists → AMPD root is **`~/.cursor/ampd`**
+2. Else if **`skills/`** exists at the workspace root → AMPD root is that repository root
+3. Read skills at **`<AMPD-root>/skills/<name>/SKILL.md`** and AMPD docs at **`<AMPD-root>/docs/`**
+
 You plan and slice a **whole feature** — you do **not** implement every increment in one pass.
 
-**Required:** Read and follow **`skills/new-feature/SKILL.md`**.
+**Required:** Read and follow **`<AMPD-root>/skills/new-feature/SKILL.md`**.
 
 **Your job:**
 
@@ -17,8 +23,8 @@ You plan and slice a **whole feature** — you do **not** implement every increm
 
 **Compose when needed (feature-wide or before a slice):**
 
-- **`skills/spike`** — feasibility unknown (`spike/…` branch)
-- **`skills/legacy-testing`** — untested code on the change path
-- **`skills/refactoring`** — prep on green tests only (refactor hat)
+- **`<AMPD-root>/skills/spike/SKILL.md`** — feasibility unknown (`spike/…` branch)
+- **`<AMPD-root>/skills/legacy-testing/SKILL.md`** — untested code on the change path
+- **`<AMPD-root>/skills/refactoring/SKILL.md`** — prep on green tests only (refactor hat)
 
 Return: backlog path, ordered increments, which line is next for **`new-increment`**, and any spike/legacy/refactor notes.
