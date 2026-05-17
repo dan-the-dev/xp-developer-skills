@@ -104,6 +104,15 @@ Refactor-only or internal tech tasks **do not** belong in the catalog — use a 
 
 **Compose:** one acceptance example → inner TDD until green → next example. Do **not** re-assert every business rule in unit tests if acceptance already proves it at a stable seam — unit tests should cover **design pressure**, edges the acceptance layer is too coarse to catch, and **fast feedback** on logic.
 
+### When **not** to use ATDD (use TDD only)
+
+For **`skills/new-increment`** and similar inner work:
+
+- Domain logic, katas, libraries, single-package modules with **no** separate deployable boundary
+- When acceptance tests would call the **same** in-process API with the **same** assertions as unit tests
+
+Use **`skills/tdd`** and `test-lists/<feature>.md` only. See **`skills/new-increment/references/scoped-atdd-tdd.md`** and **artifact-policy.md**.
+
 ---
 
 ## Language-agnostic execution

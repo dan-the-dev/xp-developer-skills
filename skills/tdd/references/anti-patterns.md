@@ -27,6 +27,8 @@ Symptoms to avoid when applying strict TDD.
 ## Process
 
 - **Big upfront tests**: a large test before any green path exists — shrink the example or add a **starter** case.
+- **Whole-file test replace**: rewriting the entire test file with all cases in one step (common agent failure mode).
+- **Checklist theater**: marking test-list `[x]` before RED or before the referenced test passes.
 - **False RED**: committing “RED” while the suite passes, failure unrelated to the case, or mistaking a **flake/timeout/env** for a behavior gap.
 - **Green without refactor discipline**: piling conditionals; skipping the refactor step habitually.
 - **Refactor in RED**: changing structure while a failing test represents incomplete behavior (finish GREEN first unless the team explicitly uses a different discipline).
@@ -51,6 +53,8 @@ Symptoms to avoid when applying strict TDD.
 
 ## Tests (behavior vs. implementation)
 
+- **Circular oracle**: expected values produced only by invoking production code under test for the same behavior (e.g. `sequence(100)` expected via `convert` in a loop).
+- **Duplicate layer**: unit tests that copy acceptance tests on the same in-process API — pick one layer (see `skills/new-increment/references/scoped-atdd-tdd.md`).
 - **Over-mocking** or strict call sequences that lock **implementation** instead of asserting outcomes at a **stable seam**.
 - **Non-deterministic** tests: real time, random seeds, network, shared global state without control.
 - Assertions that mirror implementation line-by-line (overfit to current code shape).

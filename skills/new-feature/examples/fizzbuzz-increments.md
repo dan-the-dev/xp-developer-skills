@@ -10,4 +10,6 @@
 - [ ] Multiples of 15 → FizzBuzz
 - [ ] Sequence 1..N with all rules
 
-Each `[ ]` → one **`skills/new-increment`** pass.
+Each `[ ]` → one **`new-increment`** invocation (TDD-only in this repo shape — unit tests in `test/`, behaviors in `test-lists/fizzbuzz.md` sections).
+
+**new-feature** creates this file and stops. **new-increment** implements one line at a time.

@@ -100,9 +100,9 @@ skills/new-increment/
 
 **Spike** — time-boxed experiments on an isolated `spike/` branch: disposable code, prove an idea or library fit, optional ad hoc checks only; explicit promotion to ATDD/TDD/legacy (see `skills/spike/SKILL.md`).
 
-**New feature** — slice a whole capability into ordered increments (`increments/<stem>.md`); e.g. FizzBuzz as one feature with separate increments per rule (see `skills/new-feature/SKILL.md`).
+**New feature** — slice a whole capability into ordered increments (`increments/<stem>.md`); planning only — hand off each line to **new-increment** (see `skills/new-feature/SKILL.md`).
 
-**New increment** — deliver one increment with full ATDD + TDD for that slice only (see `skills/new-increment/SKILL.md`).
+**New increment** — deliver **one** increment with strict **TDD** (unit tests, one `test-lists/<feature>.md`); **ATDD** only when a real outer seam exists (see `skills/new-increment/SKILL.md`).
 
 ### Subagents
 

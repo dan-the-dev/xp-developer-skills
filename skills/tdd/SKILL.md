@@ -200,6 +200,10 @@ This preserves local narrative during development and **reviewer-friendly** hist
 - **Wide refactors** unrelated to the code path for the current list item.
 - Assertions on **implementation** (private internals, call order) instead of **behavior**.
 - Pushing micro-commits without the requested squash for this skill.
+- **Big-bang test file** — `Write` replacing an entire `*.test.*` with many cases before any RED (add **one** `it` / test at a time).
+- **Big-bang green** — production + many tests in one edit without a failing run in between.
+- **Circular oracle** — `expected` built only by calling the method under test for the same requirement (proves delegation, not correctness). Use fixtures, tables, or independent oracles.
+- **Checklist theater** — flipping test-list or acceptance-catalog lines to `[x]` before the linked automated test exists and has failed at least once.
 
 ---
 

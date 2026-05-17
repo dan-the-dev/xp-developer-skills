@@ -8,8 +8,8 @@ Location: **`agents/`** (symlinked at **`.claude/agents/`** for Claude Code). Cu
 
 | Subagent | Skill(s) |
 |----------|----------|
-| `new-feature` | `skills/new-feature/` — slice epic into `increments/<stem>.md` |
-| `new-increment` | `skills/new-increment/` → `skills/atdd` + `skills/tdd` per slice |
+| `new-feature` | `skills/new-feature/` — slice epic into `increments/<stem>.md`; **plan only**, hand off to `new-increment` |
+| `new-increment` | `skills/new-increment/` → `skills/tdd` per slice (ATDD only at outer seam); **one** increment per invocation |
 | `bugfix` | `skills/bugfix/` |
 | `legacy-refactor` | `skills/legacy-testing/` then `skills/refactoring/` |
 | `spike` | `skills/spike/` (`spike/` branch, disposable) |

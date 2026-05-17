@@ -19,8 +19,11 @@ Read **`<AMPD-root>/docs/manifesto.md`** for AMPD principles (verify every chang
 
 - **Claims vs evidence** — Does the PR do what the description says? Were tests run?
 - **Hat discipline** — Refactor-only vs feature/fix; no silent mixing (`<AMPD-root>/skills/refactoring/SKILL.md`).
-- **Increment scope** — If part of a feature, does the PR match **one** increment (not a whole backlog at once)?
-- **Skills alignment** — Should **legacy-testing** have run first (`<AMPD-root>/skills/legacy-testing/SKILL.md`)? Acceptance/catalog for user-visible change (`<AMPD-root>/skills/atdd/SKILL.md`)? Bugfix discipline (`<AMPD-root>/skills/bugfix/SKILL.md`)?
+- **Increment scope** — If part of a feature, does the PR match **one** increment (not a whole backlog at once)? Multiple `[x]` on `increments/…` in one PR without justification?
+- **Documentation theater** — Many `acceptance-examples/<slice>.md` or per-increment `test-lists/<slice>.md` that only duplicate what tests already say? Markdown marked `[x]` without test references?
+- **Test pyramid** — Duplicate acceptance + unit tests with identical assertions on the same class/module? ATDD files when TDD-only would suffice?
+- **TDD evidence** — RED before GREEN (commits or PR description)? Big-bang test+production file? Circular oracles in tests?
+- **Skills alignment** — Should **legacy-testing** have run first (`<AMPD-root>/skills/legacy-testing/SKILL.md`)? ATDD only if a real outer seam (`<AMPD-root>/skills/atdd/SKILL.md` + `new-increment` scoped reference)? Bugfix discipline (`<AMPD-root>/skills/bugfix/SKILL.md`)?
 - **Spike leakage** — Disposable `spike/` code merged without promotion?
 
 **Output:**

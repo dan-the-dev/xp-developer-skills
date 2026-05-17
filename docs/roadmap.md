@@ -96,7 +96,7 @@ They are operational engineering workflows.
 * new-feature (implemented — **`skills/new-feature/`**)
     Slice a **whole capability** into ordered, **releasable increments** (e.g. increment backlog in repo); delegate each slice to **new-increment**. Does not implement every increment in one pass.
 * new-increment (implemented — **`skills/new-increment/`**)
-    Deliver **one** releasable increment: full **`skills/atdd`** + **`skills/tdd`** cycle for that slice only (scoped examples + test list).
+    Deliver **one** increment per invocation: **`skills/tdd`** by default (one feature test list); **`skills/atdd`** only at a real outer seam; RED gates; minimal markdown.
 * feature-development
     Umbrella for delivery orchestration; in practice **new-feature** + **new-increment** (when implemented).
 
@@ -162,7 +162,7 @@ Canonical behavior stays in **`skills/*/SKILL.md`**. **Slash commands are out of
 2. **Subagents** — implemented in **`agents/`** (symlinked at **`.claude/agents/`**; Cursor global install via **`INSTALL.md`**). Index: **`AGENTS.md`**.
 
    * [x] **`new-feature`** — `new-feature.md` → **`skills/new-feature`**
-   * [x] **`new-increment`** — `new-increment.md` → **`skills/new-increment`** (+ atdd, tdd)
+   * [x] **`new-increment`** — `new-increment.md` → **`skills/new-increment`** (TDD default; ATDD at outer seam only)
    * [x] **`bugfix`** — `bugfix.md` → **`skills/bugfix`**
    * [x] **`legacy-refactor`** — `legacy-refactor.md` → legacy-testing, then refactoring
    * [x] **`spike`** — `spike.md` → **`skills/spike`**
