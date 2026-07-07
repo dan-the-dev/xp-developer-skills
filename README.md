@@ -323,16 +323,16 @@ Especially around:
 - [x] `tdd` (first draft)  
   Apply strict Test-Driven Development using micro-iterations, fast feedback and disciplined commit flows.
 
-- [ ] `atdd`  
+- [x] `atdd`  
   Transform acceptance criteria into executable acceptance tests using outside-in development.
 
-- [ ] `refactoring`  
+- [x] `refactoring`  
   Perform safe incremental refactoring inspired by Martin Fowler’s refactoring methodology.
 
-- [ ] `add-tests-to-legacy-code`  
+- [x] `add-tests-to-legacy-code`  
   Safely introduce characterization tests, protection tests and others "outside" tests into legacy systems before modifications.
 
-- [ ] `feature-development`  
+- [x] `feature-development`  
   Orchestrate full feature implementation workflows across testing, validation and delivery systems.
 
 ---
@@ -383,12 +383,19 @@ Especially around:
 
 - [x] Initial skill architecture
 - [x] Bugfix skill
-- [ ] Refactoring skill
-- [ ] TDD skill
-- [ ] Legacy code testing skill
-- [ ] AI DevLoop draft
+- [x] Refactoring skill
+- [x] TDD skill
+- [x] Legacy code testing skill
+- [x] AI DevLoop draft
 - [ ] Manifesto website
 
+---
+
+## Improvement TODO
+
+- [ ] (Bugfix skill): sometimes it doesn't create the branch and commit on it
+- [ ] (New increment skill): sometimes it doesn't commit changes - I want every increment to be a checkpoint step
+      
 ---
 
 ## 📜 License
