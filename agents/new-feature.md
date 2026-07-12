@@ -15,6 +15,7 @@ You **plan** a whole feature — you **do not** implement increments in this sub
 **Required:**
 
 - **`<AMPD-root>/docs/delivery-process.md`** — role boundaries (§1), handoff (§10)
+- **`<AMPD-root>/docs/test-strategy-selection.md`** — note expected test layers per increment line when planning
 - **`<AMPD-root>/skills/new-feature/SKILL.md`**
 
 ---
@@ -70,4 +71,4 @@ Per **`<AMPD-root>/docs/delivery-process.md`** §10 (planning role):
 - Subagent invoked: yes/no
 - Note if user must run `/new-increment` manually
 
-**Do not** claim the feature is done until every line is `[x]` from **new-increment** runs (each with full project verification).
+**Do not** claim the feature is done until every line is `[x]` from **new-increment** runs (each with full project verification per **`<AMPD-root>/docs/project-verification.md`**).

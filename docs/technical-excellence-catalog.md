@@ -134,7 +134,7 @@ RELEASE STAGE
 | Practice | Family | Verify / automate | Examples | AMPD |
 |----------|--------|-------------------|----------|------|
 | Unit tests (TDD) | Isolated | Fast suite every commit | JUnit, pytest, Vitest | Covered |
-| Component tests (UI) | Isolated | Isolated render + behavior; commit stage | Testing Library, Vitest | Gap |
+| Component tests (UI) | Isolated | Isolated render + behavior; commit stage | Testing Library, Vitest | Partial |
 | Narrow in-process integration | Isolated | Real DB/broker in-process or Testcontainers within PR budget | Testcontainers | Partial |
 | Storybook catalog build | Isolated | Stories compile in CI | Storybook, Ladle | Gap |
 | Storybook interaction tests | Isolated | Interaction runner in CI | Storybook Test Runner | Gap |
@@ -151,8 +151,8 @@ RELEASE STAGE
 | Full vs smoke split | — | PR runs smoke; main/nightly runs full interactive | CI workflow branches | Partial |
 | External system contract tests | Interactive | Third-party sandbox suite in acceptance stage | Vendor sandbox | Gap |
 | Characterization / approval tests | Isolated | Golden output; legacy harness | ApprovalTests | Covered |
-| Property-based tests | Isolated | Generative tests in commit stage | fast-check, Hypothesis | Gap |
-| Mutation testing | Isolated | Mutation score gate (optional) | Stryker, PIT | Gap |
+| Property-based tests | Isolated | Generative tests in commit stage | fast-check, Hypothesis | Partial |
+| Mutation testing | Isolated | Mutation score gate (optional) | Stryker, PIT | Partial |
 | Snapshot tests | Isolated | Reviewed snapshots in CI | Jest snapshots | Gap |
 | Application visual regression | Interactive | Screenshot compare on key pages post-deploy | Playwright screenshots | Gap |
 | HTTP mocking | Isolated | Stable tests without live vendor in commit | MSW, WireMock | Gap |
@@ -184,9 +184,9 @@ RELEASE STAGE
 | Refactor with green suite | Isolated | Verify after each mechanical step | `skills/refactoring` | Covered |
 | Two hats (behavior vs structure) | — | Separate commits/PRs; skill boundary | delivery-process §7 | Covered |
 | Formatter enforced | — | Format check in commit stage | Prettier, rustfmt | Partial |
-| Linter enforced | — | Lint fails commit stage | ESLint, Ruff, clippy | Partial |
-| Static analysis platform gate | — | Quality gate in commit stage | SonarQube, CodeClimate | Gap |
-| Typechecker gate | — | Types fail commit stage | tsc, mypy, pyright | Partial |
+| Linter enforced | — | Lint fails commit stage | ESLint, Ruff, clippy | Covered |
+| Static analysis platform gate | — | Quality gate in commit stage | SonarQube, CodeClimate | Covered |
+| Typechecker gate | — | Types fail commit stage | tsc, mypy, pyright | Covered |
 | Import / architecture rules | — | Forbidden import fails build | deptrac, ArchUnit | Gap |
 | Complexity limits | — | Cognitive complexity over threshold fails | Sonar rule, ESLint | Gap |
 | Duplicate detection | — | Duplication over threshold fails | jscpd | Gap |
@@ -202,7 +202,7 @@ RELEASE STAGE
 | Practice | Family | Verify / automate | Examples | AMPD |
 |----------|--------|-------------------|----------|------|
 | Continuous integration | — | Every PR runs applicable verify steps | CI on PR | Covered |
-| Full project verify | — | All project-defined steps, not tests-only | delivery-process §2 | Covered |
+| Full project verify | — | All project-defined steps, not tests-only | delivery-process §2, project-verification.md | Covered |
 | Commit stage pipeline | — | Isolated gates + artifact publish | See pipeline reference | Gap |
 | Acceptance stage pipeline | — | Deploy acceptance env → interactive gates → promote | Staged workflow | Gap |
 | Release stage pipeline | — | Deploy QA → production | Release workflow | Gap |
@@ -361,7 +361,7 @@ Separate **drivers**, **channels**, and **DSL** so acceptance code stays maintai
 
 | Catalog area | Today | Roadmap / gap |
 |--------------|--------|----------------|
-| A, B (partial), C, D (partial), M | `skills/atdd`, `tdd`, `bugfix`, `legacy-testing`, `refactoring`, `new-increment`, `delivery-process.md` | Disabled acceptance test, pilot charter, pipeline stages |
+| A, B (partial), C, D (partial), M | `skills/atdd`, `tdd`, `bugfix`, `legacy-testing`, `refactoring`, `new-increment`, `delivery-process.md`, `test-strategy-selection.md` | Disabled acceptance test, pilot charter, pipeline stages |
 | P, E (stages) | — | Commit / acceptance / release modeling; `ephemeral-environments` |
 | H (design–code) | — | Token sync, Code Connect |
 | J, L | — | `setup-observability`, product metrics, feature flags |
@@ -373,4 +373,5 @@ Separate **drivers**, **channels**, and **DSL** so acceptance code stays maintai
 
 | Date | Change |
 |------|--------|
+| 2026-07-12 | Test strategy selection guide; mutation/property-based/component selection rules |
 | 2026-05-28 | Initial catalog: isolated vs interactive taxonomy, pipeline stages, workshop ATDD practices, full practice tables |

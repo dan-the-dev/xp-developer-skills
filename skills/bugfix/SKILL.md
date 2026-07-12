@@ -8,7 +8,7 @@ allowed-tools: Read, Edit, MultiEdit, Bash, Grep, Glob
 
 ## Mission
 
-Shared delivery rules at boundaries: [`docs/delivery-process.md`](../../docs/delivery-process.md) (§2 verification, §3 change-surface, §7 two hats).
+Shared delivery rules at boundaries: [`docs/delivery-process.md`](../../docs/delivery-process.md) (§2 verification, §3 change-surface, §4 test strategy, §7 two hats) and [`docs/project-verification.md`](../../docs/project-verification.md), [`docs/test-strategy-selection.md`](../../docs/test-strategy-selection.md).
 
 Fix bugs safely using a strict RED → GREEN workflow.
 
@@ -139,6 +139,7 @@ The agent should automatically generate a meaningful short description derived f
 
 Before writing code:
 
+- complete a brief **test strategy** note per [`test-strategy-selection.md`](../../docs/test-strategy-selection.md) — e.g. will mutation run after GREEN if configured and logic is branchy?
 - identify observed behavior
 - identify expected behavior
 - identify affected scope
@@ -244,6 +245,7 @@ Run progressively:
 1. focused tests
 2. related module/package tests
 3. broader suites if needed
+4. **all applicable project verify steps** at bugfix boundary — lint, format, typecheck, SonarQube/static analysis when configured, **mutation if adopted** ([`docs/project-verification.md`](../../docs/project-verification.md), [`docs/test-strategy-selection.md`](../../docs/test-strategy-selection.md))
 
 Verify:
 
@@ -335,7 +337,9 @@ Never:
 
 ## Verification Strategy
 
-**Discover** all verify steps the **current project** defines for the language/module you touched — then run **each applicable step** before claiming done (delivery-process §2). Do not stop after only the test runner if the project defines compile, typecheck, lint, integration, or other gates.
+**Discover** all verify steps the **current project** defines for the language/module you touched — then run **each applicable step** before claiming done (delivery-process §2; [`docs/project-verification.md`](../../docs/project-verification.md)). Do not stop after only the test runner if the project defines compile, typecheck, lint, format, SonarQube/static analysis, integration, or other gates.
+
+**Fix new violations** you introduced — do not suppress lint or Sonar rules to force green.
 
 Prefer incremental validation **within** that set:
 
@@ -357,6 +361,7 @@ A bugfix is complete only when:
 - minimal fix applied (restores the contract; not a symptom-only silencing)
 - GREEN state confirmed
 - **all applicable project verify steps** for this scope passed
+- **test strategy table** in output (practices evaluated → adopt/skip)
 - change-surface complete if construction/import/API changed
 - related regressions checked
 - two isolated commits exist
@@ -398,6 +403,7 @@ Invariant / contract (one line):
 - Commands executed
 - Scope validated
 - Regression status
+- Test strategy (mutation, integration, etc.): adopted / skipped with reason
 
 5. Git
 - RED commit

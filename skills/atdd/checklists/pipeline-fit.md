@@ -41,3 +41,4 @@ Answer **before** Distill. Pick the **highest** layer that still meets trust and
 2. **API acceptance** for backend-heavy stories.
 3. **One thin E2E** per capability when UI matters — not per field validation.
 4. **Unit TDD** for algorithms and branches — compose with `skills/tdd`.
+5. **Mutation / property-based** when configured and slice warrants it — see [`test-strategy-selection.md`](../../../docs/test-strategy-selection.md); not a substitute for outer layer choice above.

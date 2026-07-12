@@ -22,7 +22,7 @@ Shared delivery rules: [`docs/delivery-process.md`](../../docs/delivery-process.
 
 1. Clarify capability and whole-feature definition of done.
 2. If feasibility unknown → **`skills/spike`** on `spike/…` branch; promote before slicing.
-3. Write **ordered** increment lines in `increments/<stem>.md` (all `[ ]` initially).
+3. Write **ordered** increment lines in `increments/<stem>.md` (all `[ ]` initially). Optionally note **expected test layers** per line (see [`test-strategy-selection.md`](../../docs/test-strategy-selection.md) §2) — e.g. “mutation likely”, “contract at boundary”.
 4. **Stop.** Hand off the **first** open line to **`skills/new-increment`** (subagent or new chat).
 5. After each increment completes elsewhere, repeat planning-only check: next open line → hand off again.
 

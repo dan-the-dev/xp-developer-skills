@@ -13,6 +13,8 @@ model: inherit
 **Required reading:**
 
 - **`<AMPD-root>/docs/delivery-process.md`** — verification, roles, change-surface, return payload
+- **`<AMPD-root>/docs/project-verification.md`** — re-verify after every code change; lint, format, SonarQube, and all project gates before done
+- **`<AMPD-root>/docs/test-strategy-selection.md`** — evaluate catalog practices (mutation, contract, property-based, etc.) before first RED; adopt only when useful
 - **`<AMPD-root>/skills/new-increment/SKILL.md`**
 - **`<AMPD-root>/skills/tdd/SKILL.md`** — always for implementation
 - **`<AMPD-root>/skills/atdd/SKILL.md`** — only when a real outer seam exists
@@ -34,14 +36,20 @@ You deliver **one** releasable increment — not the whole feature.
 
 ### Before claiming done (mandatory)
 
-1. **Discover** all verify steps the **current project** defines for the **language/module** you touched — not only the test runner.
-2. **Run each applicable step**; report pass/fail per step.
-3. If construction/import/API changed, **search the scope** and update every obsolete call site.
-4. Deliver **return payload** per delivery-process §10.
+Per **`<AMPD-root>/docs/project-verification.md`** and delivery-process §2:
+
+1. **During work:** after every meaningful code change, re-run affected tests (and scoped lint if available).
+2. **Discover** all verify steps the **current project** defines — tests, build, typecheck, **lint**, **format**, **SonarQube**/static analysis, and any other CI gates.
+3. **Run each applicable step** at slice boundary; report pass/fail per step.
+4. **Fix new violations** you introduced — do not leave lint warnings, Sonar issues, or quality-gate failures for your change.
+5. If construction/import/API changed, **search the scope** and update every obsolete call site.
+6. Deliver **return payload** per delivery-process §10.
 
 ### Forbidden
 
-- Done after only one verify step when the project defines more
+- Done after only one verify step when the project defines more (including lint or Sonar)
+- Skipping re-verify after a refactor or production edit because tests were green earlier
+- Suppressing lint/sonar rules instead of fixing code
 - Markdown `[x]` before linked checks exist and pass
 - Multiple backlog `[x]` without explicit user batch opt-in
 - Circular oracles; duplicate pyramid layers
@@ -51,11 +59,12 @@ You deliver **one** releasable increment — not the whole feature.
 ## Your job
 
 1. Take **one** open `[ ]` line from **`increments/<feature-stem>.md`**.
-2. Choose TDD-only vs ATDD+TDD per scoped reference.
-3. RED → GREEN → REFACTOR per behavior; update test list honestly.
-4. Mark parent line `[x]` with links.
-5. Run **all applicable project verify steps**; fix or report out-of-scope failures.
-6. **Stop** with handoff (next open line — do not implement).
+2. **Test strategy** — per **`test-strategy-selection.md`**: discover configured jobs; complete adopt/skip table **before first RED** ([checklist](../skills/new-increment/checklists/test-strategy.md)).
+3. Choose TDD-only vs ATDD+TDD per scoped reference.
+4. RED → GREEN → REFACTOR per behavior; run **adopted** practices (e.g. mutation, integration) at slice boundary.
+5. Mark parent line `[x]` with links.
+6. Run **all applicable project verify steps**; fix or report out-of-scope failures.
+7. **Stop** with handoff (next open line — do not implement).
 
 **Prep:** legacy-testing (invalid harness), refactoring, spike — then resume.
 
@@ -63,4 +72,4 @@ You deliver **one** releasable increment — not the whole feature.
 
 ## Return payload
 
-Per **`<AMPD-root>/docs/delivery-process.md`** §10: role, single backlog line, **verification table**, RED count, layers, change-surface search, handoff.
+Per **`<AMPD-root>/docs/delivery-process.md`** §10: role, single backlog line, **verification table**, **test strategy table**, RED count, layers, change-surface search, handoff.

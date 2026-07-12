@@ -22,17 +22,27 @@ Language- and project-agnostic rules for AMPD delivery skills and subagents. Com
 
 ## 2. Project verification (definition of done)
 
-Before claiming a slice is **complete**:
+Full guide: [`project-verification.md`](project-verification.md).
 
-1. **Discover** what this project defines as verification for the **current language / module / track** you touched — scripts, Makefile targets, CI jobs, documented commands, or equivalent. Inspect README, contribution guides, CI config, and existing tooling; do not assume a single command.
-2. **Run every applicable verify step** for that scope — not only the fastest or most familiar runner.
-3. **Report** each command run and pass or fail.
+### During work (every code change)
 
-**Principle:** One green signal (e.g. only the test runner) is not equivalent to “the project verifies” when the project defines additional steps (compile, typecheck, lint, integration, packaging, etc.).
+After **each meaningful edit** (RED/GREEN/REFACTOR step, bugfix change, refactor mechanical step, harness addition):
+
+1. Re-run the **narrowest applicable checks** — at minimum **affected automated tests**.
+2. If a step fails, **fix or revert** before continuing; do not stack edits on a broken baseline.
+
+### Before claiming a slice complete
+
+1. **Discover** what this project defines as verification for the **current language / module / track** you touched — scripts, Makefile targets, CI jobs, documented commands, or equivalent. Inspect README, contribution guides, CI config, Sonar/static-analysis config, and existing tooling; do not assume a single command.
+2. **Run every applicable verify step** for that scope — not only the fastest or most familiar runner. This includes, when the project defines them: **tests**, **build/compile**, **typecheck**, **lint**, **format**, and **code quality platforms** (e.g. SonarQube, SonarCloud, CodeClimate).
+3. **Fix violations you introduced** — leave lint, static analysis, and quality gates **without new warnings or errors** attributable to your change.
+4. **Report** each command run and pass or fail (verification table).
+
+**Principle:** One green signal (e.g. only the test runner) is not equivalent to “the project verifies” when the project defines additional steps (compile, typecheck, lint, integration, Sonar, packaging, etc.).
 
 **Pre-existing failures:** If verification fails on debt **outside** your slice, state that explicitly with evidence. Do not imply the slice is done.
 
-**Anti-pattern:** Declaring done after a subset of verify steps when the project defines more.
+**Anti-pattern:** Declaring done after a subset of verify steps when the project defines more; skipping re-verify after a refactor step; suppressing lint/sonar rules instead of fixing code.
 
 ---
 
@@ -47,14 +57,22 @@ When a change alters how something is **constructed, imported, or named** (facto
 
 ---
 
-## 4. Test pyramid (one layer per concern)
+## 4. Test pyramid and strategy (one layer per concern)
 
-For a slice, use the **lowest sufficient** automated layer:
+Full guide: [`test-strategy-selection.md`](test-strategy-selection.md).
+
+For a slice, use the **lowest sufficient** automated layer — but **do not default to unit TDD only** without evaluating other practices the project configures or the slice warrants (integration, contract, component, property-based, **mutation**, etc.).
+
+**Before first RED:** complete a brief **test strategy decision** (adopt / skip with reason per relevant practice). Record in the return payload (§10).
+
+Rules:
 
 - If the same behavior would be asserted twice at the **same** boundary, use **one** layer.
-- Add a higher layer only when it proves something the lower layer cannot (real outer seam: UI, HTTP API, contract, deployable path).
+- Add a higher layer or specialized technique only when it proves something the lower layer cannot (real outer seam, silent wiring failure, weak test confidence, invariant over many inputs).
+- If the project **already runs** mutation, contract, component, or a11y jobs in CI, **strong bias to use them** when the slice matches — do not ignore configured gates.
+- Do **not** introduce heavy new tooling mid-slice without user opt-in when the repo has none.
 
-**Anti-pattern:** Duplicate checks at the same layer plus markdown that only restates them.
+**Anti-pattern:** Unit tests only with no documented consideration of catalog alternatives; mutation/contract/component configured but never run; duplicate checks at the same layer plus markdown that only restates them.
 
 ---
 
@@ -127,8 +145,9 @@ End every delivery invocation with a short factual report:
 | **Role completed** | planning \| one increment \| harness \| refactor \| fix |
 | **Backlog** | Which line marked complete (if increment) — **at most one** |
 | **Verification** | Each project verify step run → pass/fail |
+| **Test strategy** | Practices evaluated → adopt or skip with reason ([`test-strategy-selection.md`](test-strategy-selection.md) §6) |
 | **RED cycles** | Count per behavior, or batch mode noted |
-| **Layers** | e.g. inner tests only \| outer + inner |
+| **Layers** | e.g. unit + mutation \| API acceptance + inner TDD \| characterization only |
 | **Change-surface** | Search performed yes/no; what was updated |
 | **Handoff** | Next open backlog line — **do not implement** |
 
@@ -139,9 +158,10 @@ End every delivery invocation with a short factual report:
 | Skill | Uses especially |
 |-------|-----------------|
 | `new-feature` | §1 planning stop, §10 handoff |
-| `new-increment` | §1–3, §5–6, §10 |
-| `legacy-testing` | §8 |
-| `refactoring` | §7, §9, §2 at session end |
-| `tdd` | §6 |
-| `atdd` | §4 |
+| `new-increment` | §1–3, §5–6, §10; [`project-verification.md`](project-verification.md); [`test-strategy-selection.md`](test-strategy-selection.md) |
+| `legacy-testing` | §8; [`project-verification.md`](project-verification.md); [`test-strategy-selection.md`](test-strategy-selection.md) |
+| `refactoring` | §7, §9, §2 at session end; [`project-verification.md`](project-verification.md) |
+| `tdd` | §6; [`project-verification.md`](project-verification.md); [`test-strategy-selection.md`](test-strategy-selection.md) |
+| `atdd` | §4; [`project-verification.md`](project-verification.md); [`test-strategy-selection.md`](test-strategy-selection.md) |
+| `bugfix` | §2, §3, §7; [`project-verification.md`](project-verification.md); [`test-strategy-selection.md`](test-strategy-selection.md) |
 | `legacy-refactor` (agent) | §1, §7–9, §2 |

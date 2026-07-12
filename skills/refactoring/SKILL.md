@@ -65,7 +65,7 @@ Do **not** swap hats mid-commit. If you need both, **finish** one slice (includi
 
 ## Workflow (language-agnostic)
 
-Shared delivery rules: [`docs/delivery-process.md`](../../docs/delivery-process.md) (§7 two hats, §9 step size, §2 verification).
+Shared delivery rules: [`docs/delivery-process.md`](../../docs/delivery-process.md) (§7 two hats, §9 step size, §2 verification) and [`docs/project-verification.md`](../../docs/project-verification.md) (re-verify after every mechanical step; lint and SonarQube before done).
 
 1. **Goal** — one sentence: *what* will be easier after this (e.g. “extract pricing so policies are isolated”).
 2. **Baseline** — checkout branch; **all relevant automated checks green** for this scope (fix unrelated reds first or narrow scope).
@@ -74,6 +74,7 @@ Shared delivery rules: [`docs/delivery-process.md`](../../docs/delivery-process.
    - pick the **smallest** next mechanical step
    - apply it
    - run **narrowest** meaningful tests → then widen for shared code
+   - if scoped lint exists for touched files, run it after structural edits
    - if **red**: **revert** step; shrink; retry ([references/baby-steps-and-revert.md](references/baby-steps-and-revert.md))
 5. **Commit** — `refactor: …` (or team convention); message describes **structure**, not new capability.
 6. **Integrate** — small, green changes merge often when using CD / trunk-based flow ([references/continuous-delivery-discipline.md](references/continuous-delivery-discipline.md)).
@@ -106,7 +107,7 @@ Full list: [references/anti-patterns.md](references/anti-patterns.md).
 ## Definition of done (session)
 
 - Stated goal achieved or **explicitly** reduced with follow-up note
-- **All applicable project verify steps** for this scope run and passed ([`docs/delivery-process.md`](../../docs/delivery-process.md) §2)
+- **All applicable project verify steps** for this scope run and passed ([`docs/delivery-process.md`](../../docs/delivery-process.md) §2; [`docs/project-verification.md`](../../docs/project-verification.md)) — including lint, format, typecheck, SonarQube/static analysis when configured
 - **All** exercised automated checks green after final mechanical step
 - Change-surface complete if moved/renamed APIs (§3)
 - Commits are **refactor-only** (or documented hat-switch)

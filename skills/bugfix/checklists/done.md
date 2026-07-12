@@ -45,7 +45,8 @@ A bugfix is complete only if ALL items are satisfied.
 - [ ] Failing test now passes **without** weakened assertions
 - [ ] Related regressions checked
 - [ ] Validation executed incrementally
-- [ ] **All applicable project verify steps** for this scope run and passed ([`docs/delivery-process.md`](../../../docs/delivery-process.md) §2)
+- [ ] **All applicable project verify steps** for this scope run and passed ([`docs/delivery-process.md`](../../../docs/delivery-process.md) §2; [`docs/project-verification.md`](../../../docs/project-verification.md)) — tests, lint, format, typecheck, SonarQube/static analysis when configured
+- [ ] No **new** lint/sonar/quality violations introduced by this fix
 - [ ] Change-surface search done if fix touched construction/import/API (§3)
 - [ ] No flaky behavior observed
 

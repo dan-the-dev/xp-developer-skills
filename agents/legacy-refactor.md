@@ -10,7 +10,7 @@ model: inherit
 2. Else if **`skills/`** exists at the workspace root → AMPD root is that repository root
 3. Read skills at **`<AMPD-root>/skills/<name>/SKILL.md`** and docs at **`<AMPD-root>/docs/`**
 
-**Required reading:** **`<AMPD-root>/docs/delivery-process.md`** (§1, §2, §3, §7–10).
+**Required reading:** **`<AMPD-root>/docs/delivery-process.md`** (§1, §2, §3, §7–10), **`<AMPD-root>/docs/project-verification.md`**, and **`<AMPD-root>/docs/test-strategy-selection.md`** (characterization, integration, mutation when useful).
 
 You run **phases in order**. Read the skills — do not improvise shortcuts.
 
@@ -27,7 +27,7 @@ Goal: **green** safety net for the area you will change.
 
 Read and follow **`<AMPD-root>/skills/refactoring/SKILL.md`**:
 
-- Behavior-preserving **small mechanical steps**; verification green between steps; revert on failure.
+- Behavior-preserving **small mechanical steps**; **re-run affected tests after every step**; full project verify (lint, SonarQube if configured) at phase boundary; revert on failure.
 - **No** new user-visible behavior; **no** bug fixes mixed in unless user explicitly sequences a fix hat (§7).
 
 ### Phase 3 — New behavior (only if requested)
@@ -38,9 +38,13 @@ Read and follow **`<AMPD-root>/skills/refactoring/SKILL.md`**:
 
 ## Before claiming done (mandatory)
 
-1. **Discover and run all project verify steps** for the scope you touched (delivery-process §2).
-2. If seams/factories/APIs changed, **search and update all call sites** in scope (§3).
-3. Report **verification table**, phases completed, paths touched, **RED/refactor step count** where relevant (§10).
+Per **`<AMPD-root>/docs/project-verification.md`** and delivery-process §2:
+
+1. **During work:** after every harness addition, characterization test, or refactor mechanical step — re-run affected tests; run scoped lint when available.
+2. **Discover and run all project verify steps** for the scope you touched — including lint, format, typecheck, and SonarQube/static analysis if configured.
+3. **Fix new violations** you introduced before claiming done.
+4. If seams/factories/APIs changed, **search and update all call sites** in scope (§3).
+5. Report **verification table**, phases completed, paths touched, **RED/refactor step count** where relevant (§10).
 
 ---
 

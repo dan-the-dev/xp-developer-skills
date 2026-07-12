@@ -2,13 +2,18 @@
 
 Pick **one** outer/inner strategy for this backlog line. Do not stack duplicate layers.
 
+**Before choosing:** complete the test strategy decision in [`docs/test-strategy-selection.md`](../../../docs/test-strategy-selection.md) — unit TDD is the default **inner** loop, not the only practice to evaluate (mutation, property-based, integration, contract, component, etc.).
+
 ---
 
 ## Decision (pick one row)
 
 | Backlog slice looks like… | Use | Artifacts |
 |---------------------------|-----|-----------|
-| Domain logic, class, kata, in-process module | **TDD only** | `test-lists/<feature-stem>.md` (§ this increment) + unit tests |
+| Domain logic, class, kata, in-process module | **TDD only** (+ consider mutation/property if configured) | `test-lists/<feature-stem>.md` (§ this increment) + unit tests |
+| Branchy/critical rules (pricing, auth, validation) | **TDD + mutation** if project configures it | Unit tests + mutation run on touched scope |
+| Invariants / parsers / serializers | **TDD + property-based** when rules exceed fixed examples | Unit + property tests |
+| DB/repository wiring | **TDD + narrow integration** | Unit at seam + integration if project uses Testcontainers/DB tests |
 | API/HTTP/CLI user-visible contract | **ATDD + TDD** | `acceptance-examples/<feature-stem>.md` (§ slice) + acceptance tests at boundary + TDD inside |
 | UI journey | **ATDD + TDD** | Catalog + UI/contract tests + TDD |
 | Feasibility unknown | **`skills/spike`** first | Promote, then return here |

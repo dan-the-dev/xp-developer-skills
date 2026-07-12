@@ -31,7 +31,13 @@ Suggested reading order for humans and AI agents:
     Understand how the framework is structured conceptually.
 4. roadmap.md
     Explore the current implementation roadmap and planned skills.
-5. technical-excellence-catalog.md
+5. delivery-process.md
+    Shared delivery rules — verification, roles, RED→GREEN, return payload.
+6. project-verification.md
+    Tests, lint, format, SonarQube, and all project gates after every code change.
+7. test-strategy-selection.md
+    Which test layers and techniques to adopt per slice (mutation, contract, property-based, integration, etc.).
+8. technical-excellence-catalog.md
     Inventory of verifiable practices AMPD aims to enable and amplify (pipeline stages, test families, AMPD status).
 
 ⸻

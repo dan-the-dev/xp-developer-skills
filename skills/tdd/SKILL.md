@@ -8,7 +8,7 @@ allowed-tools: Read, Edit, MultiEdit, Bash, Grep, Glob
 
 ## Mission
 
-Shared delivery rules at slice boundaries: [`docs/delivery-process.md`](../../docs/delivery-process.md) (§2 verification, §3 change-surface, §6 RED→GREEN).
+Shared delivery rules at slice boundaries: [`docs/delivery-process.md`](../../docs/delivery-process.md) (§2 verification, §3 change-surface, §4 test strategy, §6 RED→GREEN), [`docs/project-verification.md`](../../docs/project-verification.md), and [`docs/test-strategy-selection.md`](../../docs/test-strategy-selection.md).
 
 Turn requirements into **concrete automated examples** before production code exists: each example is a **small** failing test, then the smallest code that passes, then structure improvements **without** changing behavior.
 
@@ -28,7 +28,7 @@ Optimize for:
 - **deterministic** tests and **stable seams** (see behavior reference)
 - **refactors scoped** to code near the current change
 
-This skill covers **only** the **inner** unit-level TDD loop. It does **not** specify acceptance-test (outer-loop) workflows, **legacy code without tests**, branching policy, CI, bugfix-only rules, or **time-boxed experiments** — compose with other skills for those (e.g. `skills/atdd`, `skills/spike` on an isolated `spike/` branch before delivery, `skills/refactoring` for stand-alone Fowler-style refactor sessions, `skills/legacy-testing` for Feathers-style harness and characterization).
+This skill covers the **inner** unit-level TDD loop. **Before first RED**, evaluate other practices per [`test-strategy-selection.md`](../../docs/test-strategy-selection.md) (mutation, property-based, narrow integration). It does **not** specify acceptance-test (outer-loop) workflows, **legacy code without tests**, branching policy, CI, bugfix-only rules, or **time-boxed experiments** — compose with other skills for those (e.g. `skills/atdd`, `skills/spike` on an isolated `spike/` branch before delivery, `skills/refactoring` for stand-alone Fowler-style refactor sessions, `skills/legacy-testing` for Feathers-style harness and characterization).
 
 ---
 
@@ -122,6 +122,8 @@ If refactoring breaks a test without changing behavior, the test was **implement
 - If a test is hard to write, **shrink** the example or treat it as a coupling smell (see behavior reference).
 - After RED, run tests and confirm failure for the **intended** reason (or the narrowest signal the runner gives) — not a timeout, order flake, or missing fixture (see [references/behavior-and-tests.md](references/behavior-and-tests.md)).
 - After GREEN, run the same scope and confirm **pass**.
+- After **each** REFACTOR micro-step, re-run the same scope (see REFACTOR section).
+- At **slice boundary**, run **all applicable project verify steps** — lint, format, typecheck, SonarQube/static analysis when configured, plus **adopted test-strategy practices** (mutation, property-based, integration) ([`docs/project-verification.md`](../../docs/project-verification.md), [`docs/test-strategy-selection.md`](../../docs/test-strategy-selection.md)).
 - From RED to GREEN, use **fake it**, **obvious implementation**, or **triangulation** as appropriate (see [references/micro-iterations.md](references/micro-iterations.md)).
 
 ---
@@ -224,7 +226,7 @@ This preserves local narrative during development and **reviewer-friendly** hist
 - Test list **file** exists at `<repo-relative-path>.md` **before** first RED and was updated throughout.
 - **Cases**: behavior-only lines; each `[x]` includes a **test reference** and passing tests; each remaining `[ ]` at end of slice is a **blocker** — either implement, move to **Deferred behavior** with closure plan, or move to **Removed** with reason (see [references/test-list.md](references/test-list.md)).
 - **Deferred behavior** / **Removed** sections: no silent scope or vague deferred rows at slice end.
-- **All applicable project verify steps** for this scope run and passed ([`docs/delivery-process.md`](../../docs/delivery-process.md) §2) — not only the test runner.
+- **All applicable project verify steps** for this scope run and passed ([`docs/delivery-process.md`](../../docs/delivery-process.md) §2; [`docs/project-verification.md`](../../docs/project-verification.md)) — tests, lint, format, typecheck, SonarQube/static analysis when configured; not only the test runner.
 - Change-surface complete if construction/import/API changed (§3).
 - Suite green; no undeclared extra behavior.
 - Deferred refactors (e.g. skipped for proximity) recorded in **`<stem>-follow-ups.md`** or listed in the **final user reply**, not in the test list.

@@ -76,13 +76,15 @@ More: [references/aligned-practices.md](references/aligned-practices.md).
 
 ## Language-agnostic execution
 
-Shared delivery rules: [`docs/delivery-process.md`](../../docs/delivery-process.md) (especially §8 harness, §2 verification, §3 change-surface).
+Shared delivery rules: [`docs/delivery-process.md`](../../docs/delivery-process.md) (especially §8 harness, §2 verification, §3 change-surface) and [`docs/project-verification.md`](../../docs/project-verification.md).
 
 Inspect the repo for:
 
 - test runner, module layout, DI patterns, build/link seams
-- **all verify steps** the project defines for the current language/module — not only the test runner
+- **all verify steps** the project defines — tests, lint, **mutation**, **property-based**, contract, component, integration; not only the test runner
 - existing “golden” or snapshot tests (possibly abuse-prone — use thoughtfully)
+
+**Test strategy:** Before adding tests, evaluate practices per [`test-strategy-selection.md`](../../docs/test-strategy-selection.md).
 
 Prefer **narrowest** tests that still **encode the legacy contract** you are about to touch.
 
@@ -115,7 +117,7 @@ Full list: [references/anti-patterns.md](references/anti-patterns.md).
 - Change point and test point documented (short note in PR or team doc folder if used)
 - Dependencies broken **only as much** as needed for the next test
 - Characterization (and/or bug) tests **green** on baseline
-- **All applicable project verify steps** for this scope run and passed ([`docs/delivery-process.md`](../../docs/delivery-process.md) §2)
+- **All applicable project verify steps** for this scope run and passed ([`docs/delivery-process.md`](../../docs/delivery-process.md) §2; [`docs/project-verification.md`](../../docs/project-verification.md))
 - Change-surface complete if seams/factories/APIs changed (§3)
 - Production change (if any) passes checks; refactor commits separate per `skills/refactoring`
 

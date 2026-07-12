@@ -34,6 +34,8 @@ This skill covers the **outer** acceptance loop. It does **not** replace unit TD
 
 **Who:** business representative, developer, and someone who thinks about quality (the “triad” / three amigos) — roles can be played by the same person on small teams.
 
+**Test strategy:** Before Distill, evaluate layers and specialized techniques per [`test-strategy-selection.md`](../../docs/test-strategy-selection.md) and [checklists/pipeline-fit.md](checklists/pipeline-fit.md) — contract vs API vs E2E; property-based or mutation only when they add evidence unit/acceptance cannot.
+
 **Output:** concrete **examples** with agreed **data**, **terminology**, and **boundaries** — not a long specification document.
 
 Practices:
@@ -173,6 +175,8 @@ Full list: [references/anti-patterns.md](references/anti-patterns.md).
 - Example catalog file exists and was maintained through the slice.
 - All **in-scope** examples `[x]` or documented under **Deferred** / **Removed**.
 - Acceptance suite (and unit suite, if composed) green.
+- **All applicable project verify steps** for this scope passed ([`docs/delivery-process.md`](../../docs/delivery-process.md) §2; [`docs/project-verification.md`](../../docs/project-verification.md)) — lint, format, typecheck, SonarQube/static analysis when configured.
+- **Test strategy table** delivered ([`docs/test-strategy-selection.md`](../../docs/test-strategy-selection.md) §6).
 - No undeclared business behavior shipped.
 
 Checklists: [checklists/story-readiness.md](checklists/story-readiness.md), [checklists/scenario-and-test-quality.md](checklists/scenario-and-test-quality.md), [checklists/pipeline-fit.md](checklists/pipeline-fit.md).

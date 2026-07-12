@@ -23,6 +23,8 @@ Location: **`agents/`** (symlinked at **`.claude/agents/`** for Claude Code). Cu
 
 - [`docs/manifesto.md`](docs/manifesto.md)
 - [`docs/delivery-process.md`](docs/delivery-process.md) — shared delivery rules (verification, roles, return payload)
+- [`docs/project-verification.md`](docs/project-verification.md) — tests, lint, format, SonarQube, and all project gates after every code change
+- [`docs/test-strategy-selection.md`](docs/test-strategy-selection.md) — which test layers and techniques to adopt per slice (mutation, contract, property-based, etc.)
 - [`docs/roadmap.md`](docs/roadmap.md)
 
 ## Install
