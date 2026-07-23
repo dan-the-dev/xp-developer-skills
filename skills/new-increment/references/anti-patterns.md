@@ -1,6 +1,6 @@
 # Anti-patterns
 
-- Two or more parent backlog `[x]` in one invocation without explicit user “implement all increments”
+- Two or more parent backlog `[x]` in one invocation (even when `new-feature` is in automatic mode — that agent continues; you still stop)
 - **Duplicate pyramid** — acceptance and unit tests with the same assertions on the same in-process API
 - **Per-increment markdown sprawl** — `test-lists/fizz-for-three.md`, `acceptance-examples/buzz-for-five.md`, etc., when one feature file suffices
 - **Retrospective checklists** — `[x]` on markdown before failing tests existed
@@ -10,9 +10,13 @@
 - Run ATDD when no outer seam (library/kata in one package)
 - Forget to mark parent `increments/…` line `[x]`
 - **Circular oracle** — expected output computed only by calling production code under test for the same requirement
-- Continue to next increment without user ask
+- Continue to next increment from this skill (orchestration belongs to `new-feature`)
 - **Done after one verify step** when the project defines more (delivery-process §2; lint, SonarQube, etc.)
+- **Done with red tests** or unrun adopted practices (e.g. mutation adopted but never executed)
+- **Uncommitted done** — claiming complete with uncommitted slice work
 - **Unit-only default** without test strategy table ([`test-strategy-selection.md`](../../../docs/test-strategy-selection.md))
+- **Skipping mutation on greenfield** branchy domain with only “not configured” **when the introduce-tooling threshold is met**
+- **Forcing mutation tooling** into teaching/kata slices or when setup ≫ slice
 - **Ignoring configured CI jobs** (mutation, contract, component) when slice matches
 - **Skipping re-verify** after a production or refactor edit because tests were green earlier
 - Skipping **change-surface search** after factory/API/rename changes (§3)

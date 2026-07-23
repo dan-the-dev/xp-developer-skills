@@ -54,7 +54,7 @@ If you default to unit TDD only, you must **explicitly state** which catalog pra
 | **Contract / schema** | Published API or event promise to another team/system | Single deployable, no consumer | Pact, OpenAPI examples, buf, JSON Schema |
 | **Characterization** | Legacy behavior must be pinned before change | Greenfield with agreed examples | ApprovalTests, golden files |
 | **Property-based** | Invariants over many inputs; round-trip; algebraic laws | Few fixed examples fully specify behavior | fast-check, Hypothesis, jqwik |
-| **Mutation testing** | Branchy/critical logic; weak tests suspected; **project already runs mutation**; after bugfix on complex rules | Trivial CRUD; first slice before tests stabilize; not configured and setup > slice value | Stryker, PIT, cargo-mutants |
+| **Mutation testing** | Branchy/critical logic; weak tests suspected; **project already runs mutation**; after bugfix on complex rules; **greenfield domain** where rules have meaningful branches | Trivial CRUD; first walking-skeleton with no domain branches yet; brownfield with no tool and setup ≫ slice (follow-up) | Stryker, PIT, cargo-mutants |
 | **Snapshot / approval** | Stable structured output (JSON, HTML fragment) | Behavior better expressed as explicit assertions | Jest snapshots, ApprovalTests |
 | **Accessibility (automated)** | UI component or page in slice; a11y is acceptance criterion | No UI; project has no a11y tooling | axe-core, pa11y, Storybook a11y |
 | **Smoke (deploy)** | Slice touches deploy path, health, or env wiring | No deployable change | curl health, `@smoke` tag |
@@ -70,10 +70,32 @@ Mutation tests are **optional but must be considered** when:
 - The project defines a mutation job or config (`stryker.conf`, `pitest`, `cargo-mutants`, CI `mutation` job).
 - The slice adds or fixes **branch-heavy** logic (pricing, auth rules, validation matrices, state machines).
 - A bugfix passed unit tests but confidence in **test strength** is low.
+- **Greenfield / new system:** the first increment that introduces real domain branches — do **not** wait for the user to ask **when the threshold below is met**.
 
-**Action when adopted:** run the project’s mutation command (or scoped run on touched files); fix **surviving mutants** by strengthening tests or fixing code; report score or surviving count.
+**Introduce-tooling threshold (greenfield / new module):** add minimal mutation config in this slice only when characterization says adopt **and** estimated setup (config + script + first scoped run) is **≤ ~25%** of the slice effort. If setup would dominate, adopt the *practice intent* in the strategy table, note **follow-up** for tooling, and strengthen unit tests this slice instead.
 
-**Skip reason examples:** “no mutation tooling in repo”; “CRUD mapping only”; “first walking-skeleton increment”; “mutation job > PR time budget — deferred to nightly.”
+**Teaching / kata / demo slices:** skip with an explicit reason (e.g. “teaching slice — no mutation tooling”) is fine.
+
+**Action when adopted:**
+
+1. If tooling is missing and the threshold above is met, **add minimal project-native mutation config** in this increment (or the first branchy one), wire a script/CI-friendly command, then run it (prefer **scoped** to touched files).
+2. Run the project’s mutation command (or scoped run); fix **surviving mutants** by strengthening tests or fixing code; report score or surviving count.
+3. **Deferred survivors** are allowed if listed with reason (time budget / nightly) — do not mark mutation “adopt” and leave it unrun without that note.
+
+**Skip reason examples:** “CRUD mapping only”; “walking-skeleton / no domain branches yet”; “brownfield, no mutation tooling, setup ≫ slice — follow-up noted”; “setup > ~25% of slice — follow-up noted”; “teaching/kata slice — no mutation tooling”; “mutation job > PR time budget — deferred to nightly.”
+
+**Do not skip** with only “not configured” on a **new** system that already has branchy domain logic **and** meets the introduce-tooling threshold.
+
+### ATDD and Gherkin (explicit)
+
+| Situation | Prefer |
+|-----------|--------|
+| Real outer seam (HTTP, CLI, UI contract) in this slice | **ATDD** at that boundary + inner TDD ([`skills/atdd`](../skills/atdd/SKILL.md)) |
+| Same assertions would duplicate unit tests with no extra boundary | **TDD only** — skip ATDD |
+| Team/product already reviews `*.feature` / Cucumber | Gherkin as Distill format |
+| Solo / code-first team, no BA reading features | **Code-first** acceptance tests — do not invent Gherkin theater |
+
+Gherkin is a **format choice**, not a required layer. Record adopt/skip for “API/HTTP acceptance” and “In-process acceptance”; mention Gherkin only when Distill uses it.
 
 ### Property-based (explicit)
 
@@ -102,7 +124,8 @@ Still obey [delivery-process.md](delivery-process.md) §4:
 | Situation | Rule |
 |-----------|------|
 | Practice **configured** in repo/CI | **Strong bias to adopt** when slice characterization matches §2 |
-| Practice **not configured** | Do **not** introduce heavy new tooling mid-slice unless user opts in; note as **follow-up** in handoff |
+| Practice **not configured**, **greenfield** / new system / new module you scaffold | **Bias to introduce** minimal tooling when §2–3 say adopt **and** the introduce-tooling threshold is met (especially mutation for branchy domain, property-based for invariants). Add config + script in the adopting increment; run before marking done. If setup ≫ slice, note follow-up and strengthen lower layers this slice. |
+| Practice **not configured**, **brownfield** | Do **not** introduce heavy tooling mid-slice unless user opts in; note as **follow-up** in handoff |
 | Practice configured but **slow** | Scoped run (changed files only) or document deferral to nightly with reason |
 
 ---
@@ -116,25 +139,31 @@ Add to every delivery return payload (with §10):
 | Practice | Decision | Reason |
 |----------|----------|--------|
 | Unit TDD | adopt | inner loop for domain rules |
-| Mutation (Stryker) | adopt | project CI job; branchy pricing logic |
+| Mutation (Stryker) | adopt | greenfield branchy pricing; config added this slice |
 | Property-based | skip | fixed examples agreed in catalog |
+| API acceptance / ATDD | skip | no outer seam this slice |
+| Gherkin | skip | code-first acceptance if ATDD later |
 | Contract (Pact) | skip | no service boundary in this slice |
 | E2E | skip | API acceptance proves AC |
 ```
 
-List **every practice from §3 you evaluated** (at least 5 for non-trivial slices). **Adopt** rows must link to the automated check added or run.
+List **every practice from §3 you evaluated** (at least 5 for non-trivial slices; include **Mutation** and an **ATDD/acceptance** row). **Adopt** rows must link to the automated check added or run.
 
 ---
 
 ## 7. Anti-patterns
 
 - **Unit-only default** without documenting considered alternatives
+- **Skipping mutation on greenfield** branchy domain until the user asks **when the introduce-tooling threshold is met**
 - **Mutation everywhere** on CRUD or config-only slices
+- **Forcing mutation tooling** into teaching/kata slices or when setup clearly dominates the slice
 - **E2E for every story** when API or component layer suffices
 - **Ignoring configured CI jobs** (mutation, contract verify, component, a11y) that match the slice
-- **Adding new tooling** (Stryker, Pact) without user opt-in when repo has none
+- **Gherkin theater** — adding `*.feature` files no stakeholder reads while duplicating unit assertions
+- **Adding heavy brownfield tooling** without user opt-in when repo has none and setup ≫ slice
 - **Duplicate pyramid layers** — same assertion in unit and E2E
 - **Skipping characterization** on legacy when changing behavior without a harness
+- **Marking done with red tests** or unrun adopted practices (mutation adopted but never executed)
 
 ---
 
@@ -142,12 +171,13 @@ List **every practice from §3 you evaluated** (at least 5 for non-trivial slice
 
 | Consumer | Uses especially |
 |----------|-----------------|
-| `new-increment` | §1 before first RED; §6 in payload |
-| `new-feature` | §2 when writing increment lines (note expected layers per slice) |
+| `new-increment` | §1 before first RED; §5 greenfield introduce; §6 in payload; hard green gate |
+| `new-feature` | §2 when writing increment lines (note expected layers per slice, e.g. “mutation”, “ATDD at API”) |
 | `skills/tdd` | §3 unit + mutation/property when inner loop insufficient |
-| `skills/atdd` | §3 outer layers; compose with [pipeline-fit checklist](../skills/atdd/checklists/pipeline-fit.md) |
+| `skills/atdd` | §3 outer layers + Gherkin choice; compose with [pipeline-fit checklist](../skills/atdd/checklists/pipeline-fit.md) |
 | `skills/bugfix` | §3 mutation after repro on critical logic |
 | `skills/legacy-testing` | characterization + narrow integration |
+| `skills/refactoring` (post-increment review) | flag missing layers / weak tests in increment commits |
 | `pr-reviewer` | §6 — flag missing strategy table or ignored configured gates |
 
 See [technical-excellence-catalog.md](technical-excellence-catalog.md) §B for the full practice inventory.

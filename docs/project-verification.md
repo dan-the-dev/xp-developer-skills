@@ -9,7 +9,7 @@ Language- and project-agnostic rules for **every AMPD agent and skill that touch
 | Moment | Requirement |
 |--------|-------------|
 | **After every meaningful code change** | Re-run the **narrowest applicable checks** so you know you did not break what you just touched — at minimum the **affected automated tests** (RED/GREEN/REFACTOR step, bugfix edit, refactor mechanical step, harness addition). |
-| **Before claiming a slice complete** | **Discover and run every applicable verify step** the project defines for the language/module you touched — not only the test runner. |
+| **Before claiming a slice complete** | **Discover and run every applicable verify step** the project defines for the language/module you touched — not only the test runner. **Hard green gate:** do not claim done, mark backlog `[x]`, or hand off as complete while any applicable step is red. |
 | **After fixing a verify failure** | Re-run the **full applicable set** for the slice boundary, not only the step that failed. |
 
 **Principle:** Fast feedback during work; **complete** project gates at the boundary. Never declare done after a subset when the project defines more.
@@ -92,6 +92,10 @@ End every delivery invocation that touched code with a table like:
 
 Include **every step you ran**. Mark **skipped** only when genuinely not applicable to the scope, with a one-line reason.
 
+**Done means all applicable rows are `pass`.** A failing **applicable** row blocks the slice — fix or narrow scope; do not stop “for feedback” with a red in-scope suite while claiming the increment complete.
+
+**Applicable** = verify steps for the language/module/track you touched (and project gates that always run for that track). Pre-existing red on **out-of-scope** debt must be documented; it does **not** block marking the backlog line `[x]` once applicable steps are green — but do not imply the whole repo is clean. Failures in files you edited are applicable: fix them.
+
 ---
 
 ## 6. Pre-existing failures
@@ -99,7 +103,8 @@ Include **every step you ran**. Mark **skipped** only when genuinely not applica
 If verification fails on debt **outside** your slice:
 
 - State that explicitly with command output or issue ids.
-- Do **not** imply the slice is done.
+- Do **not** imply the **project** is fully green — say the **slice’s applicable gates** passed and list out-of-scope reds.
+- You **may** mark the backlog line `[x]` only when every **applicable** step is green and out-of-scope failures are called out in the verification table (`fail (pre-existing, out of scope)`).
 - Do **not** silently ignore lint/sonar failures you could have fixed in files you edited.
 
 ---
@@ -107,10 +112,12 @@ If verification fails on debt **outside** your slice:
 ## 7. Anti-patterns
 
 - Declaring done after **only** unit tests when CI also runs lint, typecheck, or Sonar
+- Declaring done (or marking `[x]`) while **any** applicable verify step is red
 - Skipping verify after a refactor step because “tests were green a minute ago”
 - Adding broad suppressions instead of fixing violations
 - Assuming no Sonar because you did not search for `sonar-project.properties` or CI jobs
 - Reporting “tests pass” without listing other gates the project defines
+- Adopting mutation (or another practice) in the strategy table but never running it before done
 
 ---
 
@@ -120,7 +127,8 @@ If verification fails on debt **outside** your slice:
 |----------|-----------------|
 | All code-touching agents | §1–5 before done; §1 during work |
 | `skills/tdd`, `skills/bugfix`, `skills/refactoring` | §1 after each micro-step |
-| `skills/new-increment`, `skills/legacy-testing`, `skills/atdd` | §2–4 at increment/slice boundary |
+| `skills/new-increment`, `skills/legacy-testing`, `skills/atdd` | §2–4 at increment/slice boundary; hard green gate |
+| `skills/new-feature` | Orchestrates only — expects green verify + commits from `new-increment` before review/continue |
 | `pr-reviewer` | §5 — ask for evidence; flag missing lint/sonar |
 | `skills/spike` | §1 spike exception only |
 

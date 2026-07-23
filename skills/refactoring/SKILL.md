@@ -1,6 +1,6 @@
 ---
 name: refactoring
-description: Martin Fowler–style refactoring — change the internal structure of code without changing observable behavior. Baby steps on a green baseline: one mechanical transformation at a time, tests stay green, revert on red. Separates refactoring from adding features (“two hats”), uses named refactorings and composition of small steps, improves names and duplication thoughtfully (rule of three). Composes with TDD’s REFACTOR step and supports continuous integration discipline (small, safe commits). Use when tidying design, paying down local complexity, or preparing code for a change without altering behavior.
+description: Martin Fowler–style refactoring — change the internal structure of code without changing observable behavior. Baby steps on a green baseline: one mechanical transformation at a time, tests stay green, revert on red. Also supports post-increment review (explain commits, suggest small in-scope refactors/tests). Separates refactoring from adding features (“two hats”). Use when tidying design, paying down local complexity, preparing code for a change without altering behavior, or reviewing a just-finished increment.
 allowed-tools: Read, Edit, MultiEdit, Bash, Grep, Glob
 ---
 
@@ -22,7 +22,18 @@ Optimize for:
 - **Clarity** — better names, clearer boundaries, less accidental duplication
 - **Reviewability** — commits readers can trust as “structure only”
 
-This skill is for **dedicated** refactoring sessions and for the **REFACTOR** phase inside TDD. It does **not** replace **bugfix** (fix wrong behavior), **feature** work (new behavior), or **`skills/legacy-testing`** (harness and characterization when code lacks tests) — compose with those skills ([references/two-hats-and-scope.md](references/two-hats-and-scope.md)).
+This skill is for **dedicated** refactoring sessions, for the **REFACTOR** phase inside TDD, and for **post-increment review** after `new-increment`. It does **not** replace **bugfix** (fix wrong behavior), **feature** work (new behavior), or **`skills/legacy-testing`** (harness and characterization when code lacks tests) — compose with those skills ([references/two-hats-and-scope.md](references/two-hats-and-scope.md)).
+
+---
+
+## Modes
+
+| Mode | When | Outcome |
+|------|------|---------|
+| **Dedicated refactor** (default) | User asks to tidy / prepare design on a green baseline | Goal-driven mechanical steps + `refactor:` commits |
+| **Post-increment review** | `new-feature` (or user) after a committed increment | Explain commits; suggest small in-scope improvements; optionally apply tiny mechanical steps only in **full** depth |
+
+Post-increment review: follow [references/post-increment-review.md](references/post-increment-review.md) and [checklists/post-increment-review.md](checklists/post-increment-review.md). Depth is **full** (step / opt-in applies) or **light** (automatic default — no applies). Do **not** rewrite the slice, work outside the increment change surface, or re-run a stylistic REFACTOR when the surface is already clean.
 
 ---
 
@@ -58,6 +69,8 @@ Do **not** swap hats mid-commit. If you need both, **finish** one slice (includi
 | **`skills/bugfix`** | Fix **wrong** behavior first; refactoring is not a substitute for reproduction + RED |
 | **`skills/atdd`** | Acceptance defines *what*; refactoring does not change *what* |
 | **`skills/legacy-testing`** | Without tests, **characterization** and **seams** before large refactors ([`SKILL.md`](../legacy-testing/SKILL.md)) |
+| **`skills/new-feature`** | After each increment, invoke this skill in **post-increment review** mode |
+| **`skills/new-increment`** | Delivers the committed slice that review inspects — does not run the review itself |
 
 **Tests and design (Cupac):** Prefer tests **coupled to behavior**, not **structure**, so internal moves do not break the suite for the wrong reason ([references/tests-and-design.md](references/tests-and-design.md)).
 
@@ -66,6 +79,8 @@ Do **not** swap hats mid-commit. If you need both, **finish** one slice (includi
 ## Workflow (language-agnostic)
 
 Shared delivery rules: [`docs/delivery-process.md`](../../docs/delivery-process.md) (§7 two hats, §9 step size, §2 verification) and [`docs/project-verification.md`](../../docs/project-verification.md) (re-verify after every mechanical step; lint and SonarQube before done).
+
+**If post-increment review:** follow [references/post-increment-review.md](references/post-increment-review.md) instead of the dedicated loop below (same green/baby-step rules when applying).
 
 1. **Goal** — one sentence: *what* will be easier after this (e.g. “extract pricing so policies are isolated”).
 2. **Baseline** — checkout branch; **all relevant automated checks green** for this scope (fix unrelated reds first or narrow scope).
@@ -161,6 +176,7 @@ Checklists: [checklists/before-refactor.md](checklists/before-refactor.md), [che
 - [references/duplication-abstraction-and-naming.md](references/duplication-abstraction-and-naming.md)
 - [references/tests-and-design.md](references/tests-and-design.md)
 - [references/continuous-delivery-discipline.md](references/continuous-delivery-discipline.md)
+- [references/post-increment-review.md](references/post-increment-review.md)
 - [references/anti-patterns.md](references/anti-patterns.md)
 
 ### Examples
@@ -172,6 +188,7 @@ Checklists: [checklists/before-refactor.md](checklists/before-refactor.md), [che
 - [checklists/before-refactor.md](checklists/before-refactor.md)
 - [checklists/one-mechanical-step.md](checklists/one-mechanical-step.md)
 - [checklists/session-done.md](checklists/session-done.md)
+- [checklists/post-increment-review.md](checklists/post-increment-review.md)
 
 ### External maintenance
 

@@ -1,6 +1,6 @@
 ---
 name: new-increment
-description: Implement one releasable increment — strict TDD by default; ATDD only at a real outer seam. One backlog line per invocation; RED before GREEN; all project verify steps before done. Use after new-feature planning.
+description: Implement one releasable increment — strict TDD by default; ATDD only at a real outer seam. One backlog line per invocation; RED before GREEN; all project verify steps green before done; commit then stop. Use after new-feature planning.
 model: inherit
 ---
 
@@ -13,14 +13,14 @@ model: inherit
 **Required reading:**
 
 - **`<AMPD-root>/docs/delivery-process.md`** — verification, roles, change-surface, return payload
-- **`<AMPD-root>/docs/project-verification.md`** — re-verify after every code change; lint, format, SonarQube, and all project gates before done
-- **`<AMPD-root>/docs/test-strategy-selection.md`** — evaluate catalog practices (mutation, contract, property-based, etc.) before first RED; adopt only when useful
+- **`<AMPD-root>/docs/project-verification.md`** — re-verify after every code change; hard green gate before done
+- **`<AMPD-root>/docs/test-strategy-selection.md`** — evaluate catalog practices (mutation, contract, property-based, ATDD, etc.) before first RED; on greenfield introduce warranted tooling
 - **`<AMPD-root>/skills/new-increment/SKILL.md`**
 - **`<AMPD-root>/skills/tdd/SKILL.md`** — always for implementation
 - **`<AMPD-root>/skills/atdd/SKILL.md`** — only when a real outer seam exists
 - **`<AMPD-root>/skills/new-increment/references/artifact-policy.md`** and **scoped-atdd-tdd.md**
 
-You deliver **one** releasable increment — not the whole feature.
+You deliver **one** releasable increment — not the whole feature. Even if the parent is in automatic mode, you still stop after this line.
 
 ---
 
@@ -31,27 +31,30 @@ You deliver **one** releasable increment — not the whole feature.
 3. **One** feature-level test list file unless the repo already uses another convention.
 4. **RED gate:** observe failure before each production change; observe pass after GREEN.
 5. **One new automated check at a time** — no whole-file test replace unless recovering from a mistaken draft.
-6. **Stop** after marking **one** parent line `[x]` — unless the user explicitly asks to continue.
-7. **No** batch “remaining increments” in one turn.
+6. **Hard green gate:** run **all** applicable project verify steps; **do not** mark `[x]` or claim done while any applicable step is red.
+7. **Commit** this increment’s work before returning (TDD micro-commits + squash per cycle as applicable). Include SHAs in the payload.
+8. **Stop** after marking **one** parent line `[x]` — never start the next backlog line (that is `new-feature`’s decision).
 
 ### Before claiming done (mandatory)
 
 Per **`<AMPD-root>/docs/project-verification.md`** and delivery-process §2:
 
 1. **During work:** after every meaningful code change, re-run affected tests (and scoped lint if available).
-2. **Discover** all verify steps the **current project** defines — tests, build, typecheck, **lint**, **format**, **SonarQube**/static analysis, and any other CI gates.
+2. **Discover** all verify steps the **current project** defines — tests, build, typecheck, **lint**, **format**, **SonarQube**/static analysis, **mutation** if adopted/configured, and any other CI gates.
 3. **Run each applicable step** at slice boundary; report pass/fail per step.
-4. **Fix new violations** you introduced — do not leave lint warnings, Sonar issues, or quality-gate failures for your change.
+4. **Fix** until the applicable set is green — do not hand off a red suite as complete.
 5. If construction/import/API changed, **search the scope** and update every obsolete call site.
-6. Deliver **return payload** per delivery-process §10.
+6. Deliver **return payload** per delivery-process §10 (include commits + test strategy table).
 
 ### Forbidden
 
 - Done after only one verify step when the project defines more (including lint or Sonar)
+- Done with any applicable verify step still red
 - Skipping re-verify after a refactor or production edit because tests were green earlier
 - Suppressing lint/sonar rules instead of fixing code
 - Markdown `[x]` before linked checks exist and pass
-- Multiple backlog `[x]` without explicit user batch opt-in
+- Multiple backlog `[x]` in one invocation
+- Skipping mutation on greenfield branchy domain with only “not configured”
 - Circular oracles; duplicate pyramid layers
 
 ---
@@ -59,11 +62,11 @@ Per **`<AMPD-root>/docs/project-verification.md`** and delivery-process §2:
 ## Your job
 
 1. Take **one** open `[ ]` line from **`increments/<feature-stem>.md`**.
-2. **Test strategy** — per **`test-strategy-selection.md`**: discover configured jobs; complete adopt/skip table **before first RED** ([checklist](../skills/new-increment/checklists/test-strategy.md)).
+2. **Test strategy** — per **`test-strategy-selection.md`**: discover configured jobs; complete adopt/skip table **before first RED** ([checklist](../skills/new-increment/checklists/test-strategy.md)). Greenfield: introduce mutation/property/ATDD when warranted.
 3. Choose TDD-only vs ATDD+TDD per scoped reference.
 4. RED → GREEN → REFACTOR per behavior; run **adopted** practices (e.g. mutation, integration) at slice boundary.
-5. Mark parent line `[x]` with links.
-6. Run **all applicable project verify steps**; fix or report out-of-scope failures.
+5. Run **all applicable project verify steps**; fix until green.
+6. Mark parent line `[x]` with links; **commit**.
 7. **Stop** with handoff (next open line — do not implement).
 
 **Prep:** legacy-testing (invalid harness), refactoring, spike — then resume.
@@ -72,4 +75,4 @@ Per **`<AMPD-root>/docs/project-verification.md`** and delivery-process §2:
 
 ## Return payload
 
-Per **`<AMPD-root>/docs/delivery-process.md`** §10: role, single backlog line, **verification table**, **test strategy table**, RED count, layers, change-surface search, handoff.
+Per **`<AMPD-root>/docs/delivery-process.md`** §10: role, single backlog line, **commits**, **verification table** (all pass), **test strategy table**, RED count, layers, change-surface search, handoff (next line only — do not implement).

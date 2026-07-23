@@ -161,8 +161,9 @@ Canonical behavior stays in **`skills/*/SKILL.md`**. **Slash commands are out of
 
 2. **Subagents** — implemented in **`agents/`** (symlinked at **`.claude/agents/`**; Cursor global install via **`INSTALL.md`**). Index: **`AGENTS.md`**.
 
-   * [x] **`new-feature`** — `new-feature.md` → **`skills/new-feature`**
-   * [x] **`new-increment`** — `new-increment.md` → **`skills/new-increment`** (TDD default; ATDD at outer seam only)
+   * [x] **`new-feature`** — `new-feature.md` → **`skills/new-feature`** (step default; automatic mode explicit; post-increment review via `refactoring`)
+   * [x] **`new-increment`** — `new-increment.md` → **`skills/new-increment`** (TDD default; ATDD at outer seam only; green gate + commit + stop)
+   * [x] **`refactoring`** — `refactoring.md` → **`skills/refactoring`** (dedicated tidy-up or post-increment review)
    * [x] **`bugfix`** — `bugfix.md` → **`skills/bugfix`**
    * [x] **`legacy-refactor`** — `legacy-refactor.md` → legacy-testing, then refactoring
    * [x] **`spike`** — `spike.md` → **`skills/spike`**

@@ -28,7 +28,8 @@ Reference: [`docs/test-strategy-selection.md`](../../../docs/test-strategy-selec
 | Unit TDD | | |
 | Narrow integration | | |
 | Component / UI | | |
-| API acceptance | | |
+| API acceptance / ATDD | | |
+| Gherkin (if ATDD) | | code-first vs `*.feature` |
 | Contract / schema | | |
 | Characterization | | |
 | Property-based | | |
@@ -38,7 +39,7 @@ Reference: [`docs/test-strategy-selection.md`](../../../docs/test-strategy-selec
 | Smoke | | |
 | E2E | | |
 
-Minimum **5 practices** evaluated for non-trivial slices.
+Minimum **5 practices** evaluated for non-trivial slices (always include **Mutation** and an **ATDD/acceptance** row).
 
 ---
 
@@ -54,7 +55,9 @@ Minimum **5 practices** evaluated for non-trivial slices.
 
 - [ ] Command: ___
 - [ ] Scope: changed files / module / full
-- [ ] Run at: before marking increment `[x]` | deferred to CI with reason
+- [ ] Tooling: already present | **added this slice** (greenfield, threshold met) | deferred with reason (setup ≫ slice / teaching / brownfield)
+- [ ] Run at: before marking increment `[x]` (required when adopted) | deferred to CI with reason (exceptional)
+- [ ] Surviving mutants addressed or **justified/deferred** with reason
 
 ---
 

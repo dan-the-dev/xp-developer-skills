@@ -100,20 +100,23 @@ skills/new-increment/
 
 **Spike** — time-boxed experiments on an isolated `spike/` branch: disposable code, prove an idea or library fit, optional ad hoc checks only; explicit promotion to ATDD/TDD/legacy (see `skills/spike/SKILL.md`).
 
-**New feature** — slice a whole capability into ordered increments (`increments/<stem>.md`); planning only — hand off each line to **new-increment** (see `skills/new-feature/SKILL.md`).
+**New feature** — slice a whole capability into ordered increments (`increments/<stem>.md`); plan and orchestrate — hand off each line to **new-increment**, then **refactoring** (post-increment review). Default **step** mode stops after each increment; **automatic** mode (explicit opt-in) continues until the backlog is done (see `skills/new-feature/SKILL.md`).
 
-**New increment** — deliver **one** increment with strict **TDD** (unit tests, one `test-lists/<feature>.md`); **ATDD** only when a real outer seam exists (see `skills/new-increment/SKILL.md`).
+**New increment** — deliver **one** increment with strict **TDD** (unit tests, one `test-lists/<feature>.md`); **ATDD** only when a real outer seam exists; **all** project verify steps green; **commit**; then **stop** (see `skills/new-increment/SKILL.md`).
 
 ### Subagents
 
-Goal-oriented agents in **`agents/`** (also **`.claude/agents/`**): `new-feature`, `new-increment`, `bugfix`, `legacy-refactor`, `spike`, `pr-reviewer`. Each reads the matching skill under **`skills/`**. See **`AGENTS.md`**.
+Goal-oriented agents in **`agents/`** (also **`.claude/agents/`**): `new-feature`, `new-increment`, `refactoring`, `bugfix`, `legacy-refactor`, `spike`, `pr-reviewer`. Each reads the matching skill under **`skills/`**. See **`AGENTS.md`**.
+
+- **`refactoring`** — dedicated tidy-up **or** post-increment review after `new-increment`
+- **`legacy-refactor`** — harness via `legacy-testing`, **then** structure via `refactoring` (untested change path)
 
 ### Install for Cursor (all projects)
 
 1. Clone this repository
 2. Run **`./scripts/install-cursor.sh`**
 3. Restart Cursor
-4. Use subagents: `/bugfix`, `/new-feature`, `/pr-reviewer`, etc.
+4. Use subagents: `/bugfix`, `/new-feature`, `/new-increment`, `/refactoring`, `/pr-reviewer`, etc.
 
 Installed to **`~/.cursor/ampd/`**. Skills and agents are linked for auto-discovery under **`~/.cursor/skills/`** and **`~/.cursor/agents/`**. To update: `git pull` in the clone, then re-run the install script.
 

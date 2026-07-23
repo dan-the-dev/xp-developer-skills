@@ -8,10 +8,11 @@ Location: **`agents/`** (symlinked at **`.claude/agents/`** for Claude Code). Cu
 
 | Subagent | Skill(s) |
 |----------|----------|
-| `new-feature` | `skills/new-feature/` — slice epic into `increments/<stem>.md`; **plan only**, hand off to `new-increment` |
-| `new-increment` | `skills/new-increment/` → `skills/tdd` per slice (ATDD only at outer seam); **one** increment per invocation |
+| `new-feature` | `skills/new-feature/` — slice epic into `increments/<stem>.md`; **plan + orchestrate**; hand off to `new-increment`; post-increment review via `refactoring`; **step** (default) or **automatic** (explicit) |
+| `new-increment` | `skills/new-increment/` → `skills/tdd` per slice (ATDD only at outer seam); **one** increment per invocation; verify green; commit; stop |
+| `refactoring` | `skills/refactoring/` — dedicated tidy-up **or** post-increment review after `new-increment` (not for untested code) |
 | `bugfix` | `skills/bugfix/` |
-| `legacy-refactor` | `skills/legacy-testing/` then `skills/refactoring/` |
+| `legacy-refactor` | `skills/legacy-testing/` then `skills/refactoring/` — harness first on unprotected code, then structure |
 | `spike` | `skills/spike/` (`spike/` branch, disposable) |
 | `pr-reviewer` | `docs/manifesto.md` + applicable skills (`readonly`) |
 

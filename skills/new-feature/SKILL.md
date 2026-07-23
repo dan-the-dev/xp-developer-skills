@@ -1,10 +1,10 @@
 ---
 name: new-feature
-description: Slice a whole capability into ordered releasable increments (increment backlog in increments/<stem>.md). Delegate each slice to skills/new-increment — do not implement slices yourself. Use for an entire feature or epic (e.g. full FizzBuzz), not for implementing one increment.
+description: Slice a whole capability into ordered releasable increments (increment backlog in increments/<stem>.md). Delegate each slice to skills/new-increment — do not implement slices yourself. Default step mode stops after each increment for feedback; automatic mode (explicit opt-in) continues until the backlog is done. Use for an entire feature or epic (e.g. full FizzBuzz), not for implementing one increment.
 allowed-tools: Read, Edit, MultiEdit, Bash, Grep, Glob
 ---
 
-# New feature (increment planning)
+# New feature (increment planning + orchestration)
 
 ## Mission
 
@@ -12,23 +12,69 @@ Plan a **whole feature** as **ordered, releasable increments**. **Do not impleme
 
 **First step:** create **`increments/<feature-stem>.md`** (see [references/increment-backlog.md](references/increment-backlog.md)).
 
-**Feature complete** when every in-scope increment is `[x]` on that backlog — each line completed via **`skills/new-increment`**, not by continuing in this session.
+**Feature complete** when every in-scope increment is `[x]` on that backlog — each line completed via **`new-increment`**, not by implementing in this session.
+
+---
+
+## Orchestration modes
+
+| Mode | Activation | Behavior |
+|------|------------|----------|
+| **Step** (default) | Assumed unless the user **explicitly** opts into automatic | After each increment → **full** post-increment review → **stop** for user feedback |
+| **Automatic** | Explicit only — e.g. “modalità automatica”, “automatic mode”, “implement the whole feature”, “run until the backlog is done” | After each increment → **light** review (default) → if no **blocking** gaps and open `[ ]` remain, hand off the **next** line; if all `[x]`, stop (feature complete) |
+
+**Invariants (both modes):**
+
+1. **`new-increment` always** implements **one** line, runs full verification (all green), **commits**, and **stops**. It never starts the next backlog line.
+2. **This skill** decides whether to continue or pause — only continues in **automatic** mode, and only when the review did not report **blocking** gaps.
+3. After every successful increment, run a **post-increment review** via **`skills/refactoring`** / **`refactoring`** subagent before stopping or continuing.
+
+**Review depth:**
+
+| Depth | When | What |
+|-------|------|------|
+| **Full** | Step mode (default); or user asked for “full post-increment review” / “review with applies” | Explain, suggest, optional tiny in-surface applies |
+| **Light** | Automatic mode default | Explain + suggest-only — **no** applies (keeps long backlogs affordable) |
+
+If the user does **not** name automatic mode, stay in **step**.
 
 ---
 
 ## Workflow
 
-Shared delivery rules: [`docs/delivery-process.md`](../../docs/delivery-process.md) (planning role — §1, §10).
+Shared delivery rules: [`docs/delivery-process.md`](../../docs/delivery-process.md) (orchestration — §1, §10).
 
 1. Clarify capability and whole-feature definition of done.
-2. If feasibility unknown → **`skills/spike`** on `spike/…` branch; promote before slicing.
-3. Write **ordered** increment lines in `increments/<stem>.md` (all `[ ]` initially). Optionally note **expected test layers** per line (see [`test-strategy-selection.md`](../../docs/test-strategy-selection.md) §2) — e.g. “mutation likely”, “contract at boundary”.
-4. **Stop.** Hand off the **first** open line to **`skills/new-increment`** (subagent or new chat).
-5. After each increment completes elsewhere, repeat planning-only check: next open line → hand off again.
+2. Resolve **orchestration mode** (step vs automatic) from the user request; state it in the return payload.
+3. If feasibility unknown → **`skills/spike`** on `spike/…` branch; promote before slicing.
+4. Write **ordered** increment lines in `increments/<stem>.md` (all `[ ]` initially). Optionally note **expected test layers** per line (see [`test-strategy-selection.md`](../../docs/test-strategy-selection.md) §2) — e.g. “mutation likely”, “ATDD at API”, “property-based”.
+5. **Loop** (one open line at a time):
+   1. Hand off the **next** open line to **`new-increment`** (subagent or new chat). Do **not** implement it here.
+   2. Wait for return payload: backlog `[x]`, **verification all green**, **commits**.
+   3. Hand off **post-increment review** to **`refactoring`** with feature stem, backlog line, commit SHAs, and **review depth** (full vs light).
+   4. Incorporate review summary (full mode: applied tiny refactors stay committed; light mode: suggestions only).
+   5. If review reports **blocking** gaps (missing tests / strategy holes for **this** slice) → **stop**; do not continue automatic — present gaps to the user.
+   6. **If step mode** → **stop**; present review + next open line; wait for user.
+   7. **If automatic mode** and open `[ ]` remain → go to step 5.1.
+   8. **If automatic mode** and all `[x]` → **stop** (feature complete).
 
 Optional: create **`test-lists/<feature-stem>.md`** with empty `## <increment-slug>` headings as a skeleton — **no** behavior lines or `[x]` until **new-increment** runs.
 
 See [examples/fizzbuzz-increments.md](examples/fizzbuzz-increments.md).
+
+---
+
+## Post-increment review (mandatory when orchestrating)
+
+After each committed increment, invoke **`skills/refactoring`** in **post-increment review** mode (prefer **`refactoring`** subagent). Pass **review depth** (full vs light).
+
+- Scope: **only** the commits / files from that increment (plus any tiny follow-up the review itself applies in **full** depth).
+- Goals: explain what changed; flag test/strategy gaps; suggest **small, targeted** improvements. **Full** depth may apply **tiny** mechanical refactors only when clear leftover debt remains after the increment’s own TDD REFACTOR — not a second stylistic pass by default.
+- Forbidden: rewrite the feature, expand to future increments, large redesigns, or continuing automatic when gaps are **blocking**.
+
+**Pending:** mark review **pending** only when the user must run `/refactoring` manually or the `refactoring` agent is missing until `./scripts/install-cursor.sh` is re-run after pull.
+
+Details: [`skills/refactoring/references/post-increment-review.md`](../refactoring/references/post-increment-review.md).
 
 ---
 
@@ -40,28 +86,21 @@ See [examples/fizzbuzz-increments.md](examples/fizzbuzz-increments.md).
 | Optional skeleton `test-lists/<feature-stem>.md` (headings only) | `acceptance-examples/` (created per increment in **new-increment**) |
 | Docs clarifying scope | Production or test code |
 
+Orchestration may **invoke** subagents that edit code; this skill’s own edits stay planning-only.
+
 ---
 
 ## Composition
 
-| Need | Skill |
-|------|--------|
-| One slice delivery | **`skills/new-increment`** |
+| Need | Skill / agent |
+|------|----------------|
+| One slice delivery | **`skills/new-increment`** / **`new-increment`** |
+| Post-increment review | **`skills/refactoring`** / **`refactoring`** (post-increment review mode) |
 | Untested area | **`skills/legacy-testing`** (before or per increment) |
-| Green prep | **`skills/refactoring`** |
+| Green prep | **`skills/refactoring`** (dedicated session) |
 | Unknown tech | **`skills/spike`** |
 
 This skill does **not** run ATDD/TDD or mark increments `[x]` from implementation work.
-
----
-
-## User opt-in: implement all increments
-
-Only if the user **explicitly** asks to implement the full backlog in one go:
-
-- Still use **one increment’s discipline at a time** (RED gates, one backlog `[x]` per slice).
-- Prefer invoking **`new-increment`** repeatedly over batching “increments 2–7.”
-- Default remains: **one increment per subagent/session.**
 
 ---
 
@@ -71,6 +110,12 @@ Only if the user **explicitly** asks to implement the full backlog in one go:
 - Implementing code or tests in the **new-feature** session
 - Marking multiple `[ ]` → `[x]` without a **new-increment** pass each
 - Skipping **`new-increment`** (no scoped TDD per slice)
+- Assuming **automatic** mode without explicit user opt-in
+- Continuing to the next increment in **step** mode without user go-ahead
+- Skipping **post-increment review** between increments
+- Continuing **automatic** after a review that reported **blocking** gaps
+- Asking **`new-increment`** to “do the rest of the backlog”
+- Running **full** apply-capable review on every automatic increment when light depth would suffice (cost blow-up)
 - No on-disk `increments/` file
 - Creating many per-increment markdown files during planning
 

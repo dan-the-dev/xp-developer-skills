@@ -29,6 +29,11 @@
 
 - **Endless refactor ticket** — no goal, no done; use a **clear outcome** (e.g. “extract pricing module”, “rename confusing domain terms in orders bounded context”).
 - **Silent behavior drift** — API changes or bugfixes snuck into refactor PR without review focus.
+- **Post-increment rewrite** — using “review” to redesign the slice or pull in the next backlog line.
+- **Drive-by cleanup** — applying refactors outside the increment change surface during post-increment review.
+- **Second stylistic REFACTOR** — applying taste-only tidy when the increment’s TDD REFACTOR already left a clean surface.
+- **Applies in light depth** — modifying code during automatic light review.
+- **Hiding blocking gaps** — continuing signal when tests/strategy holes belong to this increment.
 
 ---
 

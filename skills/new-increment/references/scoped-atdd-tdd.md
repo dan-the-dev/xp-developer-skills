@@ -10,11 +10,11 @@ Pick **one** outer/inner strategy for this backlog line. Do not stack duplicate 
 
 | Backlog slice looks like… | Use | Artifacts |
 |---------------------------|-----|-----------|
-| Domain logic, class, kata, in-process module | **TDD only** (+ consider mutation/property if configured) | `test-lists/<feature-stem>.md` (§ this increment) + unit tests |
-| Branchy/critical rules (pricing, auth, validation) | **TDD + mutation** if project configures it | Unit tests + mutation run on touched scope |
+| Domain logic, class, kata, in-process module | **TDD only** (+ **mutation** when branchy — introduce on greenfield) | `test-lists/<feature-stem>.md` (§ this increment) + unit tests (+ mutation config/run if adopted) |
+| Branchy/critical rules (pricing, auth, validation) | **TDD + mutation** (configure if greenfield) | Unit tests + mutation run on touched scope |
 | Invariants / parsers / serializers | **TDD + property-based** when rules exceed fixed examples | Unit + property tests |
 | DB/repository wiring | **TDD + narrow integration** | Unit at seam + integration if project uses Testcontainers/DB tests |
-| API/HTTP/CLI user-visible contract | **ATDD + TDD** | `acceptance-examples/<feature-stem>.md` (§ slice) + acceptance tests at boundary + TDD inside |
+| API/HTTP/CLI user-visible contract | **ATDD + TDD** (Gherkin only if team reads features) | `acceptance-examples/<feature-stem>.md` (§ slice) + acceptance tests at boundary + TDD inside |
 | UI journey | **ATDD + TDD** | Catalog + UI/contract tests + TDD |
 | Feasibility unknown | **`skills/spike`** first | Promote, then return here |
 
@@ -29,7 +29,8 @@ Pick **one** outer/inner strategy for this backlog line. Do not stack duplicate 
 3. **GREEN:** minimal production; run; confirm pass.
 4. **REFACTOR** (optional): small steps, tests green after each.
 5. Mark the behavior `[x]` with test reference; repeat for next behavior in **this increment only**.
-6. Mark parent `increments/…` line `[x]`; **stop**.
+6. Run **all** applicable verify steps (including adopted mutation); **all green**.
+7. Mark parent `increments/…` line `[x]`; **commit**; **stop** (never start the next backlog line).
 
 See `skills/tdd/SKILL.md` for Three Laws, commits, and anti-patterns.
 
@@ -41,7 +42,7 @@ See `skills/tdd/SKILL.md` for Three Laws, commits, and anti-patterns.
 2. **Distill — RED:** one **failing** acceptance check at the boundary (HTTP, UI, contract — not duplicate unit layer).
 3. **Inner TDD:** `test-lists/<feature-stem>.md` + R–G–R until acceptance can pass.
 4. **GREEN:** acceptance check passes; mark catalog line `[x]`.
-5. Parent backlog `[x]`; **stop**.
+5. Parent backlog `[x]`; run full verify (green); **commit**; **stop**.
 
 Do **not** add parallel unit tests that copy the same assertions as the acceptance test unless they test **finer** behavior worth fast feedback.
 

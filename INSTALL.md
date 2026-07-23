@@ -10,7 +10,7 @@ cd xp-developer-skills
 ./scripts/install-cursor.sh
 ```
 
-Restart Cursor, then invoke subagents (e.g. `/bugfix`, `/new-feature`, `/pr-reviewer`).
+Restart Cursor, then invoke subagents (e.g. `/bugfix`, `/new-feature`, `/new-increment`, `/refactoring`, `/pr-reviewer`).
 
 ## What gets installed
 
@@ -21,6 +21,8 @@ Restart Cursor, then invoke subagents (e.g. `/bugfix`, `/new-feature`, `/pr-revi
 | `~/.cursor/agents/<name>.md` | Symlink → `~/.cursor/ampd/agents/<name>.md` (subagents) |
 | `~/.cursor/docs` | Symlink → `~/.cursor/ampd/docs` (bibliography links from skills) |
 
+New agents (e.g. **`refactoring`**) appear under `~/.cursor/agents/` only after you **re-run the install script** following `git pull`.
+
 ## Update
 
 ```bash
@@ -28,6 +30,8 @@ cd xp-developer-skills
 git pull
 ./scripts/install-cursor.sh
 ```
+
+Always re-run after pull when agents or skills were added — otherwise Cursor may lack types such as `refactoring` and orchestrators fall back to manual `/refactoring`.
 
 ## Options
 
