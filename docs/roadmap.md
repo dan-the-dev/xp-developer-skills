@@ -159,7 +159,7 @@ Canonical behavior stays in **`skills/*/SKILL.md`**. **Slash commands are out of
 
 1. **Skills** — core delivery, spike, and increment orchestration in place; see [Development Core Skills](#development-core-skills) for further backlog.
 
-2. **Subagents** — implemented in **`agents/`** (symlinked at **`.claude/agents/`**; Cursor global install via **`INSTALL.md`**). Index: **`AGENTS.md`**.
+2. **Subagents** — implemented in **`agents/`** (symlinked at **`.claude/agents/`**; global install for Cursor and Claude Code via **`INSTALL.md`**). Index: **`AGENTS.md`**.
 
    * [x] **`new-feature`** — `new-feature.md` → **`skills/new-feature`** (step default; automatic mode explicit; post-increment review via `refactoring`)
    * [x] **`new-increment`** — `new-increment.md` → **`skills/new-increment`** (TDD default; ATDD at outer seam only; green gate + commit + stop)

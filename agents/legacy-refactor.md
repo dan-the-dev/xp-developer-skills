@@ -6,9 +6,12 @@ model: inherit
 
 ## Resolve AMPD root
 
-1. If **`~/.cursor/ampd/skills/`** exists → AMPD root is **`~/.cursor/ampd`**
-2. Else if **`skills/`** exists at the workspace root → AMPD root is that repository root
-3. Read skills at **`<AMPD-root>/skills/<name>/SKILL.md`** and docs at **`<AMPD-root>/docs/`**
+1. If this agent file’s real path is under **`<dir>/ampd/agents/`** and **`<dir>/ampd/skills/`** exists → AMPD root is **`<dir>/ampd`** (covers `~/.cursor`, `~/.claude`, `~/.claude-personal`, or any `--home`)
+2. Else if **`$AMPD_ROOT/skills/`** exists → AMPD root is **`$AMPD_ROOT`**
+3. Else if **`~/.cursor/ampd/skills/`** exists → AMPD root is **`~/.cursor/ampd`**
+4. Else if **`~/.claude/ampd/skills/`** exists → AMPD root is **`~/.claude/ampd`**
+5. Else if **`skills/`** exists at the workspace root → AMPD root is that repository root
+6. Read skills at **`<AMPD-root>/skills/<name>/SKILL.md`** and docs at **`<AMPD-root>/docs/`**
 
 **Required reading:** **`<AMPD-root>/docs/delivery-process.md`** (§1, §2, §3, §7–10), **`<AMPD-root>/docs/project-verification.md`**, and **`<AMPD-root>/docs/test-strategy-selection.md`** (characterization, integration, mutation when useful).
 

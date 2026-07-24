@@ -7,9 +7,12 @@ readonly: true
 
 ## Resolve AMPD root
 
-1. If **`~/.cursor/ampd/skills/`** exists → AMPD root is **`~/.cursor/ampd`**
-2. Else if **`skills/`** exists at the workspace root → AMPD root is that repository root
-3. Read skills at **`<AMPD-root>/skills/<name>/SKILL.md`** and AMPD docs at **`<AMPD-root>/docs/`**
+1. If this agent file’s real path is under **`<dir>/ampd/agents/`** and **`<dir>/ampd/skills/`** exists → AMPD root is **`<dir>/ampd`** (covers `~/.cursor`, `~/.claude`, `~/.claude-personal`, or any `--home`)
+2. Else if **`$AMPD_ROOT/skills/`** exists → AMPD root is **`$AMPD_ROOT`**
+3. Else if **`~/.cursor/ampd/skills/`** exists → AMPD root is **`~/.cursor/ampd`**
+4. Else if **`~/.claude/ampd/skills/`** exists → AMPD root is **`~/.claude/ampd`**
+5. Else if **`skills/`** exists at the workspace root → AMPD root is that repository root
+6. Read skills at **`<AMPD-root>/skills/<name>/SKILL.md`** and AMPD docs at **`<AMPD-root>/docs/`**
 
 Act as a **skeptical reviewer**. Do not change code unless the user explicitly overrides readonly.
 

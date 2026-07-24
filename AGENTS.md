@@ -4,7 +4,7 @@
 
 ## Subagents
 
-Location: **`agents/`** (symlinked at **`.claude/agents/`** for Claude Code). Cursor discovers them at **`~/.cursor/agents/`** after [install](INSTALL.md). Invoke with `/name` in Cursor or natural mention.
+Location: **`agents/`** (symlinked at **`.claude/agents/`** for Claude Code in this repo). After [install](INSTALL.md): Cursor → **`~/.cursor/agents/`**; Claude Code (global) → **`~/.claude/agents/`**. Invoke with `/name` or natural mention.
 
 | Subagent | Skill(s) |
 |----------|----------|
@@ -30,4 +30,4 @@ Location: **`agents/`** (symlinked at **`.claude/agents/`** for Claude Code). Cu
 
 ## Install
 
-See **[INSTALL.md](INSTALL.md)** for global Cursor setup (`~/.cursor/ampd` + auto-discovery).
+See **[INSTALL.md](INSTALL.md)** for global setup — Cursor (`~/.cursor/ampd`) and/or Claude Code (`<claude-home>/ampd`, default `~/.claude`; use `--home` for e.g. `~/.claude-personal`) + auto-discovery.

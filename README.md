@@ -111,14 +111,16 @@ Goal-oriented agents in **`agents/`** (also **`.claude/agents/`**): `new-feature
 - **`refactoring`** — dedicated tidy-up **or** post-increment review after `new-increment`
 - **`legacy-refactor`** — harness via `legacy-testing`, **then** structure via `refactoring` (untested change path)
 
-### Install for Cursor (all projects)
+### Install (all projects)
 
 1. Clone this repository
-2. Run **`./scripts/install-cursor.sh`**
-3. Restart Cursor
+2. Run the script(s) for your tool(s):
+   - Cursor: **`./scripts/install-cursor.sh`** → **`~/.cursor/ampd/`**
+   - Claude Code: **`./scripts/install-claude.sh`** → **`~/.claude/ampd/`** (or **`--home ~/.claude-personal`**)
+3. Restart Cursor / start a new Claude Code session
 4. Use subagents: `/bugfix`, `/new-feature`, `/new-increment`, `/refactoring`, `/pr-reviewer`, etc.
 
-Installed to **`~/.cursor/ampd/`**. Skills and agents are linked for auto-discovery under **`~/.cursor/skills/`** and **`~/.cursor/agents/`**. To update: `git pull` in the clone, then re-run the install script.
+Skills and agents are linked for auto-discovery (`~/.cursor/skills|agents` or `<claude-home>/skills|agents`). To update: `git pull`, then re-run the install script(s) for each Claude home you use.
 
 Details: **[INSTALL.md](INSTALL.md)**
 

@@ -72,7 +72,7 @@ After each committed increment, invoke **`skills/refactoring`** in **post-increm
 - Goals: explain what changed; flag test/strategy gaps; suggest **small, targeted** improvements. **Full** depth may apply **tiny** mechanical refactors only when clear leftover debt remains after the increment’s own TDD REFACTOR — not a second stylistic pass by default.
 - Forbidden: rewrite the feature, expand to future increments, large redesigns, or continuing automatic when gaps are **blocking**.
 
-**Pending:** mark review **pending** only when the user must run `/refactoring` manually or the `refactoring` agent is missing until `./scripts/install-cursor.sh` is re-run after pull.
+**Pending:** mark review **pending** only when the user must run `/refactoring` manually or the `refactoring` agent is missing until `./scripts/install-cursor.sh` and/or `./scripts/install-claude.sh` is re-run after pull.
 
 Details: [`skills/refactoring/references/post-increment-review.md`](../refactoring/references/post-increment-review.md).
 

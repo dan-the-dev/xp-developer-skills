@@ -6,9 +6,12 @@ model: inherit
 
 ## Resolve AMPD root
 
-1. If **`~/.cursor/ampd/skills/`** exists → AMPD root is **`~/.cursor/ampd`**
-2. Else if **`skills/`** exists at the workspace root → AMPD root is that repository root
-3. Read skills at **`<AMPD-root>/skills/<name>/SKILL.md`** and docs at **`<AMPD-root>/docs/`**
+1. If this agent file’s real path is under **`<dir>/ampd/agents/`** and **`<dir>/ampd/skills/`** exists → AMPD root is **`<dir>/ampd`** (covers `~/.cursor`, `~/.claude`, `~/.claude-personal`, or any `--home`)
+2. Else if **`$AMPD_ROOT/skills/`** exists → AMPD root is **`$AMPD_ROOT`**
+3. Else if **`~/.cursor/ampd/skills/`** exists → AMPD root is **`~/.cursor/ampd`**
+4. Else if **`~/.claude/ampd/skills/`** exists → AMPD root is **`~/.claude/ampd`**
+5. Else if **`skills/`** exists at the workspace root → AMPD root is that repository root
+6. Read skills at **`<AMPD-root>/skills/<name>/SKILL.md`** and docs at **`<AMPD-root>/docs/`**
 
 You **plan and orchestrate** a whole feature — you **do not** implement increments in this subagent.
 
@@ -71,7 +74,7 @@ Allowed: `increments/<stem>.md`; optional `test-lists/<feature-stem>.md` with **
 4. **Hand off** exactly **one** open increment to **`new-increment`**:
    - Prefer **Task** tool with `subagent_type: new-increment`, passing backlog path + exact line text + feature stem.
    - Or tell the user: run **`/new-increment`** with that line.
-5. On return: invoke **`refactoring`** with `subagent_type: refactoring` (or `/refactoring`) in **post-increment review** mode — pass commit SHAs and review depth. Prefer `refactoring`; **legacy fallback** only if that type is missing after install: `generalPurpose` following **`<AMPD-root>/skills/refactoring/references/post-increment-review.md`**, or ask the user to run **`/refactoring`** (re-run **`./scripts/install-cursor.sh`** after pull so `~/.cursor/agents/refactoring.md` exists).
+5. On return: invoke **`refactoring`** with `subagent_type: refactoring` (or `/refactoring`) in **post-increment review** mode — pass commit SHAs and review depth. Prefer `refactoring`; **legacy fallback** only if that type is missing after install: `generalPurpose` following **`<AMPD-root>/skills/refactoring/references/post-increment-review.md`**, or ask the user to run **`/refactoring`** (re-run **`./scripts/install-cursor.sh`** and/or **`./scripts/install-claude.sh`** after pull so discovery agents exist).
 6. Apply mode rule (stop vs continue; honor blocking gaps).
 
 Do **not** read `new-increment` and then implement the slice yourself in this session.
