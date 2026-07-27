@@ -30,9 +30,12 @@ Do **not** confuse **fake** (working simplification) with **mock** (expects inte
 
 ## Fakes, mocks, stubs (pragmatic)
 
-- Prefer **fakes** when you need **return values** or in-memory behavior.
+Vocabulary aligns with Meszaros via [Mocks Aren't Stubs](https://martinfowler.com/articles/mocksArentStubs.html): **fake** (working shortcut), **stub** (canned answers), **mock** (pre-programmed call expectations / behavior verification).
+
+- Prefer **fakes** when you need **return values** or in-memory behavior; prefer **stubs** for canned query responses.
+- Prefer **real** awkward collaborators when a **sandbox/test** env makes that practical (especially owned vendor adapters — [`test-strategy-selection.md`](../../../docs/test-strategy-selection.md) §3a).
 - Use **mocks** when **interactions** (calls made) are the contract — but in **characterization**, don’t invent ideal APIs; record what **happens now** if that is the legacy contract.
-- Avoid mocking **everything**; you lose confidence that real wiring works. Lean on pinch points and narrow integration when cheap.
+- Avoid mocking **everything**; you lose confidence that real wiring works. Lean on pinch points and narrow integration when cheap. Do not mock **third-party SDK types** directly — wrap first, then fake/stub your port.
 
 ---
 

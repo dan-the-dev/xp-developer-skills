@@ -28,7 +28,7 @@ Optimize for:
 - **deterministic** tests and **stable seams** (see behavior reference)
 - **refactors scoped** to code near the current change
 
-This skill covers the **inner** unit-level TDD loop. **Before first RED**, evaluate other practices per [`test-strategy-selection.md`](../../docs/test-strategy-selection.md) (mutation, property-based, narrow integration). It does **not** specify acceptance-test (outer-loop) workflows, **legacy code without tests**, branching policy, CI, bugfix-only rules, or **time-boxed experiments** — compose with other skills for those (e.g. `skills/atdd`, `skills/spike` on an isolated `spike/` branch before delivery, `skills/refactoring` for stand-alone Fowler-style refactor sessions, `skills/legacy-testing` for Feathers-style harness and characterization).
+This skill covers the **inner** unit-level TDD loop. **Before first RED**, evaluate other practices per [`test-strategy-selection.md`](../../docs/test-strategy-selection.md) (mutation, property-based, narrow integration, **vendor client §3a**). It does **not** specify acceptance-test (outer-loop) workflows, **legacy code without tests**, branching policy, CI, bugfix-only rules, or **time-boxed experiments** — compose with other skills for those (e.g. `skills/atdd`, `skills/spike` on an isolated `spike/` branch before delivery, `skills/refactoring` for stand-alone Fowler-style refactor sessions, `skills/legacy-testing` for Feathers-style harness and characterization).
 
 ---
 

@@ -17,7 +17,7 @@ model: inherit
 
 - **`<AMPD-root>/docs/delivery-process.md`** — verification, roles, change-surface, return payload
 - **`<AMPD-root>/docs/project-verification.md`** — re-verify after every code change; hard green gate before done
-- **`<AMPD-root>/docs/test-strategy-selection.md`** — evaluate catalog practices (mutation, contract, property-based, ATDD, etc.) before first RED; on greenfield introduce warranted tooling
+- **`<AMPD-root>/docs/test-strategy-selection.md`** — evaluate catalog practices (mutation, contract, property-based, ATDD, **vendor client §3a**, etc.) before first RED; on greenfield introduce warranted tooling
 - **`<AMPD-root>/skills/new-increment/SKILL.md`**
 - **`<AMPD-root>/skills/tdd/SKILL.md`** — always for implementation
 - **`<AMPD-root>/skills/atdd/SKILL.md`** — only when a real outer seam exists
@@ -65,7 +65,7 @@ Per **`<AMPD-root>/docs/project-verification.md`** and delivery-process §2:
 ## Your job
 
 1. Take **one** open `[ ]` line from **`increments/<feature-stem>.md`**.
-2. **Test strategy** — per **`test-strategy-selection.md`**: discover configured jobs; complete adopt/skip table **before first RED** ([checklist](../skills/new-increment/checklists/test-strategy.md)). Greenfield: introduce mutation/property/ATDD when warranted.
+2. **Test strategy** — per **`test-strategy-selection.md`**: discover configured jobs; complete adopt/skip table **before first RED** ([checklist](../skills/new-increment/checklists/test-strategy.md)). Greenfield: introduce mutation/property/ATDD when warranted. Owned third-party client: §3a (prefer SDK; sandbox then manual fake/stub).
 3. Choose TDD-only vs ATDD+TDD per scoped reference.
 4. RED → GREEN → REFACTOR per behavior; run **adopted** practices (e.g. mutation, integration) at slice boundary.
 5. Run **all applicable project verify steps**; fix until green.

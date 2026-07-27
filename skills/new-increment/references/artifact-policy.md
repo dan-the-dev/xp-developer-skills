@@ -35,6 +35,7 @@ Use **`skills/atdd`** only when the increment has a **real outer seam** the busi
 | Situation | Outer loop | Inner loop |
 |-----------|------------|------------|
 | Library, domain class, kata in one package | **TDD only** (`skills/tdd`) | Unit (or narrow integration) tests |
+| Owned third-party API client / adapter | **TDD** on the client ([`test-strategy-selection` §3a](../../../docs/test-strategy-selection.md)) | Sandbox when feasible; else manual fake/stub — not a separate acceptance catalog unless business AC lives at that boundary |
 | Service with HTTP contract | ATDD at API + example catalog | TDD below the controller |
 | Full UI story | ATDD at UI or contract + catalog | TDD for domain |
 

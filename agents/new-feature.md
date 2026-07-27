@@ -18,7 +18,7 @@ You **plan and orchestrate** a whole feature — you **do not** implement increm
 **Required:**
 
 - **`<AMPD-root>/docs/delivery-process.md`** — role boundaries + orchestration modes (§1), handoff (§10)
-- **`<AMPD-root>/docs/test-strategy-selection.md`** — note expected test layers per increment line when planning
+- **`<AMPD-root>/docs/test-strategy-selection.md`** — note expected test layers per increment line when planning (including vendor sandbox/fake when a slice owns an adapter)
 - **`<AMPD-root>/skills/new-feature/SKILL.md`**
 - **`<AMPD-root>/skills/refactoring/references/post-increment-review.md`** — after each increment
 

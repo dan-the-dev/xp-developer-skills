@@ -13,7 +13,7 @@ Primary source and adjacent authorities referenced across AMPD skills.
 
 ## Composed authorities (same voices as other skills)
 
-- **Fowler, Martin.** *Refactoring*; refactoring.com — mechanical seam creation **after** harness exists.
+- **Fowler, Martin.** *Refactoring*; refactoring.com — mechanical seam creation **after** harness exists. [Mocks Aren't Stubs](https://martinfowler.com/articles/mocksArentStubs.html) — fake/stub vs mock when wrapping third-party libraries; prefer real sandbox when testing the owned adapter.
 
 - **Beck, Kent.** *Test Driven Development: By Example*; *Extreme Programming Explained* — small steps, tests enable design changes.
 
@@ -39,5 +39,6 @@ Primary source and adjacent authorities referenced across AMPD skills.
 | Seams, sprout/wrap, catalog | Feathers |
 | Characterization | Feathers |
 | Aligned table | Fowler, Beck, Farley, Cupać (AMPD synthesis) |
+| Third-party libraries / vendor adapters | Feathers (wrappers); Fowler *Mocks Aren't Stubs*; `test-strategy-selection` §3a |
 
 Update this file when the skill adopts additional canonical references.

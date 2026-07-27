@@ -36,7 +36,7 @@ Suggested reading order for humans and AI agents:
 6. project-verification.md
     Tests, lint, format, SonarQube, and all project gates after every code change.
 7. test-strategy-selection.md
-    Which test layers and techniques to adopt per slice (mutation, contract, property-based, integration, etc.).
+    Which test layers and techniques to adopt per slice (mutation, contract, property-based, integration, owned vendor clients / sandbox vs fake, etc.).
 8. technical-excellence-catalog.md
     Inventory of verifiable practices AMPD aims to enable and amplify (pipeline stages, test families, AMPD status).
 

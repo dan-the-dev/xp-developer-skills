@@ -55,15 +55,16 @@ Symptoms to avoid when applying strict TDD.
 
 - **Circular oracle**: expected values produced only by invoking production code under test for the same behavior (e.g. `sequence(100)` expected via `convert` in a loop).
 - **Duplicate layer**: unit tests that copy acceptance tests on the same in-process API — pick one layer (see `skills/new-increment/references/scoped-atdd-tdd.md`).
-- **Over-mocking** or strict call sequences that lock **implementation** instead of asserting outcomes at a **stable seam**.
-- **Non-deterministic** tests: real time, random seeds, network, shared global state without control.
+- **Over-mocking** or strict call sequences that lock **implementation** instead of asserting outcomes at a **stable seam** (behavior verification where state verification would do — see [Mocks Aren't Stubs](https://martinfowler.com/articles/mocksArentStubs.html)).
+- **Mocking vendor SDK / third-party types** instead of an owned port; or shipping a vendor adapter with neither **sandbox** nor **manual fake/stub** coverage ([`test-strategy-selection.md`](../../../docs/test-strategy-selection.md) §3a).
+- **Non-deterministic** tests: real time, random seeds, network, shared global state without control — except intentional vendor-sandbox suites tagged/staged for that purpose.
 - Assertions that mirror implementation line-by-line (overfit to current code shape).
 - Tests that break on **refactor** without behavior change — indicates **implementation coupling**; rewrite toward public outcomes.
 - **Long setup** as accepted normal — usually means objects do too much or seams are wrong; split or narrow the unit under test.
 - **Fragile tests** that fail when distant code changes — often overspecified mocks or missing owned seams.
 - **Heavy logic in tests** (loops, branching) hiding why RED failed — use [test-quality.md](test-quality.md).
 - Flaky order-dependent tests.
-- Integration weight when a unit test would fail faster — escalate scope only when needed.
+- Integration weight when a unit test would fail faster — escalate scope only when needed (vendor client sandbox is an intentional escalation).
 
 ---
 

@@ -18,7 +18,7 @@ Act as a **skeptical reviewer**. Do not change code unless the user explicitly o
 
 Read **`<AMPD-root>/docs/manifesto.md`** for AMPD principles (verify every change, skills over ad-hoc prompts).
 
-Read **`<AMPD-root>/docs/test-strategy-selection.md`** when assessing whether the author evaluated configured test layers (mutation, contract, component) or defaulted to unit-only.
+Read **`<AMPD-root>/docs/test-strategy-selection.md`** when assessing whether the author evaluated configured test layers (mutation, contract, component, **vendor client §3a**) or defaulted to unit-only.
 
 **Check:**
 
@@ -26,7 +26,7 @@ Read **`<AMPD-root>/docs/test-strategy-selection.md`** when assessing whether th
 - **Hat discipline** — Refactor-only vs feature/fix; no silent mixing (`<AMPD-root>/skills/refactoring/SKILL.md`).
 - **Increment scope** — If part of a feature, does the PR match **one** increment (not a whole backlog at once)? Multiple `[x]` on `increments/…` in one PR without justification?
 - **Documentation theater** — Many `acceptance-examples/<slice>.md` or per-increment `test-lists/<slice>.md` that only duplicate what tests already say? Markdown marked `[x]` without test references?
-- **Test strategy** — Is there an adopt/skip table (**`<AMPD-root>/docs/test-strategy-selection.md`**)? Unit-only without justification? Mutation/contract/component configured in CI but not run when the slice matches?
+- **Test strategy** — Is there an adopt/skip table (**`<AMPD-root>/docs/test-strategy-selection.md`**)? Unit-only without justification? Mutation/contract/component configured in CI but not run when the slice matches? Vendor adapter added without **sandbox** or **manual fake/stub** rows (§3a)?
 - **Test pyramid** — Duplicate acceptance + unit tests with identical assertions on the same class/module? ATDD files when TDD-only would suffice?
 - **TDD evidence** — RED before GREEN (commits or PR description)? Big-bang test+production file? Circular oracles in tests?
 - **Project verification** — Did the author run **all verify steps the project defines** for this scope (tests, lint, typecheck, format, SonarQube/static analysis), or only the test runner? Re-verify after each meaningful edit during development? Entrypoints/examples updated when construction API changed?

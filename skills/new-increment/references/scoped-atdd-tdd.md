@@ -14,6 +14,7 @@ Pick **one** outer/inner strategy for this backlog line. Do not stack duplicate 
 | Branchy/critical rules (pricing, auth, validation) | **TDD + mutation** (configure if greenfield) | Unit tests + mutation run on touched scope |
 | Invariants / parsers / serializers | **TDD + property-based** when rules exceed fixed examples | Unit + property tests |
 | DB/repository wiring | **TDD + narrow integration** | Unit at seam + integration if project uses Testcontainers/DB tests |
+| **Owned third-party API client / adapter** | **TDD** on the client; **sandbox** when feasible else **manual fake/stub** ([`test-strategy-selection.md`](../../../docs/test-strategy-selection.md) §3a) | Prefer vendor SDK in production; test list behaviors for mapping/errors; strategy rows for sandbox + fake |
 | API/HTTP/CLI user-visible contract | **ATDD + TDD** (Gherkin only if team reads features) | `acceptance-examples/<feature-stem>.md` (§ slice) + acceptance tests at boundary + TDD inside |
 | UI journey | **ATDD + TDD** | Catalog + UI/contract tests + TDD |
 | Feasibility unknown | **`skills/spike`** first | Promote, then return here |

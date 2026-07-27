@@ -123,7 +123,7 @@ RELEASE STAGE
 | OpenAPI / AsyncAPI contract | Interactive | Spec lint, breaking-change diff, example tests | Spectral, oasdiff | Gap |
 | Consumer-driven contracts | Interactive | Consumer publishes; provider verify job | Pact | Partial |
 | Provider/schema contract tests | Interactive | Schema compatibility in CI | JSON Schema, buf | Gap |
-| Contract tests for third-party APIs | Interactive | Recorded fixtures; sandbox; upgrade gate | VCR, sandbox job | Gap |
+| Contract tests for third-party APIs | Interactive | Recorded fixtures; sandbox; upgrade gate; owned client under test | VCR, sandbox job, manual fake/stub | Partial |
 | API backward-compat gate | Interactive | Breaking change fails build | buf breaking, GraphQL inspector | Gap |
 | Feature-flag behavior in tests | Interactive | Flag matrix or test mode in CI/stage | LaunchDarkly test hooks | Gap |
 
@@ -149,13 +149,13 @@ RELEASE STAGE
 | Smoke tests (suite tag) | Isolated or Interactive | `@smoke` subset; document if pre-deploy API or post-deploy | Tag filter in CI | Partial |
 | Smoke tests (synthetic / production) | Interactive | Scheduled probes on stage/prod | Checkly, Pingdom | Gap |
 | Full vs smoke split | — | PR runs smoke; main/nightly runs full interactive | CI workflow branches | Partial |
-| External system contract tests | Interactive | Third-party sandbox suite in acceptance stage | Vendor sandbox | Gap |
+| External system contract tests | Interactive | Third-party sandbox suite in acceptance stage; else manual fake/stub at owned seam | Vendor sandbox | Partial |
 | Characterization / approval tests | Isolated | Golden output; legacy harness | ApprovalTests | Covered |
 | Property-based tests | Isolated | Generative tests in commit stage | fast-check, Hypothesis | Partial |
 | Mutation testing | Isolated | Mutation score gate (optional) | Stryker, PIT | Partial |
 | Snapshot tests | Isolated | Reviewed snapshots in CI | Jest snapshots | Gap |
 | Application visual regression | Interactive | Screenshot compare on key pages post-deploy | Playwright screenshots | Gap |
-| HTTP mocking | Isolated | Stable tests without live vendor in commit | MSW, WireMock | Gap |
+| HTTP mocking | Isolated | Stable tests without live vendor in commit — prefer after sandbox ruled out; prefer owned fake/stub when possible | MSW, WireMock | Partial |
 | Parallel test sharding | — | CI splits by timing | Matrix jobs | Gap |
 | Flake control / quarantine | — | Retry limits; tracked quarantined tests | CI retry policy | Partial |
 
@@ -248,7 +248,7 @@ RELEASE STAGE
 | Architectural fitness functions | — | Cycles, forbidden imports, metrics fail build | ArchUnit, deptrac | Gap |
 | Architecture decision records | — | ADR template and status in repo | MADR, adr-tools | Gap |
 | Module boundary tests | Isolated | Forbidden import fails compile | custom lint | Gap |
-| Hexagonal ports (tested) | Isolated | Adapters behind interfaces; fakes in unit layer | ports/adapters layout | Partial |
+| Hexagonal ports (tested) | Isolated | Adapters behind interfaces; sandbox or fakes for vendor adapters; fakes in unit layer | ports/adapters layout | Partial |
 | Event schema registry compatibility | Interactive | Schema evolution check in CI | Confluent schema registry | Gap |
 | Idempotency / outbox tests | Interactive | Duplicate delivery simulated | outbox pattern tests | Gap |
 
@@ -310,7 +310,7 @@ RELEASE STAGE
 | Anonymized fixture datasets | — | Seed from sanitized dump | seed scripts | Gap |
 | Change data capture schema compatibility | Interactive | Event schema evolution in CI | Avro compatibility | Gap |
 | Webhook replay tests | Interactive | Recorded payloads verified | VCR, custom replay | Gap |
-| Vendor sandbox suite | Interactive | Nightly external contract job | Stripe test mode | Gap |
+| Vendor sandbox suite | Interactive | Nightly/acceptance external contract job; policy in `test-strategy-selection` §3a | Stripe test mode | Partial |
 
 ---
 

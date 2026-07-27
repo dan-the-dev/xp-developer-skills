@@ -9,8 +9,9 @@ Reference: [`docs/test-strategy-selection.md`](../../../docs/test-strategy-selec
 ## Slice characterization
 
 - [ ] Backlog line (verbatim): ___
-- [ ] Slice type: domain logic | API | UI component | UI journey | legacy | integration | bugfix | other: ___
+- [ ] Slice type: domain logic | API | UI component | UI journey | legacy | integration | **vendor client/adapter** | bugfix | other: ___
 - [ ] What could break **silently** without the right layer? ___
+- [ ] If vendor client: prefer **SDK** when available? sandbox feasible? else manual fake/stub planned? ___
 
 ---
 
@@ -38,8 +39,10 @@ Reference: [`docs/test-strategy-selection.md`](../../../docs/test-strategy-selec
 | Accessibility | | |
 | Smoke | | |
 | E2E | | |
+| **Vendor client (sandbox)** | | required row if slice owns a third-party adapter — [`test-strategy-selection` §3a](../../../docs/test-strategy-selection.md) |
+| **Vendor client (manual fake/stub)** | | required row if slice owns a third-party adapter; fallback when sandbox skipped |
 
-Minimum **5 practices** evaluated for non-trivial slices (always include **Mutation** and an **ATDD/acceptance** row).
+Minimum **5 practices** evaluated for non-trivial slices (always include **Mutation** and an **ATDD/acceptance** row). If the increment introduces or changes a **vendor client/adapter**, always evaluate both **Vendor client** rows.
 
 ---
 

@@ -12,6 +12,9 @@ This note ties the repository’s **TDD** agent skill to published sources. The 
 - **Santos, Pedro M.; Consolaro, Marco; Di Gioia, Alessandro.** *Agile Technical Practices Distilled: A Learning Journey in Technical Agility and Lean Software Development.* Packt Publishing, 2019.  
   Covers TDD as analysis and design, nested feedback loops with acceptance-level tests, strategies in the GREEN phase, continuous refactoring, and collaboration with broader agile technical practice.
 
+- **Fowler, Martin.** [Mocks Aren't Stubs](https://martinfowler.com/articles/mocksArentStubs.html) (2007).  
+  Distinguishes **state** vs **behavior** verification; classical vs mockist TDD; Meszaros’s **test double** vocabulary (dummy, fake, stub, spy, mock). AMPD prefers classical style: real collaborators when practical (including vendor sandbox), else fake/stub with state verification — not mocks of third-party SDK types.
+
 ---
 
 ## Related material (concepts echoed in skill design)
@@ -35,7 +38,8 @@ This note ties the repository’s **TDD** agent skill to published sources. The 
 | GREEN strategies (fake / obvious / triangulation) | Beck; distilled “implementation strategies” |
 | Refactor only on green, micro-steps, revert on red | Beck; *Clean Code* refactoring discipline |
 | Tests specify **behavior**, not structure | Beck (tests drive design); distilled outside-in framing |
-| Test doubles only to isolate behavior | Common testing practice summarized in distilled / Beck contexts |
+| Test doubles only to isolate behavior | Common testing practice summarized in distilled / Beck contexts; **Fowler** *Mocks Aren't Stubs* (classical preference; fake/stub vs mock) |
+| Owned vendor client: sandbox then manual fake/stub; prefer SDK | AMPD policy in `docs/test-strategy-selection.md` §3a; classical “real when practical” from Fowler |
 | Rule of three before extracting duplication | Distilled continuous-refactoring guidance |
 | Double-loop (outer acceptance, inner unit) | Distilled; skill keeps **inner** loop only and composes with **`skills/atdd`** |
 | Code **without** tests at change seam | **Feathers**; compose with **`skills/legacy-testing`** before relying on RED–GREEN alone |

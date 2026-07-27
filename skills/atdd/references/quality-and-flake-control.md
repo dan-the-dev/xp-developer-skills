@@ -13,7 +13,7 @@ Acceptance tests that lie or flake destroy the **definition of done**. Pragmatic
 | **Async** | explicit waits on outcomes, not fixed delays |
 | **Shared data** | isolated tenants/users per run; cleanup or transactions |
 | **Order** | tests must not depend on execution order |
-| **External services** | test doubles, wiremock, or dedicated sandbox — document which |
+| **External services** | Prefer vendor **sandbox/test** when feasible; else **manual fake/stub** at an owned seam; HTTP mock/fixtures only as interim — document which ([`test-strategy-selection.md`](../../../docs/test-strategy-selection.md) §3a; [Mocks Aren't Stubs](https://martinfowler.com/articles/mocksArentStubs.html)) |
 
 ---
 

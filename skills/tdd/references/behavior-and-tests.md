@@ -12,7 +12,7 @@ Control or fake:
 
 - **Clocks and time** — inject a clock or freeze time; no real sleeps as assertions.
 - **Randomness** — fixed seed or injected generator.
-- **Network and external I/O** — no real network/files in the default unit loop unless this test **is** an integration test at an owned boundary (see below).
+- **Network and external I/O** — no real network/files in the default **domain/unit** loop unless this test **is** an integration test at an owned boundary (see below), or the SUT **is** an owned vendor client under [`test-strategy-selection.md`](../../../docs/test-strategy-selection.md) §3a (sandbox when feasible).
 - **Global / process / env state** — reset or isolate per test per project patterns.
 - **Parallelism** — avoid shared mutable statics; follow the runner’s isolation rules.
 
@@ -25,9 +25,10 @@ After RED, confirm the failure is the **intended** signal (missing behavior, wro
 Still **one failing test at a time** and still **Three Laws** — but pick the **smallest test that asserts behavior at a stable seam**:
 
 - **Unit** (fast, in-memory): logic and pure transformations; collaborators are **real** when cheap or **doubles** at **owned** boundaries.
-- **Narrow integration**: **one** real module boundary (e.g. repository with in-memory DB, HTTP handler with test client) when behavior is **wiring** or serialization — avoid duplicating that in over-mocked units.
+- **Narrow integration**: **one** real module boundary (e.g. repository with in-memory DB, HTTP handler with test client, **vendor adapter against sandbox**) when behavior is **wiring**, serialization, or external mapping — avoid duplicating that in over-mocked units.
+- **Owned vendor client**: SUT is your adapter; prefer sandbox live calls, else a **manual fake/stub** at the port you own — see [`test-strategy-selection.md`](../../../docs/test-strategy-selection.md) §3a. Prefer vendor **SDK** in production when available; SDK vs HTTP does not change this seam choice.
 
-**Over-mocking** (many mocks, strict call sequences unrelated to the specified behavior) often **locks implementation** and violates “tests decoupled from internals.” Prefer a **real** collaborator or a **dumb fake** at a **thin seam** you own; reserve mocks for **command-style** interactions the product contract actually specifies.
+**Over-mocking** (many mocks, strict call sequences unrelated to the specified behavior) often **locks implementation** and violates “tests decoupled from internals.” Prefer a **real** collaborator or a **dumb fake** at a **thin seam** you own; reserve mocks for **command-style** interactions the product contract actually specifies. This matches classical TDD and **state verification** over **behavior verification** for awkward collaborators ([Mocks Aren't Stubs](https://martinfowler.com/articles/mocksArentStubs.html)).
 
 ---
 
@@ -67,12 +68,15 @@ Write the test as if the **ideal** API already existed: clear names, minimal par
 
 ## Test doubles (when the stack uses them)
 
+Vocabulary (Meszaros via [Mocks Aren't Stubs](https://martinfowler.com/articles/mocksArentStubs.html)): **Dummy**, **Fake**, **Stub**, **Spy**, **Mock**. Only **mocks** insist on **behavior verification** (expected calls). Prefer **classical** style: real objects when practical; otherwise **fake** / **stub** with **state verification**.
+
 Use doubles only to **isolate behavior** or replace slow/non-deterministic collaborators, following project conventions:
 
-- Prefer **real** collaborators when cheap and deterministic.
-- **Stub** predictable responses for queries; use **fakes** with minimal in-memory behavior when the project already uses them.
+- Prefer **real** collaborators when cheap and deterministic (including vendor **sandbox** when testing an owned client — §3a).
+- **Stub** predictable canned responses for queries; use **fakes** with minimal in-memory behavior when you need working shortcuts.
 - **Mocks / spies** only for specified command-style interactions — avoid over-specifying call sequences unrelated to the behavior under test.
-- Do not mock **third-party** types directly unless the codebase already wraps them; prefer a thin owned seam.
+- Do not mock **third-party** types directly unless the codebase already wraps them; prefer a thin owned seam. When the collaborator is awkward and sandbox is not feasible, prefer a **hand-written fake/stub** on **your** interface over mock frameworks aimed at the vendor SDK.
+- Do not confuse test-double **fake/stub** with GREEN-phase **“fake it”** (hard-coded production return until triangulation).
 
 Doubles should stay **dumb and obvious**; complex logic inside a double is a smell.
 

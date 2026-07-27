@@ -21,8 +21,12 @@ SRP violation is a **smell**; the medicine is **tests + small extractions**, not
 
 **Moves:**
 
-- **Wrapper / adapter** — your interface, their implementation; tests use fake adapter.
-- **Seam at boundary** — only the wrapper talks to the library; domain never imports vendor types directly if feasible.
+- **Wrapper / adapter** — your interface, their implementation; domain never imports vendor types directly if feasible.
+- **Prefer official SDK** inside the adapter when one exists; otherwise HTTP — same owned seam either way.
+- **Test the owned adapter** ([`test-strategy-selection.md`](../../../docs/test-strategy-selection.md) §3a):
+  1. **Sandbox / test** environment live calls when credentials and stability allow.
+  2. Else a **manual fake** on your port with **stub** (canned) responses — prefer state verification over mocking SDK types ([Mocks Aren't Stubs](https://martinfowler.com/articles/mocksArentStubs.html)).
+- **Seam at boundary** — only the wrapper talks to the library.
 
 Matches **Hexagonal / Ports** thinking (see Cupać’s architecture material) without requiring full rewrite — **start** at the module you touch.
 
