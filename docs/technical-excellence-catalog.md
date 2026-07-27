@@ -182,6 +182,7 @@ RELEASE STAGE
 | Strict TDD (RED observed) | Isolated | Failing test run before production change | — | Covered |
 | Test-first bugfix | Isolated | Failing repro before fix merge | `skills/bugfix` | Covered |
 | Refactor with green suite | Isolated | Verify after each mechanical step | `skills/refactoring` | Covered |
+| Simple Design + mandatory Object Calisthenics; patterns as destinations | Isolated | Design note in return payload; post-increment / PR gates | `docs/simple-design.md`, `docs/design-quality.md`, `tdd` / `refactoring` / `new-increment` | Covered |
 | Two hats (behavior vs structure) | — | Separate commits/PRs; skill boundary | delivery-process §7 | Covered |
 | Formatter enforced | — | Format check in commit stage | Prettier, rustfmt | Partial |
 | Linter enforced | — | Lint fails commit stage | ESLint, Ruff, clippy | Covered |

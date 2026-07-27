@@ -15,7 +15,7 @@ Martin Fowler’s core distinction:
 - **Refactoring** (noun): *a change* that improves internal design without changing observable behavior.
 - **Refactoring** (verb): *the process* of applying such changes **in small steps**, each keeping behavior intact.
 
-The goal is **simpler change later** — not cleverness for its own sake.
+The goal is **simpler change later** — not cleverness for its own sake. AMPD judges “simpler” with [`docs/simple-design.md`](../../../docs/simple-design.md): Beck’s four rules, **mandatory Object Calisthenics**, and GoF patterns only as destinations when smells persist.
 
 ---
 

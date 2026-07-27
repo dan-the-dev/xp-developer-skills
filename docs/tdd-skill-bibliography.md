@@ -22,6 +22,13 @@ This note ties the repository’s **TDD** agent skill to published sources. The 
 - **Martin, Robert C.** *Clean Code: A Handbook of Agile Software Craftsmanship.* Prentice Hall, 2008.  
   Often cited in discussions of ultra-short feedback loops and disciplined refactoring alongside tests.
 
+- **Fowler, Martin.** [Beck Design Rules](https://martinfowler.com/bliki/BeckDesignRules.html); [Yagni](https://martinfowler.com/bliki/Yagni.html).  
+  Simple Design as the REFACTOR compass; YAGNI forbids speculative features, not malleability.
+
+- **Bay, Jeff.** Object Calisthenics — mandatory OO discipline during REFACTOR in AMPD ([`object-calisthenics.md`](object-calisthenics.md)).
+
+- **Kerievsky, Joshua.** *Refactoring to Patterns* — patterns emerge after green, when smells persist.
+
 - **Martin, Robert C.** — **The Three Laws of TDD** (widely reproduced essays and talks).  
   The skill encodes these laws literally: no production without a failing test; minimal test to fail; minimal production to pass the current failing test.
 
@@ -37,6 +44,7 @@ This note ties the repository’s **TDD** agent skill to published sources. The 
 | Short R–G–R cycles, smallest steps | Beck; distilled agile TDD chapters |
 | GREEN strategies (fake / obvious / triangulation) | Beck; distilled “implementation strategies” |
 | Refactor only on green, micro-steps, revert on red | Beck; *Clean Code* refactoring discipline |
+| Simple Design + mandatory calisthenics; patterns only toward smells | Beck Design Rules; Bay; Kerievsky; [`docs/simple-design.md`](simple-design.md) / [`docs/design-quality.md`](design-quality.md) |
 | Tests specify **behavior**, not structure | Beck (tests drive design); distilled outside-in framing |
 | Test doubles only to isolate behavior | Common testing practice summarized in distilled / Beck contexts; **Fowler** *Mocks Aren't Stubs* (classical preference; fake/stub vs mock) |
 | Owned vendor client: sandbox then manual fake/stub; prefer SDK | AMPD policy in `docs/test-strategy-selection.md` §3a; classical “real when practical” from Fowler |

@@ -20,6 +20,7 @@ Optimize for:
 - **Small steps** — one mechanical change per step; if tests go **red**, **undo** that step and try smaller
 - **No behavior change** — same inputs and outputs, same observable side effects
 - **Clarity** — better names, clearer boundaries, less accidental duplication
+- **Simple Design** — Beck’s four rules + **mandatory Object Calisthenics**; GoF patterns only as destinations when smells persist ([`docs/simple-design.md`](../../docs/simple-design.md), [`docs/design-quality.md`](../../docs/design-quality.md))
 - **Reviewability** — commits readers can trust as “structure only”
 
 This skill is for **dedicated** refactoring sessions, for the **REFACTOR** phase inside TDD, and for **post-increment review** after `new-increment`. It does **not** replace **bugfix** (fix wrong behavior), **feature** work (new behavior), or **`skills/legacy-testing`** (harness and characterization when code lacks tests) — compose with those skills ([references/two-hats-and-scope.md](references/two-hats-and-scope.md)).
@@ -45,6 +46,7 @@ Post-increment review: follow [references/post-increment-review.md](references/p
 | **Green light** | Start green; after *every* step, green again; red → **revert** last step ([references/testing-and-safety-net.md](references/testing-and-safety-net.md)) |
 | **No new toys** | No new behavior, APIs, or “while we’re here” features ([references/two-hats-and-scope.md](references/two-hats-and-scope.md)) |
 | **Rule of three** | Wait for real repetition before abstracting; don’t DRY noise ([references/duplication-abstraction-and-naming.md](references/duplication-abstraction-and-naming.md)) |
+| **Simple Design** | Beck 4 rules + **mandatory** Object Calisthenics; patterns toward evidenced smells only ([`docs/simple-design.md`](../../docs/simple-design.md), [`docs/design-quality.md`](../../docs/design-quality.md)) |
 | **Good names** | Rename so code tells a story; same discipline in tests ([references/duplication-abstraction-and-naming.md](references/duplication-abstraction-and-naming.md)) |
 | **Leave it better** | Boy Scout rule: small local improvement when you touch code; scope larger refactors explicitly |
 
@@ -84,15 +86,17 @@ Shared delivery rules: [`docs/delivery-process.md`](../../docs/delivery-process.
 
 1. **Goal** — one sentence: *what* will be easier after this (e.g. “extract pricing so policies are isolated”).
 2. **Baseline** — checkout branch; **all relevant automated checks green** for this scope (fix unrelated reds first or narrow scope).
-3. **Plan** — name 1–3 **Fowler-style** refactorings you will compose ([references/catalog-and-composing-refactorings.md](references/catalog-and-composing-refactorings.md)).
+3. **Plan** — name 1–3 **Fowler-style** refactorings you will compose ([references/catalog-and-composing-refactorings.md](references/catalog-and-composing-refactorings.md)); if aiming at a GoF destination, say so explicitly and why ([`docs/design-quality.md`](../../docs/design-quality.md)).
 4. **Loop** until goal met:
    - pick the **smallest** next mechanical step
+   - apply **Object Calisthenics** on touched OO as you go ([`docs/object-calisthenics.md`](../../docs/object-calisthenics.md))
    - apply it
    - run **narrowest** meaningful tests → then widen for shared code
    - if scoped lint exists for touched files, run it after structural edits
    - if **red**: **revert** step; shrink; retry ([references/baby-steps-and-revert.md](references/baby-steps-and-revert.md))
 5. **Commit** — `refactor: …` (or team convention); message describes **structure**, not new capability.
 6. **Integrate** — small, green changes merge often when using CD / trunk-based flow ([references/continuous-delivery-discipline.md](references/continuous-delivery-discipline.md)).
+7. **Design note** — include Simple Design / calisthenics / patterns in the return payload ([`docs/delivery-process.md`](../../docs/delivery-process.md) §10).
 
 Never “fix” production under failing tests during a refactor pass unless you are **switching hats** to a bugfix/feature workflow.
 
@@ -178,6 +182,10 @@ Checklists: [checklists/before-refactor.md](checklists/before-refactor.md), [che
 - [references/continuous-delivery-discipline.md](references/continuous-delivery-discipline.md)
 - [references/post-increment-review.md](references/post-increment-review.md)
 - [references/anti-patterns.md](references/anti-patterns.md)
+- [`docs/simple-design.md`](../../docs/simple-design.md)
+- [`docs/object-calisthenics.md`](../../docs/object-calisthenics.md)
+- [`docs/design-patterns.md`](../../docs/design-patterns.md)
+- [`docs/design-quality.md`](../../docs/design-quality.md)
 
 ### Examples
 

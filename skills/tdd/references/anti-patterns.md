@@ -40,6 +40,9 @@ Symptoms to avoid when applying strict TDD.
 
 - **Drive-by refactors** in modules far from the code that turned the last test green.
 - **Global** renames or style sweeps bundled into a feature slice without their own list items or workflow.
+- **Procedural god Action** — multi-case `if`/`else` on type/state left as “refactored” (violates mandatory Object Calisthenics / Simple Design).
+- **Pattern theater** — Strategy/State/Factory introduced in GREEN or with a single unused concrete type (YAGNI / fewest elements).
+- **Skipped calisthenics** — nesting, `else`, Demeter chains, ask-then-branch on owned OO with no boundary exception.
 
 ---
 

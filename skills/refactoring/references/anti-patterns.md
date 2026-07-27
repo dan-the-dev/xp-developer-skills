@@ -12,8 +12,12 @@
 ## Design
 
 - **Premature abstraction** — extracting after the first duplicate without a third use.
-- **Golden hammer** — forcing one pattern (e.g. every `if` → strategy) without local benefit.
+- **Golden hammer** — forcing one pattern (e.g. every `if` → strategy) without local benefit / fewest elements.
 - **Refactor to “clever”** — shorter code that is harder to read.
+- **Procedural god Action** — type/state behavior selected with `if`/`else` instead of guards + polymorphism (calisthenics / Simple Design breach).
+- **Pattern theater** — Strategy/State/Factory with one concrete type “for later” (YAGNI).
+- **Calisthenics theater** — wrapping every primitive or exploding types so Beck rule 4 fails.
+- **Skipped mandatory calisthenics** on owned OO touched in the session without a documented boundary exception.
 
 ---
 

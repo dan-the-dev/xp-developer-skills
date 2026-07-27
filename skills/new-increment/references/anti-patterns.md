@@ -22,3 +22,6 @@
 - Skipping **change-surface search** after factory/API/rename changes (§3)
 - **Per-increment git branch** or merge-to-main between increments ([`delivery-process.md`](../../../docs/delivery-process.md) §1a)
 - **Full suite mid-RGR** when a narrower test command exists — scoped during work; full verify only at increment end
+- **Calisthenics breach left as done** — nested indent, `else` chains, ask-then-branch god Actions on owned OO without boundary exception ([`docs/object-calisthenics.md`](../../../docs/object-calisthenics.md))
+- **Pattern theater** — speculative Strategy/State/Factory without evidenced smell / fewest elements ([`docs/design-quality.md`](../../../docs/design-quality.md))
+- **Missing Design note** in return payload when OO production code was touched

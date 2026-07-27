@@ -50,6 +50,9 @@ Use for the **whole slice** (test list) and each **cycle** before squash and pus
 - [ ] If any test fails: **reverted** or reset to last green before proceeding
 - [ ] Behavior unchanged (structure, names, extraction, duplication removal in **production and/or tests**)
 - [ ] **Proximity**: changes focused on code touched for this list item; no opportunistic distant cleanups
+- [ ] **Simple Design** ([`docs/simple-design.md`](../../../docs/simple-design.md)): Beck 4 rules on touched code
+- [ ] **Object Calisthenics** mandatory on owned OO touched this cycle ([`docs/object-calisthenics.md`](../../../docs/object-calisthenics.md)) — no `else`, one indent level, tell-don’t-ask, etc. (or stated boundary exception)
+- [ ] **Patterns** only toward evidenced smells — not speculative ([`docs/design-quality.md`](../../../docs/design-quality.md))
 - [ ] Staged changes are refactor-only (may be **test-only** files)
 - [ ] Commit: `refactor: …` (or omit if truly nothing to improve)
 

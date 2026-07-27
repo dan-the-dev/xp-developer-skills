@@ -6,4 +6,5 @@
 - [ ] Change-surface search done if construction/import/API changed (§3)
 - [ ] Commits labeled **refactor:** (or team equivalent); **no** feature tickets closed without hat switch
 - [ ] **Follow-ups** recorded if proximity prevented wider cleanup ([`two-hats-and-scope.md`](../references/two-hats-and-scope.md))
+- [ ] **Design** note: Simple Design / calisthenics / patterns ([`docs/design-quality.md`](../../../docs/design-quality.md))
 - [ ] Return payload includes verification results (§10)

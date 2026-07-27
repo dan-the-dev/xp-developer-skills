@@ -18,6 +18,8 @@ model: inherit
 - **`<AMPD-root>/docs/delivery-process.md`** — verification, roles, **§1a feature branch**, change-surface, return payload
 - **`<AMPD-root>/docs/project-verification.md`** — **scoped** checks after every code change; **full** hard green gate only before done
 - **`<AMPD-root>/docs/test-strategy-selection.md`** — evaluate catalog practices (mutation, contract, property-based, ATDD, **vendor client §3a**, etc.) before first RED; on greenfield introduce warranted tooling
+- **`<AMPD-root>/docs/simple-design.md`** — Simple Design + YAGNI; **mandatory** Object Calisthenics; patterns as emerged destinations
+- **`<AMPD-root>/docs/design-quality.md`** — smell → move → pattern playbook (REFACTOR / Design return field)
 - **`<AMPD-root>/skills/new-increment/SKILL.md`**
 - **`<AMPD-root>/skills/tdd/SKILL.md`** — always for implementation
 - **`<AMPD-root>/skills/atdd/SKILL.md`** — only when a real outer seam exists
@@ -61,6 +63,8 @@ Per **`<AMPD-root>/docs/project-verification.md`** and delivery-process §2 / §
 - **Per-increment branch** (`feat/<feature>-<increment-slug>`) or merge-to-main between increments
 - Skipping mutation on greenfield branchy domain with only “not configured”
 - Circular oracles; duplicate pyramid layers
+- Claiming done with Object Calisthenics breaches on owned OO introduced this slice (no boundary exception)
+- Introducing speculative GoF pattern hierarchies (YAGNI / fewest elements)
 
 ---
 
@@ -69,7 +73,7 @@ Per **`<AMPD-root>/docs/project-verification.md`** and delivery-process §2 / §
 1. Take **one** open `[ ]` line from **`increments/<feature-stem>.md`**. Confirm you are on **`feat/<feature-stem>`** (create only if missing; never a new branch per line).
 2. **Test strategy** — per **`test-strategy-selection.md`**: discover configured jobs; complete adopt/skip table **before first RED** ([checklist](../skills/new-increment/checklists/test-strategy.md)). Greenfield: introduce mutation/property/ATDD when warranted. Owned third-party client: §3a (prefer SDK; sandbox then manual fake/stub).
 3. Choose TDD-only vs ATDD+TDD per scoped reference.
-4. RED → GREEN → REFACTOR per behavior; **scoped** test runs mid-increment; run **adopted** practices (e.g. mutation, integration) and **full** verify at slice boundary only.
+4. RED → GREEN → REFACTOR per behavior; **scoped** test runs mid-increment; REFACTOR applies Simple Design + **mandatory Object Calisthenics** (**`<AMPD-root>/docs/design-quality.md`**); run **adopted** practices (e.g. mutation, integration) and **full** verify at slice boundary only.
 5. Run **all applicable project verify steps**; fix until green.
 6. Mark parent line `[x]` with links; **commit** on the feature branch (do not merge).
 7. **Stop** with handoff (next open line — do not implement).
@@ -80,4 +84,4 @@ Per **`<AMPD-root>/docs/project-verification.md`** and delivery-process §2 / §
 
 ## Return payload
 
-Per **`<AMPD-root>/docs/delivery-process.md`** §10: role, single backlog line, **branch**, **commits**, **verification table** (all pass), **test strategy table**, RED count, layers, change-surface search, handoff (next line only — do not implement).
+Per **`<AMPD-root>/docs/delivery-process.md`** §10: role, single backlog line, **branch**, **commits**, **verification table** (all pass), **test strategy table**, **Design** note (Simple Design / calisthenics / patterns when OO production touched), RED count, layers, change-surface search, handoff (next line only — do not implement).

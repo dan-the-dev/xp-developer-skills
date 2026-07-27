@@ -9,11 +9,13 @@ Mode of **`skills/refactoring`** invoked by **`new-feature`** (or the user) afte
 Review **only** the commits (and files) from the just-finished increment:
 
 1. **Explain** what changed (behavior + structure) in reviewer-friendly language.
-2. **Suggest** small, targeted improvements: naming, extracts, test gaps, pyramid/strategy holes (e.g. missing mutation on branchy logic).
-3. **Optionally apply** (full depth only) only **tiny** mechanical refactors clearly inside that change surface — baby steps, tests stay green, `refactor:` commits.
+2. **Suggest** small, targeted improvements: naming, extracts, **Simple Design / Object Calisthenics breaches**, unjustified pattern theater, test gaps, pyramid/strategy holes (e.g. missing mutation on branchy logic).
+3. **Optionally apply** (full depth only) only **tiny** mechanical refactors clearly inside that change surface — baby steps, tests stay green, `refactor:` commits — including calisthenics fixes and inlining speculative single-implementation patterns.
 4. **Stop** with a structured report. Do **not** implement the next backlog line.
 
-This pass is an **external quality gate**, not a second stylistic REFACTOR. The increment’s TDD loop already includes REFACTOR — apply here only when **clear leftover debt** remains in the change surface (e.g. an obvious extract the slice left half-done, a misleading name in touched files). Do **not** re-tidy for taste by default.
+This pass is an **external quality gate**, not a second stylistic REFACTOR. The increment’s TDD loop already includes REFACTOR — apply here only when **clear leftover debt** remains in the change surface (e.g. an obvious extract the slice left half-done, an `else` chain on owned OO, a misleading name in touched files). Do **not** re-tidy for taste by default.
+
+Design compass: [`docs/simple-design.md`](../../../docs/simple-design.md), playbook [`docs/design-quality.md`](../../../docs/design-quality.md).
 
 ---
 
@@ -34,6 +36,8 @@ Caller passes depth explicitly. If omitted: **full** when SHAs come from a step-
 |----------|--------------|
 | Diff / commits of this increment (plus your own tiny follow-up commits in full depth) | Future increment behavior |
 | Local names, duplication, extract/inline in touched modules | Module-wide redesign, layering rewrite |
+| **Object Calisthenics** breaches on OO introduced/edited this slice | Pre-existing debt far outside the change surface (suggest only) |
+| Speculative pattern theater introduced this slice | Inventing large GoF hierarchies “properly” under review |
 | Missing tests for branches **introduced in this increment** | New product capabilities |
 | Flagging weak strategy vs [`test-strategy-selection.md`](../../../docs/test-strategy-selection.md) | Introducing unrelated tooling “while here” without clear increment need |
 
@@ -45,8 +49,8 @@ Caller passes depth explicitly. If omitted: **full** when SHAs come from a step-
 
 | Kind | Meaning | Effect on `new-feature` automatic |
 |------|---------|-----------------------------------|
-| **Blocking** | Tests or strategy holes that belong in **this** increment (e.g. untested branch just introduced; mutation adopted but never run) | **Stop** — do not hand off the next backlog line |
-| **Non-blocking** | Nice-to-have renames, future extracts, cross-cutting cleanups | Continue automatic; record under deferred |
+| **Blocking** | Tests or strategy holes that belong in **this** increment (e.g. untested branch just introduced; mutation adopted but never run); **Object Calisthenics** breach on OO introduced/edited this slice without boundary exception; duplicated type/state behavior switch left procedural; speculative pattern hierarchy introduced this slice | **Stop** — do not hand off the next backlog line |
+| **Non-blocking** | Nice-to-have renames, future extracts, cross-cutting cleanups, pre-existing design debt outside surface | Continue automatic; record under deferred |
 
 Mark blocking items clearly in the report (`blocking: yes`).
 
@@ -84,10 +88,15 @@ full | light
 - Gaps / follow-ups: <bullets or none>
 - Blocking gaps: <none | bullets>
 
+### Design posture
+- Simple Design / calisthenics: <ok | breaches…>
+- Patterns: <none | toward/away Name | theater…>
+- Blocking design gaps: <none | bullets>
+
 ### Suggestions
 | Id | Kind | Scope | Action | Blocking | Note |
 |----|------|-------|--------|----------|------|
-| 1 | rename / extract / test | in-surface | apply-now \| suggest-only | yes \| no | … |
+| 1 | rename / extract / calisthenics / pattern / test | in-surface | apply-now \| suggest-only | yes \| no | … |
 
 ### Applied (if any — full depth only)
 - `refactor: …` — <sha>

@@ -90,6 +90,8 @@ AI should amplify simplicity by:
 AMPD strongly favors:
 the simplest solution that works today.
 
+For OO structure, that means [`simple-design.md`](simple-design.md): Beck’s four rules and YAGNI as compass; **Object Calisthenics mandatory** on owned domain/application code; Gang of Four patterns only as destinations reached by refactoring when smells persist (Kerievsky) — never as speculative catalogs.
+
 ⸻
 
 ### Feedback

@@ -64,3 +64,18 @@ What is **not** refactor here:
 
 - Prefer **evidence-based** extraction: remove duplication when it is real and recurring, not speculative.
 - Avoid premature frameworks: let structure emerge from repeated tests and green code; over-abstracting is a design smell visible through hard-to-write tests.
+
+---
+
+## Simple Design (mandatory on REFACTOR)
+
+Compass: [`docs/simple-design.md`](../../../docs/simple-design.md) — **Simple Design + YAGNI**; **Object Calisthenics mandatory**; patterns as **emerged destinations** (Kerievsky).
+
+After GREEN, before ending the cycle, on **production and test OO code in proximity**:
+
+1. **Beck’s four rules** (priority): passes tests → reveals intention → no duplication → fewest elements.
+2. **Object Calisthenics** — mandatory for owned domain/application OO ([`docs/object-calisthenics.md`](../../../docs/object-calisthenics.md)). Fix breaches with small Fowler moves (extract to one indentation level; replace `else` with guards or polymorphism; wrap domain primitives; first-class collections; one dot per line; small types; ≤ two instance variables; tell, don’t ask).
+3. **Patterns** — only if a smell remains with evidence (rule of three / duplicated type-or-state branching). Refactor **toward** Strategy, State, Factory Method, Null Object, etc. ([`docs/design-patterns.md`](../../../docs/design-patterns.md); playbook [`docs/design-quality.md`](../../../docs/design-quality.md)). Do **not** introduce hierarchies in GREEN or for hypothetical future cases (YAGNI).
+4. **Away from pattern** if a single-implementation hierarchy appeared without need — inline.
+
+**Anti-patterns:** leaving a procedural multi-case Action with `if`/`else` as “refactored”; Strategy/State theater with one concrete type; skipping calisthenics because “we’ll pattern it later.”

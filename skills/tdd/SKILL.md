@@ -8,7 +8,7 @@ allowed-tools: Read, Edit, MultiEdit, Bash, Grep, Glob
 
 ## Mission
 
-Shared delivery rules at slice boundaries: [`docs/delivery-process.md`](../../docs/delivery-process.md) (§2 verification, §3 change-surface, §4 test strategy, §6 RED→GREEN), [`docs/project-verification.md`](../../docs/project-verification.md), and [`docs/test-strategy-selection.md`](../../docs/test-strategy-selection.md).
+Shared delivery rules at slice boundaries: [`docs/delivery-process.md`](../../docs/delivery-process.md) (§2 verification, §3 change-surface, §4 test strategy, §6 RED→GREEN), [`docs/project-verification.md`](../../docs/project-verification.md), [`docs/test-strategy-selection.md`](../../docs/test-strategy-selection.md), and [`docs/simple-design.md`](../../docs/simple-design.md) (REFACTOR design compass).
 
 Turn requirements into **concrete automated examples** before production code exists: each example is a **small** failing test, then the smallest code that passes, then structure improvements **without** changing behavior.
 
@@ -137,8 +137,9 @@ During REFACTOR:
 - if **any** test fails: **revert** that change (or reset to last green), then take a **smaller** step
 - do not slip in behavior changes “while you are here”
 - prefer edits **close** to the code that satisfied the current test; **avoid** drive-by refactors in distant modules (see [references/refactor-discipline.md](references/refactor-discipline.md))
+- apply **Simple Design** ([`docs/simple-design.md`](../../docs/simple-design.md)): Beck’s four rules; **Object Calisthenics mandatory** on owned OO ([`docs/object-calisthenics.md`](../../docs/object-calisthenics.md)); GoF patterns only as destinations when smells persist ([`docs/design-quality.md`](../../docs/design-quality.md)) — never speculative hierarchies in GREEN
 
-Refactoring is **continuous** across cycles, not deferred cleanup. Remove duplication when it is **real and recurring**; avoid speculative abstraction (rule-of-three guidance in micro-iterations reference).
+Refactoring is **continuous** across cycles, not deferred cleanup. Remove duplication when it is **real and recurring**; avoid speculative abstraction (rule-of-three guidance in micro-iterations reference). Leaving procedural multi-case `if`/`else` on owned OO as “done” is not a completed REFACTOR.
 
 ---
 
@@ -286,6 +287,7 @@ This preserves local narrative during development and **reviewer-friendly** hist
 - [references/refactor-discipline.md](references/refactor-discipline.md)
 - [references/squash-and-push.md](references/squash-and-push.md)
 - [references/anti-patterns.md](references/anti-patterns.md)
+- [`docs/simple-design.md`](../../docs/simple-design.md) / [`docs/design-quality.md`](../../docs/design-quality.md)
 
 ### Examples
 

@@ -20,6 +20,8 @@ Read **`<AMPD-root>/docs/manifesto.md`** for AMPD principles (verify every chang
 
 Read **`<AMPD-root>/docs/test-strategy-selection.md`** when assessing whether the author evaluated configured test layers (mutation, contract, component, **vendor client §3a**) or defaulted to unit-only.
 
+Read **`<AMPD-root>/docs/simple-design.md`** and **`<AMPD-root>/docs/design-quality.md`** when assessing OO structure (Object Calisthenics mandatory; patterns as emerged destinations only).
+
 **Check:**
 
 - **Claims vs evidence** — Does the PR do what the description says? Were tests run?
@@ -29,6 +31,8 @@ Read **`<AMPD-root>/docs/test-strategy-selection.md`** when assessing whether th
 - **Test strategy** — Is there an adopt/skip table (**`<AMPD-root>/docs/test-strategy-selection.md`**)? Unit-only without justification? Mutation/contract/component configured in CI but not run when the slice matches? Vendor adapter added without **sandbox** or **manual fake/stub** rows (§3a)?
 - **Test pyramid** — Duplicate acceptance + unit tests with identical assertions on the same class/module? ATDD files when TDD-only would suffice?
 - **TDD evidence** — RED before GREEN (commits or PR description)? Big-bang test+production file? Circular oracles in tests?
+- **Simple Design / Object Calisthenics** — On owned OO in the diff: nested indent, `else` chains, ask-then-branch god Actions, Demeter chains, bloated types without boundary exception? (**must-fix** for code introduced/edited in this PR.) Duplicated type/state behavior switches left procedural?
+- **Pattern discipline** — Speculative Strategy/State/Factory with one concrete type or “for later” extension points? (**must-fix** / should-fix per **`<AMPD-root>/docs/design-quality.md`**.) Missing polymorphism where rule-of-three / duplicated switches clearly apply?
 - **Project verification** — Did the author run **all verify steps the project defines** for this scope (tests, lint, typecheck, format, SonarQube/static analysis), or only the test runner? Re-verify after each meaningful edit during development? Entrypoints/examples updated when construction API changed?
 - **Skills alignment** — Should **legacy-testing** have run first (`<AMPD-root>/skills/legacy-testing/SKILL.md`)? ATDD only if a real outer seam (`<AMPD-root>/skills/atdd/SKILL.md` + `new-increment` scoped reference)? Bugfix discipline (`<AMPD-root>/skills/bugfix/SKILL.md`)?
 - **Spike leakage** — Disposable `spike/` code merged without promotion?

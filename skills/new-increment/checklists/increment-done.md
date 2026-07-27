@@ -11,8 +11,9 @@
 - [ ] **At end:** **All project verify steps** for this scope run and **passed** ([`docs/delivery-process.md`](../../../docs/delivery-process.md) §2; [`docs/project-verification.md`](../../../docs/project-verification.md)) — full relevant tests, lint, format, SonarQube, adopted mutation/contract/etc.
 - [ ] **Hard green gate** — no applicable verify step left red
 - [ ] **Change-surface search** done if construction/import/API changed (§3)
+- [ ] **Design** — Simple Design + **mandatory Object Calisthenics** on touched owned OO ([`docs/simple-design.md`](../../../docs/simple-design.md), [`docs/object-calisthenics.md`](../../../docs/object-calisthenics.md)); patterns only toward evidenced smells / no theater ([`docs/design-quality.md`](../../../docs/design-quality.md))
 - [ ] Parent `increments/…` **one** line `[x]` with links
 - [ ] Work **committed** on the feature branch; SHAs + branch name in return payload
 - [ ] Redundant per-slice markdown merged/deleted if created
-- [ ] **Return payload** includes verification results, **test strategy table**, commits, branch, and RED count ([`docs/delivery-process.md`](../../../docs/delivery-process.md) §10)
+- [ ] **Return payload** includes verification results, **test strategy table**, **Design** note (when OO production touched), commits, branch, and RED count ([`docs/delivery-process.md`](../../../docs/delivery-process.md) §10)
 - [ ] **Stopped** — did not start the next backlog line; did not merge to unlock the next increment

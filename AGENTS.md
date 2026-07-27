@@ -26,6 +26,8 @@ Location: **`agents/`** (symlinked at **`.claude/agents/`** for Claude Code in t
 - [`docs/delivery-process.md`](docs/delivery-process.md) — shared delivery rules (verification, roles, **feature branch §1a**, return payload)
 - [`docs/project-verification.md`](docs/project-verification.md) — scoped checks during work; full gates after every code-touching slice
 - [`docs/test-strategy-selection.md`](docs/test-strategy-selection.md) — which test layers and techniques to adopt per slice (mutation, contract, property-based, owned vendor clients §3a, etc.)
+- [`docs/simple-design.md`](docs/simple-design.md) — Simple Design + YAGNI; **mandatory** Object Calisthenics; patterns as emerged destinations
+- [`docs/design-quality.md`](docs/design-quality.md) — agent playbook (smell → move → pattern)
 - [`docs/roadmap.md`](docs/roadmap.md)
 
 ## Install

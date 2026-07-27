@@ -37,7 +37,11 @@ Suggested reading order for humans and AI agents:
     Scoped checks during work; full tests, lint, format, SonarQube, and all project gates at slice boundary.
 7. test-strategy-selection.md
     Which test layers and techniques to adopt per slice (mutation, contract, property-based, integration, owned vendor clients / sandbox vs fake, etc.).
-8. technical-excellence-catalog.md
+8. simple-design.md
+    Compass: Simple Design + YAGNI; mandatory Object Calisthenics; patterns as emerged destinations (Kerievsky).
+9. object-calisthenics.md / design-patterns.md / design-quality.md
+    Mandatory OO constraints; GoF when/when-not; agent smell → move playbook.
+10. technical-excellence-catalog.md
     Inventory of verifiable practices AMPD aims to enable and amplify (pipeline stages, test families, AMPD status).
 
 ⸻

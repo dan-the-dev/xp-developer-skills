@@ -131,9 +131,9 @@ Rules:
 |------|------|
 | **RED** | Add or extend **one** failing automated check; run verification; **observe** failure before production changes. |
 | **GREEN** | Minimal production change to pass; run verification again. |
-| **REFACTOR** | Structure-only steps; verification green after each meaningful step; revert on failure. |
+| **REFACTOR** | Structure-only steps; verification green after each meaningful step; revert on failure. Apply [`simple-design.md`](simple-design.md): Beck rules + **mandatory** Object Calisthenics on touched OO code; introduce GoF patterns only by refactoring toward them when smells persist ([`design-quality.md`](design-quality.md)). |
 
-**Anti-pattern:** Replacing entire test or production files in one edit with no failing run in between.
+**Anti-pattern:** Replacing entire test or production files in one edit with no failing run in between; leaving procedural multi-case `if`/`else` on owned OO as “done”; introducing speculative pattern hierarchies in GREEN.
 
 **Evidence:** Report count of RED cycles observed, or state **batch mode** if the user explicitly opted in.
 
@@ -185,6 +185,7 @@ End every delivery invocation with a short factual report:
 | **Branch** | Feature branch name (e.g. `feat/<stem>`) — same branch for all increments of the feature (§1a) |
 | **Verification** | Each project verify step run → pass/fail — **all must be pass** to claim done |
 | **Test strategy** | Practices evaluated → adopt or skip with reason ([`test-strategy-selection.md`](test-strategy-selection.md) §6) |
+| **Design** | Simple Design / Object Calisthenics / patterns note ([`design-quality.md`](design-quality.md); required when OO production code was touched) |
 | **RED cycles** | Count per behavior, or batch mode noted |
 | **Layers** | e.g. unit + mutation \| API acceptance + inner TDD \| characterization only |
 | **Change-surface** | Search performed yes/no; what was updated |
@@ -198,10 +199,10 @@ End every delivery invocation with a short factual report:
 | Skill / agent | Uses especially |
 |---------------|-----------------|
 | `new-feature` | §1 orchestration modes + review depth + blocking gaps, **§1a feature branch**, §10 handoff |
-| `new-increment` | §1–3, **§1a** (stay on feature branch), §5–6, §10; always one line + commit + green gate; [`project-verification.md`](project-verification.md); [`test-strategy-selection.md`](test-strategy-selection.md) |
+| `new-increment` | §1–3, **§1a** (stay on feature branch), §5–6, §10; always one line + commit + green gate; [`project-verification.md`](project-verification.md); [`test-strategy-selection.md`](test-strategy-selection.md); [`simple-design.md`](simple-design.md) / [`design-quality.md`](design-quality.md) |
 | `legacy-testing` | §8; [`project-verification.md`](project-verification.md); [`test-strategy-selection.md`](test-strategy-selection.md) |
-| `refactoring` (skill) / `refactoring` (agent) | §1 post-increment review (full/light) **or** dedicated structure pass (§7, §9, §2); [`project-verification.md`](project-verification.md) |
+| `refactoring` (skill) / `refactoring` (agent) | §1 post-increment review (full/light) **or** dedicated structure pass (§7, §9, §2); [`project-verification.md`](project-verification.md); [`simple-design.md`](simple-design.md) / [`design-quality.md`](design-quality.md) |
 | `legacy-refactor` (agent) | §1, §7–9, §2 — harness then structure (distinct from `refactoring` alone) |
-| `tdd` | §6; [`project-verification.md`](project-verification.md); [`test-strategy-selection.md`](test-strategy-selection.md) |
+| `tdd` | §6; [`project-verification.md`](project-verification.md); [`test-strategy-selection.md`](test-strategy-selection.md); [`simple-design.md`](simple-design.md) |
 | `atdd` | §4; [`project-verification.md`](project-verification.md); [`test-strategy-selection.md`](test-strategy-selection.md) |
 | `bugfix` | §2, §3, §7; [`project-verification.md`](project-verification.md); [`test-strategy-selection.md`](test-strategy-selection.md) |

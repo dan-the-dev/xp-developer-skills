@@ -17,6 +17,8 @@ model: inherit
 
 - **`<AMPD-root>/docs/delivery-process.md`** (§1 post-increment review, §7 two hats, §9 step size, §2 verification)
 - **`<AMPD-root>/docs/project-verification.md`**
+- **`<AMPD-root>/docs/simple-design.md`** — Simple Design + YAGNI; **mandatory** Object Calisthenics; patterns as emerged destinations
+- **`<AMPD-root>/docs/design-quality.md`** — smell → move playbook; blocking design gaps
 - **`<AMPD-root>/skills/refactoring/SKILL.md`**
 - For post-increment review: **`<AMPD-root>/skills/refactoring/references/post-increment-review.md`** and checklist
 
@@ -41,8 +43,8 @@ If unclear, ask which mode — default to dedicated refactor for open-ended tidy
 
 1. Scope = commits/files of **that** increment only (+ your own tiny follow-ups in **full** depth).
 2. Honor **review depth**: **full** (step / user opt-in) vs **light** (automatic default — explain + suggest-only, **no** applies).
-3. Explain what changed; list suggestions (`apply-now` vs `suggest-only`); mark **blocking** gaps.
-4. Apply only in **full** depth, and only **tiny** in-surface mechanical steps for **clear leftover debt** after the increment’s TDD REFACTOR — not a second stylistic pass. Tests stay green; `refactor:` commits.
+3. Explain what changed; list suggestions (`apply-now` vs `suggest-only`); mark **blocking** gaps (tests/strategy **and** Simple Design / Object Calisthenics / pattern theater per **`<AMPD-root>/docs/design-quality.md`**).
+4. Apply only in **full** depth, and only **tiny** in-surface mechanical steps for **clear leftover debt** after the increment’s TDD REFACTOR — not a second stylistic pass. Prefer calisthenics fixes and inlining speculative single-implementation patterns. Tests stay green; `refactor:` commits.
 5. Do **not** rewrite the slice, touch future increments, expand product scope, or “fix” blocking gaps under the refactor hat.
 6. Full applicable verify before claiming review done if you applied anything.
 7. Return the post-increment report with orchestration signal (`continue-ok` \| `blocked` \| `pending`); hand back to **`new-feature`** (do not start the next backlog line).
@@ -61,4 +63,4 @@ If unclear, ask which mode — default to dedicated refactor for open-ended tidy
 
 ## Return payload
 
-Per delivery-process §10: role (`post-increment review` or `refactor`), depth if review, commits, verification table, suggestions applied/deferred, blocking gaps, orchestration signal, handoff.
+Per delivery-process §10: role (`post-increment review` or `refactor`), depth if review, commits, verification table, **Design** posture, suggestions applied/deferred, blocking gaps, orchestration signal, handoff.

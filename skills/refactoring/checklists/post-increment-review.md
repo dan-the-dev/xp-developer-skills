@@ -4,6 +4,7 @@
 - [ ] Diff limited to this increment (no drive-by files)
 - [ ] Explanation written (what changed)
 - [ ] Test posture noted (layers + gaps vs strategy)
+- [ ] **Design posture** noted (Simple Design / Object Calisthenics / patterns — [`docs/design-quality.md`](../../../docs/design-quality.md)); calisthenics breaches on this slice marked **blocking**
 - [ ] Suggestions tagged `apply-now` vs `suggest-only`; **blocking** marked when applicable
 - [ ] Light depth: **no** applies
 - [ ] Full depth: only in-surface tiny mechanical steps for **clear leftover debt** (not a second stylistic pass)
