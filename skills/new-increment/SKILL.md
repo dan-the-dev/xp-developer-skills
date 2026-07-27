@@ -14,7 +14,7 @@ Implement **exactly one** open line from `increments/<feature-stem>.md`.
 
 **When a real outer seam exists:** compose **`skills/atdd/SKILL.md`** at that boundary, then TDD inside. **Never** duplicate the same assertions in acceptance and unit layers.
 
-**Always:** complete test strategy before first RED; run **all** applicable verify steps; leave the suite **green**; **commit**; mark the parent backlog line **`[x]`**; **stop**. Never start the next backlog line — even if the user asked for the whole feature (that is **`new-feature`** automatic mode).
+**Always:** complete test strategy before first RED; during RGR run **scoped** tests only; at the end run **all** applicable verify steps; leave the suite **green**; **commit on the feature branch**; mark the parent backlog line **`[x]`**; **stop**. Never start the next backlog line — even if the user asked for the whole feature (that is **`new-feature`** automatic mode).
 
 ---
 
@@ -22,18 +22,18 @@ Implement **exactly one** open line from `increments/<feature-stem>.md`.
 
 Shared delivery rules: [`docs/delivery-process.md`](../../docs/delivery-process.md) and [`docs/project-verification.md`](../../docs/project-verification.md).
 
-1. Lock scope to **one** `[ ]` backlog line; branch e.g. `feat/<feature>-<increment-slug>`.
+1. Lock scope to **one** `[ ]` backlog line. **Stay on the feature branch** `feat/<feature-stem>` (create it only if missing) — **never** a new branch per increment, and **never** merge to main between increments ([`delivery-process.md`](../../docs/delivery-process.md) §1a).
 2. **Test strategy** — [`test-strategy-selection.md`](../../docs/test-strategy-selection.md): discover configured jobs; complete adopt/skip table **before first RED** ([checklists/test-strategy.md](checklists/test-strategy.md)). On **greenfield**, introduce mutation (and other warranted practices) when characterization says adopt **and** the introduce-tooling threshold is met — do not wait to be asked; teaching/kata may skip with an explicit reason. For an **owned third-party API client**, follow §3a (prefer SDK; sandbox when feasible; else manual fake/stub).
 3. **Discover project verification** for the language/module you will touch (§2; [`project-verification.md`](../../docs/project-verification.md)) — README, CI, scripts, Makefile, Sonar, **mutation** config; do not assume one command.
 4. **Choose layer** — [references/scoped-atdd-tdd.md](references/scoped-atdd-tdd.md) (TDD-only vs ATDD+TDD; Gherkin only when Distill needs it).
 5. **Artifacts** — [references/artifact-policy.md](references/artifact-policy.md): one feature test list; no per-increment markdown sprawl.
-6. **RED → GREEN → REFACTOR** per behavior; **one failing check at a time**; **re-run affected tests after every edit**; run **adopted** practices (mutation, integration, contract, etc.) at slice boundary.
+6. **RED → GREEN → REFACTOR** per behavior; **one failing check at a time**; after each edit run **only the narrowest tests** for what you touched (file/test id/package) — **not** the full suite mid-increment.
 7. If construction/import/API changed, **search and update all call sites** in scope (§3).
 8. Update parent `increments/…` to `[x]` with link to test list section (and acceptance section if used) — **only after** verification is fully green.
 9. **Cleanup** redundant slice-only markdown if created by mistake.
-10. **Run all applicable project verify steps** (tests, lint, format, typecheck, SonarQube, **mutation job if adopted**); none may be skipped because another already passed (§2). **If any step is red → fix; do not stop as done.**
-11. **Commit** — ensure this increment’s work is committed (follow `skills/tdd` micro-commits + squash per cycle; leave a clean committed tip). Include commit SHAs in the return payload. **AMPD agents:** commit is part of done. Outside AMPD delivery workflows, follow the user’s git policy.
-12. **Return payload** (§10) including **test strategy table** and verification table; **stop** — do not start the next increment.
+10. **At increment end only:** run **all** applicable project verify steps (full relevant test suite, lint, format, typecheck, SonarQube, **mutation job if adopted**); none may be skipped because another already passed (§2). **If any step is red → fix; do not stop as done.**
+11. **Commit** on the **same feature branch** — ensure this increment’s work is committed (follow `skills/tdd` micro-commits + squash per cycle; leave a clean committed tip). Include commit SHAs in the return payload. **AMPD agents:** commit is part of done. Outside AMPD delivery workflows, follow the user’s git policy. Do **not** merge to main or open a per-increment PR unless the user asks.
+12. **Return payload** (§10) including **test strategy table**, verification table, and **feature branch name**; **stop** — do not start the next increment.
 
 Prep if needed: **`skills/legacy-testing`** (invalid harness), **`skills/refactoring`**, **`skills/spike`** — then resume.
 
@@ -69,6 +69,8 @@ Checklist: [checklists/increment-done.md](checklists/increment-done.md), [checkl
 - Skipping mutation on greenfield branchy domain with only “not configured” **when the introduce-tooling threshold is met**
 - Forcing mutation tooling into teaching/kata slices or when setup clearly dominates the slice
 - Batch message: “implementing increments 2–7”
+- **Per-increment git branch** (`feat/<feature>-<increment-slug>`) or merge-to-main between increments — keep **one feature branch** (§1a)
+- **Full suite on every RGR step** — scoped tests mid-increment; full verify only at step 10
 
 See [references/anti-patterns.md](references/anti-patterns.md).
 

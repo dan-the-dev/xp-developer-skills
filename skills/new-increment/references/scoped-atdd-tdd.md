@@ -26,12 +26,12 @@ Pick **one** outer/inner strategy for this backlog line. Do not stack duplicate 
 ## TDD-only order (default)
 
 1. Add `[ ]` behavior lines under this increment’s section in `test-lists/<feature-stem>.md`.
-2. **RED:** add **one** test; run runner; confirm failure in transcript.
-3. **GREEN:** minimal production; run; confirm pass.
-4. **REFACTOR** (optional): small steps, tests green after each.
+2. **RED:** add **one** test; run **that** test (narrowest command); confirm failure in transcript.
+3. **GREEN:** minimal production; run **that** test; confirm pass.
+4. **REFACTOR** (optional): small steps; re-run **scoped** tests after each.
 5. Mark the behavior `[x]` with test reference; repeat for next behavior in **this increment only**.
-6. Run **all** applicable verify steps (including adopted mutation); **all green**.
-7. Mark parent `increments/…` line `[x]`; **commit**; **stop** (never start the next backlog line).
+6. **At increment end:** run **all** applicable verify steps (full relevant suite + lint/etc., including adopted mutation); **all green**.
+7. Mark parent `increments/…` line `[x]`; **commit on the feature branch**; **stop** (never start the next backlog line; never merge to main to “unlock” the next increment).
 
 See `skills/tdd/SKILL.md` for Three Laws, commits, and anti-patterns.
 
@@ -43,7 +43,7 @@ See `skills/tdd/SKILL.md` for Three Laws, commits, and anti-patterns.
 2. **Distill — RED:** one **failing** acceptance check at the boundary (HTTP, UI, contract — not duplicate unit layer).
 3. **Inner TDD:** `test-lists/<feature-stem>.md` + R–G–R until acceptance can pass.
 4. **GREEN:** acceptance check passes; mark catalog line `[x]`.
-5. Parent backlog `[x]`; run full verify (green); **commit**; **stop**.
+5. Parent backlog `[x]`; **at end** run full verify (green); **commit on feature branch**; **stop**.
 
 Do **not** add parallel unit tests that copy the same assertions as the acceptance test unless they test **finer** behavior worth fast feedback.
 

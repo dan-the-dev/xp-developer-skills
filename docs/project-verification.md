@@ -8,13 +8,13 @@ Language- and project-agnostic rules for **every AMPD agent and skill that touch
 
 | Moment | Requirement |
 |--------|-------------|
-| **After every meaningful code change** | Re-run the **narrowest applicable checks** so you know you did not break what you just touched — at minimum the **affected automated tests** (RED/GREEN/REFACTOR step, bugfix edit, refactor mechanical step, harness addition). |
-| **Before claiming a slice complete** | **Discover and run every applicable verify step** the project defines for the language/module you touched — not only the test runner. **Hard green gate:** do not claim done, mark backlog `[x]`, or hand off as complete while any applicable step is red. |
-| **After fixing a verify failure** | Re-run the **full applicable set** for the slice boundary, not only the step that failed. |
+| **After every meaningful code change** | Re-run **only the narrowest checks for what you just touched** — typically one test, one file, or one package (RED/GREEN/REFACTOR step, bugfix edit, refactor mechanical step, harness addition). **Do not** run the full suite or full CI inventory on every micro-step. |
+| **Before claiming a slice complete** | **Discover and run every applicable verify step** the project defines for the language/module you touched — including the **full** relevant test suite plus lint, typecheck, format, Sonar, etc. **Hard green gate:** do not claim done, mark backlog `[x]`, or hand off as complete while any applicable step is red. |
+| **After fixing a verify failure at the boundary** | Re-run the **full applicable set** for the slice boundary, not only the step that failed. |
 
-**Principle:** Fast feedback during work; **complete** project gates at the boundary. Never declare done after a subset when the project defines more.
+**Principle:** Fast, **scoped** feedback during work; **complete** project gates **only at the slice boundary**. Never declare done after a subset when the project defines more. Never burn time on full-suite runs mid-RGR when a narrower command exists.
 
-**Spike exception:** On an isolated `spike/` branch, run checks only when they **directly prove the charter** ([`skills/spike/SKILL.md`](../skills/spike/SKILL.md)). Promotion to delivery skills requires full verification on a **new** branch.
+**Spike exception:** On an isolated `spike/` branch, run checks only when they **directly prove the charter** ([`skills/spike/SKILL.md`](../skills/spike/SKILL.md)). Promotion to delivery skills requires full verification on a **new** branch (typically the feature branch — see [`delivery-process.md`](delivery-process.md) §1a).
 
 ---
 
@@ -59,7 +59,7 @@ When the project defines lint, format, or style gates:
 - Prefer **project-native fix commands** (`npm run lint:fix`, `cargo fmt`, etc.) when available; otherwise edit manually to match existing style.
 - **Do not weaken** rules (disable eslint-disable, `@SuppressWarnings`, `# noqa` without team convention) to force green unless the user explicitly approves.
 
-During micro-iterations, run lint on **touched files** when a fast scoped command exists; run the **full lint gate** before claiming done.
+During micro-iterations, run lint on **touched files** when a fast scoped command exists; run the **full lint gate** only before claiming done (same pattern as tests: scoped mid-work, full at boundary).
 
 ---
 
@@ -111,6 +111,7 @@ If verification fails on debt **outside** your slice:
 
 ## 7. Anti-patterns
 
+- Running the **full** test suite (or full CI inventory) after every tiny RGR edit when a **narrower** command exists
 - Declaring done after **only** unit tests when CI also runs lint, typecheck, or Sonar
 - Declaring done (or marking `[x]`) while **any** applicable verify step is red
 - Skipping verify after a refactor step because “tests were green a minute ago”
@@ -118,6 +119,7 @@ If verification fails on debt **outside** your slice:
 - Assuming no Sonar because you did not search for `sonar-project.properties` or CI jobs
 - Reporting “tests pass” without listing other gates the project defines
 - Adopting mutation (or another practice) in the strategy table but never running it before done
+- Skipping the **full** boundary verify because mid-increment scoped runs were green
 
 ---
 

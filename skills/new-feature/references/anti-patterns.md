@@ -14,3 +14,4 @@
 - Continuing **automatic** after a review that reported **blocking** gaps
 - Treating post-increment review as a license to rewrite the feature
 - Running **full** apply-capable review on every automatic increment when light depth would suffice
+- **Per-increment branches or merges to main** between increments — one `feat/<stem>` for the whole feature ([`delivery-process.md`](../../../docs/delivery-process.md) §1a)

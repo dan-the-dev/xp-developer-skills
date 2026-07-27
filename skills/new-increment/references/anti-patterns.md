@@ -20,3 +20,5 @@
 - **Ignoring configured CI jobs** (mutation, contract, component) when slice matches
 - **Skipping re-verify** after a production or refactor edit because tests were green earlier
 - Skipping **change-surface search** after factory/API/rename changes (§3)
+- **Per-increment git branch** or merge-to-main between increments ([`delivery-process.md`](../../../docs/delivery-process.md) §1a)
+- **Full suite mid-RGR** when a narrower test command exists — scoped during work; full verify only at increment end

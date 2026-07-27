@@ -28,7 +28,25 @@ Language- and project-agnostic rules for AMPD delivery skills and subagents. Com
 
 **Review depth:** step → **full** (explain, suggest, optional tiny applies). Automatic → **light** (explain + suggest-only) unless the user opted into full review with applies.
 
-**Anti-pattern:** Treating “continue” as implied; batching increments inside `new-increment`; skipping post-increment review when orchestrating; continuing automatic after blocking review findings.
+**Anti-pattern:** Treating “continue” as implied; batching increments inside `new-increment`; skipping post-increment review when orchestrating; continuing automatic after blocking review findings; **one git branch (or merge to main) per increment** instead of one feature branch (§1a).
+
+---
+
+## 1a. Feature branch (one branch for the whole feature)
+
+AMPD expects **one long-lived feature branch** that can become **one PR for the feature**. Increments are **commits on that branch**, not separate branches or merges.
+
+| Rule | Meaning |
+|------|---------|
+| **One branch per feature** | Name e.g. `feat/<feature-stem>` (or the repo’s equivalent). Create it when starting the feature (typically `new-feature` / first `new-increment`). |
+| **All increments on that branch** | Every `new-increment` commit stays on the **same** feature branch. Do **not** create `feat/<feature>-<increment-slug>` (or similar) per backlog line. |
+| **No merge between increments** | Do **not** merge the feature branch into `main`/`master`/`develop` after each increment in order to “start the next.” Leave commits stacked; open/update **one PR** when the feature (or an agreed release slice) is ready. |
+| **Reuse if already checked out** | If already on `feat/<feature-stem>`, keep working there. Only create the branch when missing. |
+| **Exceptions** | User explicitly asks for a different branch layout; or a true emergency hotfix branch unrelated to this feature backlog. Spikes stay on `spike/…` and do not replace this rule for delivery. |
+
+**Why:** A PR per feature reviews the whole capability; per-increment branches + merges fragment history and force premature integration.
+
+**Anti-pattern:** Branch → implement one increment → merge to main → new branch for the next increment; opening a PR per backlog line while orchestrating a multi-increment feature (unless the user explicitly wants that).
 
 ---
 
@@ -40,24 +58,26 @@ Full guide: [`project-verification.md`](project-verification.md).
 
 After **each meaningful edit** (RED/GREEN/REFACTOR step, bugfix change, refactor mechanical step, harness addition):
 
-1. Re-run the **narrowest applicable checks** — at minimum **affected automated tests**.
-2. If a step fails, **fix or revert** before continuing; do not stack edits on a broken baseline.
+1. Re-run **only the narrowest checks for what you just touched** — typically the **single failing/passing test**, file, or package under change. Do **not** run the full suite or the full lint/typecheck/Sonar inventory on every micro-step.
+2. If that narrow check fails, **fix or revert** before continuing; do not stack edits on a broken baseline.
+
+**Speed rule:** Mid-increment feedback stays **scoped**. Save the **full** project verify set for the slice boundary below.
 
 ### Before claiming a slice complete
 
 1. **Discover** what this project defines as verification for the **current language / module / track** you touched — scripts, Makefile targets, CI jobs, documented commands, or equivalent. Inspect README, contribution guides, CI config, Sonar/static-analysis config, and existing tooling; do not assume a single command.
-2. **Run every applicable verify step** for that scope — not only the fastest or most familiar runner. This includes, when the project defines them: **tests** (unit, integration, contract, acceptance, **mutation**, property-based, …), **build/compile**, **typecheck**, **lint**, **format**, and **code quality platforms** (e.g. SonarQube, SonarCloud, CodeClimate).
+2. **Run every applicable verify step** for that scope — **now** include the **full** relevant test suite (not only the one test from the last RGR) plus build/compile, typecheck, lint, format, and code quality platforms when the project defines them (e.g. SonarQube, SonarCloud, CodeClimate), and adopted practices (mutation, contract, …).
 3. **Fix violations you introduced** — leave lint, static analysis, and quality gates **without new warnings or errors** attributable to your change.
 4. **Hard green gate:** do **not** mark the backlog line `[x]`, claim done, or hand off as complete while **any** applicable verify step is red. Fix first; then re-run the **full** applicable set.
 5. **Report** each command run and pass or fail (verification table).
 
 **Applicable vs out-of-scope:** **Applicable** = steps that cover the language/module/files you touched (or project gates that always run for that track). Pre-existing red on **debt outside your slice** must be documented with evidence — it does **not** block `[x]` once in-scope steps are green — but do **not** claim the whole project is clean. Failures in files you edited are in-scope: fix them.
 
-**Principle:** One green signal (e.g. only the test runner) is not equivalent to “the project verifies” when the project defines additional steps (compile, typecheck, lint, integration, Sonar, packaging, etc.).
+**Principle:** One green signal (e.g. only the test runner) is not equivalent to “the project verifies” when the project defines additional steps (compile, typecheck, lint, integration, Sonar, packaging, etc.). Scoped runs during RGR do **not** replace this boundary gate.
 
 **AMPD commit rule:** For AMPD delivery agents (`new-increment`, post-increment review applies, dedicated refactor sessions), **commit is part of done**. Outside AMPD agent workflows, follow the user’s git policy (commit only when asked).
 
-**Anti-pattern:** Declaring done after a subset of verify steps when the project defines more; stopping with failing **in-scope** tests “for the user to decide”; skipping re-verify after a refactor step; suppressing lint/sonar rules instead of fixing code.
+**Anti-pattern:** Running the **full** suite (or full CI inventory) after every tiny RGR edit; declaring done after a subset of verify steps when the project defines more; stopping with failing **in-scope** tests “for the user to decide”; skipping re-verify after a refactor step; suppressing lint/sonar rules instead of fixing code.
 
 ---
 
@@ -162,6 +182,7 @@ End every delivery invocation with a short factual report:
 | **Orchestration mode** | step \| automatic (planning / `new-feature` only) |
 | **Backlog** | Which line marked complete (if increment) — **at most one** |
 | **Commits** | SHAs / messages for this slice (increment and review must leave work committed) |
+| **Branch** | Feature branch name (e.g. `feat/<stem>`) — same branch for all increments of the feature (§1a) |
 | **Verification** | Each project verify step run → pass/fail — **all must be pass** to claim done |
 | **Test strategy** | Practices evaluated → adopt or skip with reason ([`test-strategy-selection.md`](test-strategy-selection.md) §6) |
 | **RED cycles** | Count per behavior, or batch mode noted |
@@ -176,8 +197,8 @@ End every delivery invocation with a short factual report:
 
 | Skill / agent | Uses especially |
 |---------------|-----------------|
-| `new-feature` | §1 orchestration modes + review depth + blocking gaps, §10 handoff |
-| `new-increment` | §1–3, §5–6, §10; always one line + commit + green gate; [`project-verification.md`](project-verification.md); [`test-strategy-selection.md`](test-strategy-selection.md) |
+| `new-feature` | §1 orchestration modes + review depth + blocking gaps, **§1a feature branch**, §10 handoff |
+| `new-increment` | §1–3, **§1a** (stay on feature branch), §5–6, §10; always one line + commit + green gate; [`project-verification.md`](project-verification.md); [`test-strategy-selection.md`](test-strategy-selection.md) |
 | `legacy-testing` | §8; [`project-verification.md`](project-verification.md); [`test-strategy-selection.md`](test-strategy-selection.md) |
 | `refactoring` (skill) / `refactoring` (agent) | §1 post-increment review (full/light) **or** dedicated structure pass (§7, §9, §2); [`project-verification.md`](project-verification.md) |
 | `legacy-refactor` (agent) | §1, §7–9, §2 — harness then structure (distinct from `refactoring` alone) |

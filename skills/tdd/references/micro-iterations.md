@@ -78,4 +78,4 @@ Use the narrowest command the repo supports, for example:
 - single file pattern
 - package-scoped test run
 
-Widen only after green on the narrow scope, or when integration risk is explicit. Integrate frequently in the sense of **running broader suites regularly** as the code touches shared surfaces — without abandoning narrow runs after each micro-step.
+Widen only after green on the narrow scope, or when integration risk is explicit. **During an increment**, prefer the narrowest command after every RGR step; run the **broader / full suite** at **increment end** (slice boundary), not after each micro-edit. Integrate frequently in the sense of **running broader suites at boundaries** as the code touches shared surfaces — without abandoning narrow runs after each micro-step.

@@ -70,5 +70,5 @@ Symptoms to avoid when applying strict TDD.
 
 ## Feedback
 
-- Running the full suite after every tiny edit when a narrower command exists.
+- Running the full suite after every tiny edit when a narrower command exists — **scoped mid-cycle; full suite at slice/increment boundary** ([`project-verification.md`](../../../docs/project-verification.md) §1).
 - Continuing after RED without observing the failure output.

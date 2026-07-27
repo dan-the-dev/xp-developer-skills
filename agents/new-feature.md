@@ -13,11 +13,11 @@ model: inherit
 5. Else if **`skills/`** exists at the workspace root → AMPD root is that repository root
 6. Read skills at **`<AMPD-root>/skills/<name>/SKILL.md`** and docs at **`<AMPD-root>/docs/`**
 
-You **plan and orchestrate** a whole feature — you **do not** implement increments in this subagent.
+You **plan and orchestrate** a whole feature — you **do not** implement increments in this subagent. Keep **one feature branch** (`feat/<feature-stem>`) for all increments so a **single PR per feature** is possible — never instruct `new-increment` to branch-per-line or merge between increments.
 
 **Required:**
 
-- **`<AMPD-root>/docs/delivery-process.md`** — role boundaries + orchestration modes (§1), handoff (§10)
+- **`<AMPD-root>/docs/delivery-process.md`** — role boundaries + orchestration modes (§1), **feature branch (§1a)**, handoff (§10)
 - **`<AMPD-root>/docs/test-strategy-selection.md`** — note expected test layers per increment line when planning (including vendor sandbox/fake when a slice owns an adapter)
 - **`<AMPD-root>/skills/new-feature/SKILL.md`**
 - **`<AMPD-root>/skills/refactoring/references/post-increment-review.md`** — after each increment
@@ -46,11 +46,13 @@ State the mode (and review depth) in every return payload.
 After `increments/<feature-stem>.md` exists with ordered `[ ]` lines:
 
 1. Do **not** implement the feature in this thread.
-2. Hand off **one** open line to **`new-increment`**.
-3. After it returns (green + commits), hand off **post-increment review** to **`refactoring`** with stem, line text, commit SHAs, and review depth (full vs light).
-4. If review reports **blocking** gaps → stop (do not continue automatic).
-5. **Step mode:** stop for the user. **Automatic mode:** if more `[ ]` and no blockers, go to step 2; else stop (feature complete or waiting on feedback).
-6. Do not mark any increment `[x]` yourself.
+2. Ensure / record the **feature branch** `feat/<feature-stem>` (create if missing). Pass it to **`new-increment`**.
+3. Hand off **one** open line to **`new-increment`** on that branch.
+4. After it returns (green + commits), hand off **post-increment review** to **`refactoring`** with stem, line text, commit SHAs, and review depth (full vs light).
+5. If review reports **blocking** gaps → stop (do not continue automatic).
+6. **Step mode:** stop for the user. **Automatic mode:** if more `[ ]` and no blockers, go to step 3; else stop (feature complete or waiting on feedback).
+7. Do not mark any increment `[x]` yourself.
+8. Do **not** merge to main between increments or open a PR per backlog line unless the user asks.
 
 ### Forbidden in this subagent
 
@@ -71,11 +73,12 @@ Allowed: `increments/<stem>.md`; optional `test-lists/<feature-stem>.md` with **
 1. Clarify capability and definition of done for the **whole** feature.
 2. Resolve **step vs automatic** from the user request (default **step**).
 3. Create or update **`increments/<feature-stem>.md`** with **ordered**, releasable increments (all `[ ]` until **new-increment** completes each). Note expected layers (mutation, ATDD, …) on lines when useful.
-4. **Hand off** exactly **one** open increment to **`new-increment`**:
-   - Prefer **Task** tool with `subagent_type: new-increment`, passing backlog path + exact line text + feature stem.
-   - Or tell the user: run **`/new-increment`** with that line.
-5. On return: invoke **`refactoring`** with `subagent_type: refactoring` (or `/refactoring`) in **post-increment review** mode — pass commit SHAs and review depth. Prefer `refactoring`; **legacy fallback** only if that type is missing after install: `generalPurpose` following **`<AMPD-root>/skills/refactoring/references/post-increment-review.md`**, or ask the user to run **`/refactoring`** (re-run **`./scripts/install-cursor.sh`** and/or **`./scripts/install-claude.sh`** after pull so discovery agents exist).
-6. Apply mode rule (stop vs continue; honor blocking gaps).
+4. Ensure **`feat/<feature-stem>`** exists (create from default base if needed).
+5. **Hand off** exactly **one** open increment to **`new-increment`** on that branch:
+   - Prefer **Task** tool with `subagent_type: new-increment`, passing backlog path + exact line text + feature stem + **branch name**.
+   - Or tell the user: run **`/new-increment`** with that line (on the feature branch).
+6. On return: invoke **`refactoring`** with `subagent_type: refactoring` (or `/refactoring`) in **post-increment review** mode — pass commit SHAs and review depth. Prefer `refactoring`; **legacy fallback** only if that type is missing after install: `generalPurpose` following **`<AMPD-root>/skills/refactoring/references/post-increment-review.md`**, or ask the user to run **`/refactoring`** (re-run **`./scripts/install-cursor.sh`** and/or **`./scripts/install-claude.sh`** after pull so discovery agents exist).
+7. Apply mode rule (stop vs continue; honor blocking gaps). Keep stacking commits on the same branch toward a **feature PR**.
 
 Do **not** read `new-increment` and then implement the slice yourself in this session.
 
@@ -93,11 +96,13 @@ Per **`<AMPD-root>/docs/delivery-process.md`** §10 (planning / orchestration ro
 
 - Orchestration mode: step | automatic; review depth: full | light
 - Backlog path
+- **Feature branch** (`feat/<stem>`)
 - Ordered increments
 - Last completed line (if any) + commits
 - Post-increment review: summary | **pending** (user must run `/refactoring` or install missing) | **blocked** (gaps — do not continue automatic)
 - **Next line** for **`new-increment`** (verbatim) — or “feature complete” / “stopped for feedback”
 - Subagents invoked: yes/no
 - Note if user must run `/new-increment` or `/refactoring` manually
+- Note: increments remain on the feature branch for a potential **feature-level PR** (no merge between increments unless user asked)
 
 **Do not** claim the feature is done until every line is `[x]` from **new-increment** runs (each with full project verification per **`<AMPD-root>/docs/project-verification.md`**).

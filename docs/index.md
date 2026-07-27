@@ -32,9 +32,9 @@ Suggested reading order for humans and AI agents:
 4. roadmap.md
     Explore the current implementation roadmap and planned skills.
 5. delivery-process.md
-    Shared delivery rules — verification, roles, RED→GREEN, return payload.
+    Shared delivery rules — verification (scoped mid-work / full at boundary), roles, **one feature branch (§1a)**, RED→GREEN, return payload.
 6. project-verification.md
-    Tests, lint, format, SonarQube, and all project gates after every code change.
+    Scoped checks during work; full tests, lint, format, SonarQube, and all project gates at slice boundary.
 7. test-strategy-selection.md
     Which test layers and techniques to adopt per slice (mutation, contract, property-based, integration, owned vendor clients / sandbox vs fake, etc.).
 8. technical-excellence-catalog.md
