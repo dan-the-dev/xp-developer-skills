@@ -94,11 +94,15 @@ They are operational engineering workflows.
 * spike
     Time-boxed experiments on isolated `spike/` branches; disposable code; promotion to ATDD/TDD/legacy. Implementation: **`skills/spike/`**.
 * new-feature (implemented — **`skills/new-feature/`**)
-    Slice a **whole capability** into ordered, **releasable increments** (e.g. increment backlog in repo); delegate each slice to **new-increment**. Does not implement every increment in one pass.
+    Slice a **whole capability** into ordered, **releasable increments** (e.g. increment backlog in repo); confirms the plan before executing; delegate each slice to **new-increment**, review via **increment-review**; can open the feature PR from the increments' mini-journals. Does not implement every increment in one pass.
 * new-increment (implemented — **`skills/new-increment/`**)
-    Deliver **one** increment per invocation: **`skills/tdd`** by default (one feature test list); **`skills/atdd`** only at a real outer seam; RED gates; minimal markdown.
+    Deliver **one** increment per invocation: **`skills/tdd`** by default (one feature test list); **`skills/atdd`** only at a real outer seam; RED gates; minimal markdown; commit squashed to one; returns a mini-journal.
+* increment-review (implemented — **`skills/increment-review/`**)
+    Fast, single-pass review (target <60s) of one increment against **`docs/code-review.md`**, driven by the `new-increment` mini-journal; default reviewer invoked by **new-feature**.
+* tweak (implemented — **`skills/tweak/`**)
+    Small, direct follow-up edit on the current branch — scoped tests/lint, one commit, no branch/backlog/PR ceremony.
 * feature-development
-    Umbrella for delivery orchestration; in practice **new-feature** + **new-increment** (when implemented).
+    Umbrella for delivery orchestration; in practice **new-feature** + **new-increment** + **increment-review** (when implemented).
 
 ⸻
 
@@ -151,7 +155,10 @@ They are operational engineering workflows.
 * [x] Spike skill (`skills/spike/`)
 * [x] New feature skill (`skills/new-feature/`)
 * [x] New increment skill (`skills/new-increment/`)
+* [x] Increment review skill (`skills/increment-review/`)
+* [x] Tweak skill (`skills/tweak/`)
 * [x] Manifesto (`docs/manifesto.md`)
+* [x] Code review guide (`docs/code-review.md`)
 
 ### Agent harness (skills → subagents)
 
@@ -161,9 +168,11 @@ Canonical behavior stays in **`skills/*/SKILL.md`**. **Slash commands are out of
 
 2. **Subagents** — implemented in **`agents/`** (symlinked at **`.claude/agents/`**; global install for Cursor and Claude Code via **`INSTALL.md`**). Index: **`AGENTS.md`**.
 
-   * [x] **`new-feature`** — `new-feature.md` → **`skills/new-feature`** (step default; automatic mode explicit; post-increment review via `refactoring`)
-   * [x] **`new-increment`** — `new-increment.md` → **`skills/new-increment`** (TDD default; ATDD at outer seam only; green gate + commit + stop)
-   * [x] **`refactoring`** — `refactoring.md` → **`skills/refactoring`** (dedicated tidy-up or post-increment review)
+   * [x] **`new-feature`** — `new-feature.md` → **`skills/new-feature`** (step default; automatic mode explicit; plan confirmation gate; post-increment review via `increment-review`; can open the feature PR)
+   * [x] **`new-increment`** — `new-increment.md` → **`skills/new-increment`** (TDD default; ATDD at outer seam only; green gate + commit squashed to one + mini-journal + stop)
+   * [x] **`increment-review`** — `increment-review.md` → **`skills/increment-review`** (fast single-pass review, default reviewer for `new-feature`)
+   * [x] **`refactoring`** — `refactoring.md` → **`skills/refactoring`** (dedicated tidy-up, `increment-review` fix-brief executor, or legacy manual post-increment review)
+   * [x] **`tweak`** — `tweak.md` → **`skills/tweak`** (small follow-up edit on the current branch, outside the `new-feature` ceremony)
    * [x] **`bugfix`** — `bugfix.md` → **`skills/bugfix`**
    * [x] **`legacy-refactor`** — `legacy-refactor.md` → legacy-testing, then refactoring
    * [x] **`spike`** — `spike.md` → **`skills/spike`**

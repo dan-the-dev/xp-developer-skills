@@ -9,7 +9,7 @@ Language- and project-agnostic rules for **every AMPD agent and skill that touch
 | Moment | Requirement |
 |--------|-------------|
 | **After every meaningful code change** | Re-run **only the narrowest checks for what you just touched** — typically one test, one file, or one package (RED/GREEN/REFACTOR step, bugfix edit, refactor mechanical step, harness addition). **Do not** run the full suite or full CI inventory on every micro-step. |
-| **Before claiming a slice complete** | **Discover and run every applicable verify step** the project defines for the language/module you touched — including the **full** relevant test suite plus lint, typecheck, format, Sonar, etc. **Hard green gate:** do not claim done, mark backlog `[x]`, or hand off as complete while any applicable step is red. |
+| **Before claiming a slice complete** | **Discover and run every applicable verify step** the project defines for the language/module you touched — including the **full** relevant test suite (scoped to the touched module/package in a monorepo when the project defines a narrower command; the whole repo only when it doesn't) plus lint, typecheck, format, Sonar, etc. **Hard green gate:** do not claim done, mark backlog `[x]`, or hand off as complete while any applicable step is red. |
 | **After fixing a verify failure at the boundary** | Re-run the **full applicable set** for the slice boundary, not only the step that failed. |
 
 **Principle:** Fast, **scoped** feedback during work; **complete** project gates **only at the slice boundary**. Never declare done after a subset when the project defines more. Never burn time on full-suite runs mid-RGR when a narrower command exists.
@@ -128,9 +128,11 @@ If verification fails on debt **outside** your slice:
 | Consumer | Uses especially |
 |----------|-----------------|
 | All code-touching agents | §1–5 before done; §1 during work |
-| `skills/tdd`, `skills/bugfix`, `skills/refactoring` | §1 after each micro-step |
-| `skills/new-increment`, `skills/legacy-testing`, `skills/atdd` | §2–4 at increment/slice boundary; hard green gate |
-| `skills/new-feature` | Orchestrates only — expects green verify + commits from `new-increment` before review/continue |
+| `skills/tdd`, `skills/bugfix`, `skills/refactoring`, `skills/tweak` | §1 after each micro-step |
+| `skills/new-increment`, `skills/legacy-testing`, `skills/atdd` | §2–4 at increment/slice boundary (module-scoped suite where the project defines one); hard green gate |
+| `skills/tweak` | §2–5 scoped to the touched files only — no full-suite requirement unless no scoped command exists |
+| `skills/increment-review` | §5 — trusts the `new-increment` verification table by default; re-runs only what the review-focus warrants |
+| `skills/new-feature` | Orchestrates only — expects green verify + a squashed commit + mini-journal from `new-increment` before `increment-review`/continue |
 | `pr-reviewer` | §5 — ask for evidence; flag missing lint/sonar |
 | `skills/spike` | §1 spike exception only |
 

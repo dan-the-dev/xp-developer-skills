@@ -25,7 +25,7 @@ cd xp-developer-skills
 ./scripts/install-claude.sh --home ~/.claude-personal
 ```
 
-Then restart the tool (or start a new Claude Code session) and invoke subagents (e.g. `/bugfix`, `/new-feature`, `/new-increment`, `/refactoring`, `/pr-reviewer`).
+Then restart the tool (or start a new Claude Code session) and invoke subagents (e.g. `/bugfix`, `/new-feature`, `/new-increment`, `/increment-review`, `/refactoring`, `/tweak`, `/pr-reviewer`).
 
 For a non-default Claude home, the Claude Code process must use the **same** config directory (e.g. `CLAUDE_CONFIG_DIR=~/.claude-personal`), or it will keep loading `~/.claude` only.
 

@@ -1,6 +1,6 @@
 ---
 name: refactoring
-description: Behavior-preserving Fowler-style refactoring on a green baseline, or post-increment review after new-increment (explain commits, suggest small in-scope refactors/tests, optional tiny applies). Use for dedicated tidy-ups or when new-feature requests a review of the just-finished increment.
+description: Behavior-preserving Fowler-style refactoring on a green baseline, executing an increment-review fix brief, or the legacy manual post-increment review mode on direct user request (explain commits, suggest small in-scope refactors/tests, optional tiny applies). Use for dedicated tidy-ups, applying a fix brief dispatched by new-feature, or when the user directly asks for the old full review — not new-feature's default reviewer (that's increment-review).
 model: inherit
 ---
 

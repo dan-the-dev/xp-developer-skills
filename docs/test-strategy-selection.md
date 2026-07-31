@@ -220,7 +220,8 @@ List **every practice from §3 you evaluated** (at least 5 for non-trivial slice
 | `skills/atdd` | §3 outer layers + Gherkin choice; compose with [pipeline-fit checklist](../skills/atdd/checklists/pipeline-fit.md); external services per §3a |
 | `skills/bugfix` | §3 mutation after repro on critical logic |
 | `skills/legacy-testing` | characterization + narrow integration; vendor wrappers per §3a |
-| `skills/refactoring` (post-increment review) | flag missing layers / weak tests in increment commits |
+| `skills/increment-review` | flag missing layers / weak tests in the increment's commit, using the mini-journal's review-focus as the starting point |
+| `skills/refactoring` (fix brief) | apply the strategy fix `increment-review` names, scoped to its brief |
 | `pr-reviewer` | §6 — flag missing strategy table, ignored configured gates, or vendor client without sandbox/fake row |
 
 See [technical-excellence-catalog.md](technical-excellence-catalog.md) §B for the full practice inventory.

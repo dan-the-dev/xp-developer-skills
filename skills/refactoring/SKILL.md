@@ -1,6 +1,6 @@
 ---
 name: refactoring
-description: Martin Fowler–style refactoring — change the internal structure of code without changing observable behavior. Baby steps on a green baseline: one mechanical transformation at a time, tests stay green, revert on red. Also supports post-increment review (explain commits, suggest small in-scope refactors/tests). Separates refactoring from adding features (“two hats”). Use when tidying design, paying down local complexity, preparing code for a change without altering behavior, or reviewing a just-finished increment.
+description: Martin Fowler–style refactoring — change the internal structure of code without changing observable behavior. Baby steps on a green baseline: one mechanical transformation at a time, tests stay green, revert on red. Also executes an increment-review fix brief, or runs the legacy manual post-increment review mode on direct user request (explain commits, suggest small in-scope refactors/tests) — skills/increment-review is the default post-increment reviewer now. Separates refactoring from adding features (“two hats”). Use when tidying design, paying down local complexity, preparing code for a change without altering behavior, applying a review's fix brief, or reviewing a just-finished increment on direct request.
 allowed-tools: Read, Edit, MultiEdit, Bash, Grep, Glob
 ---
 

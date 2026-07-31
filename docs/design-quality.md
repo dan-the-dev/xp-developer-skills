@@ -94,6 +94,7 @@ See [`delivery-process.md`](delivery-process.md) §10.
 ## Related skills
 
 - `skills/tdd` — REFACTOR applies this playbook at proximity
-- `skills/refactoring` — dedicated and post-increment review
+- `skills/increment-review` — flags calisthenics/pattern-theater breaches in the fast post-increment pass
+- `skills/refactoring` — dedicated refactor, executing an `increment-review` fix brief, or legacy manual post-increment review
 - `skills/new-increment` — Design note + done checklist
 - `agents/pr-reviewer` — must-fix / should-fix from this file

@@ -8,9 +8,11 @@ Language- and project-agnostic rules for AMPD delivery skills and subagents. Com
 
 | Role | Delivers | Must stop before |
 |------|----------|------------------|
-| **Feature planning / orchestration** | Ordered backlog; optional empty tracking skeleton; **decides** whether to hand off the next increment or pause for feedback | Production code, tests, marking backlog lines complete (always delegated) |
-| **One increment** | Exactly **one** open backlog line; commits when done; all verify steps green | Starting the next line — **always** (never continues the backlog) |
-| **Post-increment review** | Explain the increment’s commits; small in-scope refactor / test suggestions (optional tiny mechanical applies) | Rewrites outside the increment change surface; new capability |
+| **Feature planning / orchestration** | Ordered backlog; optional empty tracking skeleton; confirms the plan before executing; **decides** whether to hand off the next increment or pause for feedback; can open the feature PR when done | Production code, tests, marking backlog lines complete, reviewing an increment (always delegated) |
+| **One increment** | Exactly **one** open backlog line; commits when done, squashed to one; all verify steps green; a mini-journal (recap + review-focus) | Starting the next line — **always** (never continues the backlog) |
+| **Post-increment review** | Fast, single-pass verdict (`approved` \| `changes-requested` \| `bug-found`) from the increment's diff + mini-journal, per `docs/code-review.md`; a ready-to-paste fix brief when changes are requested (typically **`increment-review`**) | Rewrites outside the increment change surface; new capability; a second review round on the same increment |
+| **Fix execution** | Applies a review's fix brief as behavior-preserving mechanical steps (typically **`refactoring`**) | Anything outside the brief; correctness bugs (route to `bugfix` instead) |
+| **Small tweak** | One small, tested, committed change on the **current** branch — no backlog/branch/PR (typically **`tweak`**) | Anything that grows past a handful of files (escalate to feature planning) |
 | **Harness (legacy)** | Trustworthy automated safety net for the change path | Large structural edits on unprotected code |
 | **Refactor (structure)** | Behavior-preserving structure improvements | New capability or bug fixes in the same pass |
 | **Capability / fix** | New behavior or corrected behavior | Silent mixing with refactor-only work |
@@ -19,16 +21,16 @@ Language- and project-agnostic rules for AMPD delivery skills and subagents. Com
 
 ### Orchestration modes (`new-feature`)
 
-| Mode | How activated | After each `new-increment` + post-increment review |
-|------|---------------|-----------------------------------------------------|
-| **Step** (default) | Assumed unless the user explicitly opts in to automatic | **Full** review → **stop** for user feedback; do not start the next line |
-| **Automatic** | Explicit user request only (e.g. “modalità automatica”, “automatic mode”, “implement the whole feature”, “run until the backlog is done”) | **Light** review by default → if no **blocking** gaps and open `[ ]` remain → hand off the **next** line; if all `[x]` → stop (feature complete) |
+Before any increment starts, `new-feature` presents the backlog and runs a **plan confirmation gate**: step mode stops and waits for explicit confirmation; automatic mode announces and holds a ~2 minute pause (or the closest the host tool supports) before proceeding.
 
-**Invariant:** `new-increment` **always** delivers one line, verifies green, commits, and **stops**. Only `new-feature` decides whether to continue or pause — and only continues in **automatic** mode when the review did not report **blocking** gaps.
+| Mode | How activated | After each `new-increment` + `increment-review` |
+|------|---------------|---------------------------------------------------|
+| **Step** (default) | Assumed unless the user explicitly opts in to automatic | `increment-review` runs **once** → **stop** for user feedback; present the verdict + next line; ask before dispatching a `changes-requested` fix |
+| **Automatic** | Explicit user request only (e.g. “modalità automatica”, “automatic mode”, “implement the whole feature”, “run until the backlog is done”) | `increment-review` runs **once** → `approved`: hand off the **next** line; `changes-requested`: dispatch `refactoring` with the review's brief automatically, then continue; `bug-found`: **always stop** for the user. If all `[x]` → offer/open the **feature PR** from the increments' mini-journals. |
 
-**Review depth:** step → **full** (explain, suggest, optional tiny applies). Automatic → **light** (explain + suggest-only) unless the user opted into full review with applies.
+**Invariant:** `new-increment` **always** delivers one line, verifies green, commits (squashed to one), returns a mini-journal, and **stops**. `increment-review` runs **once** per increment — never a second pass after a fix is applied. Only `new-feature` decides whether to continue or pause — and only continues automatically on `approved` or a resolved `changes-requested`; a `bug-found` verdict stops in **both** modes.
 
-**Anti-pattern:** Treating “continue” as implied; batching increments inside `new-increment`; skipping post-increment review when orchestrating; continuing automatic after blocking review findings; **one git branch (or merge to main) per increment** instead of one feature branch (§1a).
+**Anti-pattern:** Treating “continue” as implied; batching increments inside `new-increment`; skipping `increment-review` (or calling `refactoring` directly for the review) when orchestrating; continuing automatic after a `bug-found` verdict; dispatching `refactoring` to fix a correctness bug; a second review round on the same increment; cascading past the plan confirmation gate; **one git branch (or merge to main) per increment** instead of one feature branch (§1a).
 
 ---
 
@@ -66,7 +68,7 @@ After **each meaningful edit** (RED/GREEN/REFACTOR step, bugfix change, refactor
 ### Before claiming a slice complete
 
 1. **Discover** what this project defines as verification for the **current language / module / track** you touched — scripts, Makefile targets, CI jobs, documented commands, or equivalent. Inspect README, contribution guides, CI config, Sonar/static-analysis config, and existing tooling; do not assume a single command.
-2. **Run every applicable verify step** for that scope — **now** include the **full** relevant test suite (not only the one test from the last RGR) plus build/compile, typecheck, lint, format, and code quality platforms when the project defines them (e.g. SonarQube, SonarCloud, CodeClimate), and adopted practices (mutation, contract, …).
+2. **Run every applicable verify step** for that scope — **now** include the **full** relevant test suite (not only the one test from the last RGR) plus build/compile, typecheck, lint, format, and code quality platforms when the project defines them (e.g. SonarQube, SonarCloud, CodeClimate), and adopted practices (mutation, contract, …). In a **monorepo / multi-module** project, "full relevant test suite" means the suite **scoped to the module/package/app you touched** when the project defines a narrower command for that — run the entire repository's suite only when no such scoping exists.
 3. **Fix violations you introduced** — leave lint, static analysis, and quality gates **without new warnings or errors** attributable to your change.
 4. **Hard green gate:** do **not** mark the backlog line `[x]`, claim done, or hand off as complete while **any** applicable verify step is red. Fix first; then re-run the **full** applicable set.
 5. **Report** each command run and pass or fail (verification table).
@@ -178,10 +180,12 @@ End every delivery invocation with a short factual report:
 
 | Field | Content |
 |-------|---------|
-| **Role completed** | planning \| one increment \| post-increment review \| harness \| refactor \| fix |
-| **Orchestration mode** | step \| automatic (planning / `new-feature` only) |
+| **Role completed** | planning \| one increment \| post-increment review \| fix execution \| tweak \| harness \| refactor \| fix |
+| **Orchestration mode** | step \| automatic (planning / `new-feature` only); plan-confirmation outcome |
 | **Backlog** | Which line marked complete (if increment) — **at most one** |
-| **Commits** | SHAs / messages for this slice (increment and review must leave work committed) |
+| **Commits** | SHA(s) / messages for this slice (increment: squashed to **one**; review/fix/tweak must leave work committed) |
+| **Mini-journal** | Recap + review-focus bullets (increment only) — feeds `increment-review` and the feature PR description |
+| **Verdict** | approved \| changes-requested \| bug-found (post-increment review only) |
 | **Branch** | Feature branch name (e.g. `feat/<stem>`) — same branch for all increments of the feature (§1a) |
 | **Verification** | Each project verify step run → pass/fail — **all must be pass** to claim done |
 | **Test strategy** | Practices evaluated → adopt or skip with reason ([`test-strategy-selection.md`](test-strategy-selection.md) §6) |
@@ -189,8 +193,9 @@ End every delivery invocation with a short factual report:
 | **RED cycles** | Count per behavior, or batch mode noted |
 | **Layers** | e.g. unit + mutation \| API acceptance + inner TDD \| characterization only |
 | **Change-surface** | Search performed yes/no; what was updated |
-| **Post-increment review** | Summary / depth (full\|light) / pending / blocked (`new-feature` orchestration) |
+| **Post-increment review** | Verdict (see above) / pending (`new-feature` orchestration) |
 | **Handoff** | Next open backlog line — **do not implement** (`new-increment`); or continue/stop decision (`new-feature`) |
+| **PR** | Not yet / drafted awaiting confirmation / opened at `<url>` (`new-feature`, once the backlog is fully `[x]`) |
 
 ---
 
@@ -198,11 +203,13 @@ End every delivery invocation with a short factual report:
 
 | Skill / agent | Uses especially |
 |---------------|-----------------|
-| `new-feature` | §1 orchestration modes + review depth + blocking gaps, **§1a feature branch**, §10 handoff |
-| `new-increment` | §1–3, **§1a** (stay on feature branch), §5–6, §10; always one line + commit + green gate; [`project-verification.md`](project-verification.md); [`test-strategy-selection.md`](test-strategy-selection.md); [`simple-design.md`](simple-design.md) / [`design-quality.md`](design-quality.md) |
+| `new-feature` | §1 orchestration modes + plan confirmation gate, **§1a feature branch**, §10 handoff, PR from mini-journals |
+| `new-increment` | §1–3, **§1a** (stay on feature branch), §5–6, §10; always one line + squashed commit + mini-journal + green gate; [`project-verification.md`](project-verification.md); [`test-strategy-selection.md`](test-strategy-selection.md); [`simple-design.md`](simple-design.md) / [`design-quality.md`](design-quality.md) |
+| `increment-review` (skill) / `increment-review` (agent) | §1 post-increment review — fast single pass driven by the mini-journal; [`code-review.md`](code-review.md); [`design-quality.md`](design-quality.md) |
 | `legacy-testing` | §8; [`project-verification.md`](project-verification.md); [`test-strategy-selection.md`](test-strategy-selection.md) |
-| `refactoring` (skill) / `refactoring` (agent) | §1 post-increment review (full/light) **or** dedicated structure pass (§7, §9, §2); [`project-verification.md`](project-verification.md); [`simple-design.md`](simple-design.md) / [`design-quality.md`](design-quality.md) |
+| `refactoring` (skill) / `refactoring` (agent) | Executes an `increment-review` fix brief, dedicated structure pass (§7, §9, §2), **or** legacy manual post-increment review (full/light) on direct request; [`project-verification.md`](project-verification.md); [`simple-design.md`](simple-design.md) / [`design-quality.md`](design-quality.md) |
 | `legacy-refactor` (agent) | §1, §7–9, §2 — harness then structure (distinct from `refactoring` alone) |
+| `tweak` (skill) / `tweak` (agent) | §2 scoped verify, §10 minimal payload — small edit on the current branch, no §1/§1a ceremony |
 | `tdd` | §6; [`project-verification.md`](project-verification.md); [`test-strategy-selection.md`](test-strategy-selection.md); [`simple-design.md`](simple-design.md) |
 | `atdd` | §4; [`project-verification.md`](project-verification.md); [`test-strategy-selection.md`](test-strategy-selection.md) |
 | `bugfix` | §2, §3, §7; [`project-verification.md`](project-verification.md); [`test-strategy-selection.md`](test-strategy-selection.md) |

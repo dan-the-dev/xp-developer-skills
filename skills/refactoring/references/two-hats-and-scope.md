@@ -38,7 +38,7 @@ For wide cleanups, **schedule** a refactor session with its own goal and branch 
 - **`skills/tdd`**: after GREEN, **REFACTOR** uses this skill’s loop inside a micro-cycle.
 - **`skills/bugfix`**: after GREEN on the fix, optional **refactor** pass for clarity — **separate** commit.
 - **`skills/atdd`**: acceptance still passes unchanged after refactor; if it fails, you changed behavior or broke a **structural** test (fix test design per [tests-and-design.md](tests-and-design.md)).
-- **`skills/new-feature`**: after each committed increment, **post-increment review** mode ([post-increment-review.md](post-increment-review.md)) — explain, suggest, optional tiny applies only.
+- **`skills/new-feature`**: after each committed increment, `new-feature` calls **`skills/increment-review`** for the review; this skill only executes the resulting fix brief, or runs the legacy manual **post-increment review** mode ([post-increment-review.md](post-increment-review.md)) on direct user request — explain, suggest, optional tiny applies only.
 
 ---
 

@@ -79,6 +79,8 @@ skills/legacy-testing/
 skills/spike/
 skills/new-feature/
 skills/new-increment/
+skills/increment-review/
+skills/tweak/
 ```
 
 **Bugfix** — a strict bugfix workflow enforcing:
@@ -100,16 +102,22 @@ skills/new-increment/
 
 **Spike** — time-boxed experiments on an isolated `spike/` branch: disposable code, prove an idea or library fit, optional ad hoc checks only; explicit promotion to ATDD/TDD/legacy (see `skills/spike/SKILL.md`).
 
-**New feature** — slice a whole capability into ordered increments (`increments/<stem>.md`); plan and orchestrate — hand off each line to **new-increment**, then **refactoring** (post-increment review). Default **step** mode stops after each increment; **automatic** mode (explicit opt-in) continues until the backlog is done (see `skills/new-feature/SKILL.md`).
+**New feature** — slice a whole capability into ordered increments (`increments/<stem>.md`); plan and orchestrate — confirm the plan before executing, hand off each line to **new-increment**, then **increment-review**. Default **step** mode stops after each increment; **automatic** mode (explicit opt-in) continues until the backlog is done, then can open the feature PR from the increments' mini-journals (see `skills/new-feature/SKILL.md`).
 
-**New increment** — deliver **one** increment with strict **TDD** (unit tests, one `test-lists/<feature>.md`); **ATDD** only when a real outer seam exists; **all** project verify steps green; **commit**; then **stop** (see `skills/new-increment/SKILL.md`).
+**New increment** — deliver **one** increment with strict **TDD** (unit tests, one `test-lists/<feature>.md`); **ATDD** only when a real outer seam exists; **all** project verify steps green; **commit squashed to one**; return a mini-journal; then **stop** (see `skills/new-increment/SKILL.md`).
+
+**Increment review** — fast, single-pass review (target under 60s) of one just-finished increment, driven by its mini-journal and `docs/code-review.md`; returns approved / changes-requested / bug-found (see `skills/increment-review/SKILL.md`).
+
+**Tweak** — small, direct follow-up edit on the current branch (copy, style, a small logic change, or a small new file) with scoped tests and lint, one commit, no branch/backlog/PR ceremony (see `skills/tweak/SKILL.md`).
 
 ### Subagents
 
-Goal-oriented agents in **`agents/`** (also **`.claude/agents/`**): `new-feature`, `new-increment`, `refactoring`, `bugfix`, `legacy-refactor`, `spike`, `pr-reviewer`. Each reads the matching skill under **`skills/`**. See **`AGENTS.md`**.
+Goal-oriented agents in **`agents/`** (also **`.claude/agents/`**): `new-feature`, `new-increment`, `increment-review`, `refactoring`, `tweak`, `bugfix`, `legacy-refactor`, `spike`, `pr-reviewer`. Each reads the matching skill under **`skills/`**. See **`AGENTS.md`**.
 
-- **`refactoring`** — dedicated tidy-up **or** post-increment review after `new-increment`
+- **`increment-review`** — default post-increment reviewer `new-feature` calls (fast, single-pass)
+- **`refactoring`** — dedicated tidy-up, executing an `increment-review` fix brief, **or** legacy manual post-increment review on direct request
 - **`legacy-refactor`** — harness via `legacy-testing`, **then** structure via `refactoring` (untested change path)
+- **`tweak`** — small follow-up edit on the current branch, outside the `new-feature` ceremony
 
 ### Install (all projects)
 
@@ -118,7 +126,7 @@ Goal-oriented agents in **`agents/`** (also **`.claude/agents/`**): `new-feature
    - Cursor: **`./scripts/install-cursor.sh`** → **`~/.cursor/ampd/`**
    - Claude Code: **`./scripts/install-claude.sh`** → **`~/.claude/ampd/`** (or **`--home ~/.claude-personal`**)
 3. Restart Cursor / start a new Claude Code session
-4. Use subagents: `/bugfix`, `/new-feature`, `/new-increment`, `/refactoring`, `/pr-reviewer`, etc.
+4. Use subagents: `/bugfix`, `/new-feature`, `/new-increment`, `/increment-review`, `/refactoring`, `/tweak`, `/pr-reviewer`, etc.
 
 Skills and agents are linked for auto-discovery (`~/.cursor/skills|agents` or `<claude-home>/skills|agents`). To update: `git pull`, then re-run the install script(s) for each Claude home you use.
 
