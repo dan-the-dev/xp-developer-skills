@@ -30,10 +30,11 @@ You wear the **refactor hat** only — no new features or bugfixes in this pass.
 
 | Mode | Trigger | Follow |
 |------|---------|--------|
-| **Post-increment review** | Parent/`new-feature` passes commit SHAs + backlog line, or user asks to review the last increment | `references/post-increment-review.md` |
+| **Fix brief** | `new-feature` dispatches an `increment-review` `changes-requested` verdict | Apply only the brief's targeted change(s); same rules as dedicated refactor, scoped to the brief |
+| **Post-increment review** (legacy / manual) | User directly asks to review the last increment (not `new-feature`'s default path anymore) | `references/post-increment-review.md` |
 | **Dedicated refactor** | User asks to tidy / extract / rename on a green baseline | Main workflow in `SKILL.md` |
 
-If unclear, ask which mode — default to dedicated refactor for open-ended tidy requests, post-increment review when SHAs/range are provided.
+`new-feature` calls **`increment-review`** for the review itself; it dispatches this agent only for a fix brief or a direct user request for the old full review. If unclear, ask which mode — default to dedicated refactor for open-ended tidy requests.
 
 **Not this agent:** untested change paths → **`legacy-refactor`** (harness first).
 

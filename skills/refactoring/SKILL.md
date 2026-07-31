@@ -32,9 +32,10 @@ This skill is for **dedicated** refactoring sessions, for the **REFACTOR** phase
 | Mode | When | Outcome |
 |------|------|---------|
 | **Dedicated refactor** (default) | User asks to tidy / prepare design on a green baseline | Goal-driven mechanical steps + `refactor:` commits |
-| **Post-increment review** | `new-feature` (or user) after a committed increment | Explain commits; suggest small in-scope improvements; optionally apply tiny mechanical steps only in **full** depth |
+| **Fix brief** | `new-feature` dispatches a `changes-requested` verdict from **`skills/increment-review`** | Apply *only* the brief's targeted change(s) as mechanical refactor steps; same green/baby-step rules as dedicated refactor, scoped to the brief |
+| **Post-increment review** (legacy / manual only) | User directly asks this agent to review the last increment; **not** `new-feature`'s default anymore | Explain commits; suggest small in-scope improvements; optionally apply tiny mechanical steps only in **full** depth |
 
-Post-increment review: follow [references/post-increment-review.md](references/post-increment-review.md) and [checklists/post-increment-review.md](checklists/post-increment-review.md). Depth is **full** (step / opt-in applies) or **light** (automatic default — no applies). Do **not** rewrite the slice, work outside the increment change surface, or re-run a stylistic REFACTOR when the surface is already clean.
+**`new-feature` now calls `skills/increment-review` for the review itself** (fast, single-pass, ~60s) and dispatches **this** skill only to execute a `changes-requested` fix brief, or when the user directly asks for the old full review. Post-increment review mode: follow [references/post-increment-review.md](references/post-increment-review.md) and [checklists/post-increment-review.md](checklists/post-increment-review.md) — kept for that manual case. Depth is **full** (step / opt-in applies) or **light** (automatic default — no applies). Do **not** rewrite the slice, work outside the increment change surface, or re-run a stylistic REFACTOR when the surface is already clean.
 
 ---
 
@@ -71,8 +72,9 @@ Do **not** swap hats mid-commit. If you need both, **finish** one slice (includi
 | **`skills/bugfix`** | Fix **wrong** behavior first; refactoring is not a substitute for reproduction + RED |
 | **`skills/atdd`** | Acceptance defines *what*; refactoring does not change *what* |
 | **`skills/legacy-testing`** | Without tests, **characterization** and **seams** before large refactors ([`SKILL.md`](../legacy-testing/SKILL.md)) |
-| **`skills/new-feature`** | After each increment, invoke this skill in **post-increment review** mode |
-| **`skills/new-increment`** | Delivers the committed slice that review inspects — does not run the review itself |
+| **`skills/increment-review`** | Runs the fast post-increment review; dispatches this skill with a minimal fix brief when it returns `changes-requested` |
+| **`skills/new-feature`** | After each increment, invokes **`skills/increment-review`** for the review, then this skill only to apply the resulting fix brief (or on a direct user request for a full review) |
+| **`skills/new-increment`** | Delivers the committed slice (+ mini-journal) that `increment-review` inspects — does not run the review itself |
 
 **Tests and design (Cupac):** Prefer tests **coupled to behavior**, not **structure**, so internal moves do not break the suite for the wrong reason ([references/tests-and-design.md](references/tests-and-design.md)).
 

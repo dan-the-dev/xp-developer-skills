@@ -1,6 +1,8 @@
-# Post-increment review
+# Post-increment review (legacy / manual mode)
 
-Mode of **`skills/refactoring`** invoked by **`new-feature`** (or the user) after a **`new-increment`** has marked one backlog line `[x]`, verified green, and **committed**.
+Mode of **`skills/refactoring`**, previously invoked by `new-feature` after every increment. **`new-feature` now calls `skills/increment-review`** for that (fast, single-pass, ~60s) and dispatches this skill only to execute the resulting fix brief. Use **this** mode only when the **user** directly asks for a full/manual review of the last increment (or `increment-review`/its agent is missing after install).
+
+Invoked after a **`new-increment`** has marked one backlog line `[x]`, verified green, and **committed**.
 
 ---
 
