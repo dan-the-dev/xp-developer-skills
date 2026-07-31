@@ -37,8 +37,9 @@ You deliver **one** releasable increment — not the whole feature. Even if the 
 4. **RED gate:** observe failure before each production change; observe pass after GREEN.
 5. **One new automated check at a time** — no whole-file test replace unless recovering from a mistaken draft.
 6. **Hard green gate (at increment end only):** run **all** applicable project verify steps; **do not** mark `[x]` or claim done while any applicable step is red.
-7. **Commit** this increment’s work on the **feature branch** before returning (TDD micro-commits + squash per cycle as applicable). Include SHAs + **branch name** in the payload.
-8. **Stop** after marking **one** parent line `[x]` — never start the next backlog line (that is `new-feature`’s decision). Never merge to main to “start” the next increment.
+7. **Commit — mandatory, squashed.** Before returning, squash all of this increment's RGR micro-commits into **one** commit on the feature branch (`git reset --soft <start-point-sha> && git commit -m "..."`), and confirm `git status` is clean. Never return uncommitted or with more than one commit for this line. Include the single SHA + **branch name** in the payload.
+8. **Mini-journal — mandatory.** Return a short recap (what shipped) and a review-focus note (riskiest part of the diff) so `increment-review` doesn't have to re-derive intent from the commit.
+9. **Stop** after marking **one** parent line `[x]` — never start the next backlog line (that is `new-feature`’s decision). Never merge to main to “start” the next increment.
 
 ### Before claiming done (mandatory)
 
@@ -46,10 +47,11 @@ Per **`<AMPD-root>/docs/project-verification.md`** and delivery-process §2 / §
 
 1. **During work:** after every meaningful code change, re-run **only** the narrowest tests for what you touched (and scoped lint if available) — **not** the full suite every RGR step.
 2. **Discover** all verify steps the **current project** defines — tests, build, typecheck, **lint**, **format**, **SonarQube**/static analysis, **mutation** if adopted/configured, and any other CI gates.
-3. **At slice boundary:** **Run each applicable step** (full relevant suite + other gates); report pass/fail per step.
+3. **At slice boundary:** **Run each applicable step** — full suite **scoped to the module/package you touched** when the project defines a narrower command (monorepo/multi-module); the whole-repo suite only when no such scoping exists — plus other gates; report pass/fail per step.
 4. **Fix** until the applicable set is green — do not hand off a red suite as complete.
 5. If construction/import/API changed, **search the scope** and update every obsolete call site.
-6. Deliver **return payload** per delivery-process §10 (include commits + **branch** + test strategy table).
+6. **Squash to one commit**, confirm `git status` clean.
+7. Deliver **return payload** per delivery-process §10 (include single commit SHA + **branch** + test strategy table + **mini-journal**: recap + review-focus).
 
 ### Forbidden
 
@@ -60,6 +62,8 @@ Per **`<AMPD-root>/docs/project-verification.md`** and delivery-process §2 / §
 - Suppressing lint/sonar rules instead of fixing code
 - Markdown `[x]` before linked checks exist and pass
 - Multiple backlog `[x]` in one invocation
+- Returning with unsquashed micro-commits or an uncommitted working tree
+- Returning without a mini-journal (recap + review-focus)
 - **Per-increment branch** (`feat/<feature>-<increment-slug>`) or merge-to-main between increments
 - Skipping mutation on greenfield branchy domain with only “not configured”
 - Circular oracles; duplicate pyramid layers
@@ -75,8 +79,9 @@ Per **`<AMPD-root>/docs/project-verification.md`** and delivery-process §2 / §
 3. Choose TDD-only vs ATDD+TDD per scoped reference.
 4. RED → GREEN → REFACTOR per behavior; **scoped** test runs mid-increment; REFACTOR applies Simple Design + **mandatory Object Calisthenics** (**`<AMPD-root>/docs/design-quality.md`**); run **adopted** practices (e.g. mutation, integration) and **full** verify at slice boundary only.
 5. Run **all applicable project verify steps**; fix until green.
-6. Mark parent line `[x]` with links; **commit** on the feature branch (do not merge).
-7. **Stop** with handoff (next open line — do not implement).
+6. Mark parent line `[x]` with links; **squash to one commit** on the feature branch (do not merge); confirm `git status` clean.
+7. Write the **mini-journal** (recap + review-focus).
+8. **Stop** with handoff (next open line — do not implement).
 
 **Prep:** legacy-testing (invalid harness), refactoring, spike — then resume.
 
@@ -84,4 +89,4 @@ Per **`<AMPD-root>/docs/project-verification.md`** and delivery-process §2 / §
 
 ## Return payload
 
-Per **`<AMPD-root>/docs/delivery-process.md`** §10: role, single backlog line, **branch**, **commits**, **verification table** (all pass), **test strategy table**, **Design** note (Simple Design / calisthenics / patterns when OO production touched), RED count, layers, change-surface search, handoff (next line only — do not implement).
+Per **`<AMPD-root>/docs/delivery-process.md`** §10: role, single backlog line, **branch**, single squashed **commit** SHA, **verification table** (all pass), **test strategy table**, **Design** note (Simple Design / calisthenics / patterns when OO production touched), RED count, layers, change-surface search, **mini-journal** (recap + review-focus, for `increment-review`), handoff (next line only — do not implement).

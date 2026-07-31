@@ -14,6 +14,8 @@
 - **Done after one verify step** when the project defines more (delivery-process §2; lint, SonarQube, etc.)
 - **Done with red tests** or unrun adopted practices (e.g. mutation adopted but never executed)
 - **Uncommitted done** — claiming complete with uncommitted slice work
+- **Unsquashed done** — returning with multiple RGR micro-commits still separate instead of one commit for the line
+- **Missing mini-journal** — returning without a recap + review-focus note for `increment-review` / `new-feature`
 - **Unit-only default** without test strategy table ([`test-strategy-selection.md`](../../../docs/test-strategy-selection.md))
 - **Skipping mutation on greenfield** branchy domain with only “not configured” **when the introduce-tooling threshold is met**
 - **Forcing mutation tooling** into teaching/kata slices or when setup ≫ slice

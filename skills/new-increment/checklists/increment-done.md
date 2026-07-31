@@ -13,7 +13,8 @@
 - [ ] **Change-surface search** done if construction/import/API changed (§3)
 - [ ] **Design** — Simple Design + **mandatory Object Calisthenics** on touched owned OO ([`docs/simple-design.md`](../../../docs/simple-design.md), [`docs/object-calisthenics.md`](../../../docs/object-calisthenics.md)); patterns only toward evidenced smells / no theater ([`docs/design-quality.md`](../../../docs/design-quality.md))
 - [ ] Parent `increments/…` **one** line `[x]` with links
-- [ ] Work **committed** on the feature branch; SHAs + branch name in return payload
+- [ ] Work **committed** and **squashed to one commit** for this line on the feature branch; `git status` clean; SHA + branch name in return payload
 - [ ] Redundant per-slice markdown merged/deleted if created
-- [ ] **Return payload** includes verification results, **test strategy table**, **Design** note (when OO production touched), commits, branch, and RED count ([`docs/delivery-process.md`](../../../docs/delivery-process.md) §10)
+- [ ] **Mini-journal** written: recap (2–4 bullets) + review-focus (1–3 bullets on the riskiest part of the diff)
+- [ ] **Return payload** includes verification results, **test strategy table**, **Design** note (when OO production touched), commit SHA, branch, RED count, and **mini-journal** ([`docs/delivery-process.md`](../../../docs/delivery-process.md) §10)
 - [ ] **Stopped** — did not start the next backlog line; did not merge to unlock the next increment
