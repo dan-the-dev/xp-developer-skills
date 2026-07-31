@@ -10,8 +10,12 @@
 - Claiming feature done while backlog still has `[ ]`
 - Assuming **automatic** mode without explicit user opt-in
 - Continuing to the next increment in **step** mode without user go-ahead
-- Skipping **post-increment review** between increments when orchestrating
-- Continuing **automatic** after a review that reported **blocking** gaps
+- Skipping **`increment-review`** between increments, or calling `refactoring` directly for the review
+- Continuing **automatic** on a **`bug-found`** verdict instead of stopping for the user
+- Dispatching `refactoring` to fix a `bug-found` verdict — that's `bugfix`'s job, not a refactor
 - Treating post-increment review as a license to rewrite the feature
-- Running **full** apply-capable review on every automatic increment when light depth would suffice
+- A second review round on the same increment after `refactoring` applies the brief
+- Cascading from "here is the plan" into the first `new-increment` handoff without the confirmation gate ([SKILL.md](../SKILL.md) — Plan confirmation gate)
+- Padded, non-minimal handoff prompts that restate a subagent's own skill or the whole backlog ([references/handoff-prompts.md](handoff-prompts.md))
+- Opening or pushing the feature PR in **step** mode without showing the draft and asking first
 - **Per-increment branches or merges to main** between increments — one `feat/<stem>` for the whole feature ([`delivery-process.md`](../../../docs/delivery-process.md) §1a)
