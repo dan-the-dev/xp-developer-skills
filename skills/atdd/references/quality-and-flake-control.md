@@ -43,7 +43,8 @@ Before calling Distill done:
 
 ## Selectors and coupling (UI)
 
-- Prefer **roles, labels, test ids** agreed with accessibility in mind.
+- Prefer **`data-testid`** (reference stack default) or **roles/labels** — one convention per repo; see [e2e-acceptance.md § Selectors](e2e-acceptance.md#selectors).
+- Selectors live only in **Page Objects**, never in steps or scenarios.
 - Avoid CSS paths that change with every redesign.
 - Assert **outcomes** (text, URL, state), not animation frames.
 

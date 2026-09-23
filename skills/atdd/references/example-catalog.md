@@ -62,6 +62,7 @@ Sibling **follow-ups** (refactor / tech debt only): `<stem>-follow-ups.md`.
 # Example catalog — <short capability title>
 
 Story: <optional ticket / id>
+Mode: <api | e2e | mixed>
 Branch: <optional>
 Updated: <optional ISO date>
 

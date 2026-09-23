@@ -1,6 +1,6 @@
 ---
 name: atdd
-description: Pragmatic Acceptance Test-Driven Development — agree concrete examples with stakeholders (Discuss), capture them as executable acceptance checks (Distill), then implement with outside-in delivery (Develop). Supports Gherkin/Cucumber when it helps, code-first acceptance tests, and contract tests at service boundaries. Composes with the inner-loop TDD skill for programmer tests. Use when defining story done, writing acceptance or executable specifications, or aligning business examples with automation before feature code.
+description: Pragmatic Acceptance Test-Driven Development — agree concrete examples with stakeholders (Discuss), capture them as executable acceptance checks (Distill), then implement with outside-in delivery (Develop). Works in two modes — API-only (HTTP/CLI/event/in-process seam, the default) or E2E (browser, full stack, Page Objects) — with Gherkin/Cucumber when it helps, code-first acceptance tests, and contract tests at service boundaries. Composes with the inner-loop TDD skill for programmer tests. Use when defining story done, writing acceptance or executable specifications, or aligning business examples with automation before feature code.
 allowed-tools: Read, Edit, MultiEdit, Bash, Grep, Glob
 ---
 
@@ -25,6 +25,26 @@ Optimize for:
 - **composition** with inner TDD — not duplication at every layer
 
 This skill covers the **outer** acceptance loop. It does **not** replace unit TDD, bugfix workflows, CI pipeline design, or product discovery — compose with other skills for those.
+
+---
+
+## Acceptance mode: API-only or E2E
+
+Every slice runs in exactly **one** mode per example, chosen at the end of **Discuss** with [checklists/pipeline-fit.md](checklists/pipeline-fit.md) and recorded in the catalog header (`Mode: api | e2e | mixed`) and on each line when mixed.
+
+| Mode | Drives the system through | Choose when | Reference |
+|------|---------------------------|-------------|-----------|
+| **`api`** (default) | Public boundary below the UI — HTTP/GraphQL/gRPC, CLI, message/event, in-process application service; plus contract tests at service boundaries | Backend/service/CLI capabilities; any business rule observable without a browser; no UI in the slice | [references/api-acceptance.md](references/api-acceptance.md) |
+| **`e2e`** | Real browser against the running app (Cypress / Playwright / WebDriver) | The UI **is** the capability, or no lower seam can prove the agreed outcome | [references/e2e-acceptance.md](references/e2e-acceptance.md) |
+| **`mixed`** | One thin `e2e` journey + remaining examples in `api` | UI capability with many business rules, **or any `e2e` slice that touches the backend** — journey in browser, backend rules/edges below it | both |
+
+Rules:
+
+- **Default to `api`.** Escalate to `e2e` only for what a browser adds (the journey, UI wiring) — Fowler's [SubcutaneousTest](https://martinfowler.com/bliki/SubcutaneousTest.html) and [Practical Test Pyramid](https://martinfowler.com/articles/practical-test-pyramid.html).
+- **`e2e` + backend ⇒ also `api`.** When an `e2e` slice adds or changes backend behavior (endpoint, server-side rule, persistence, event), **also** write API acceptance for that backend behavior — the slice becomes `mixed`: the browser test covers the journey, the API tests cover the backend rules and their edge/failure cases. If it is unclear whether the backend is involved, or whether an API test would add signal beyond the E2E journey (e.g. the UI only reads an existing, already-covered endpoint), **ask the user** before Distill and record the answer in the pipeline-fit decision. Pure frontend slices (no backend change) stay `e2e` only.
+- **Same four layers in both modes** (Farley): test case (scenario in domain language) → DSL (step definitions / helpers) → protocol driver (**API client** in `api`, **Page Objects** in `e2e`) → system under test. The scenario text must not change if the driver is swapped.
+- **`e2e` follows the reference stack and patterns** in [references/e2e-acceptance.md](references/e2e-acceptance.md): Cypress + Gherkin (`@badeball/cypress-cucumber-preprocessor`) layout for JS/TS web apps, one Page Object per page, steps never touch selectors, `data-testid` selectors, English scenarios, credentials from a gitignored test env file via `cy.task`, `baseUrl` overridable by env. On another existing E2E stack, keep the structure and rules, swap the tool.
+- **Inspect before choosing tooling** — never introduce a second E2E runner or Gherkin where the repo has none without a reason recorded in the pipeline-fit decision.
 
 ---
 
@@ -54,15 +74,17 @@ Transform agreed examples into **executable** checks:
 | Approach | When (pragmatic) |
 |----------|------------------|
 | **Gherkin + runner** (Cucumber, SpecFlow, pytest-bdd, etc.) | Stakeholders will read scenarios in PRs; team already uses BDD tooling |
-| **Code-first acceptance** (Playwright, API tests, RSpec feature specs) | Faster for the team; examples stay in catalog + test names/assertions |
+| **Code-first acceptance** (API tests, Playwright/Cypress specs, RSpec feature specs) | Faster for the team; examples stay in catalog + test names/assertions |
 | **Contract tests** (Pact, schema/contract suites, consumer-driven contracts) | **Service boundary** is the capability; business outcome is “honors agreed contract” |
-| **Narrow acceptance** (HTTP against app, in-process acceptance module) | Full E2E is slow/flaky but **business rule** can be proven at a stable seam |
+| **Narrow acceptance** (HTTP against app, in-process acceptance module) — mode `api` | Full E2E is slow/flaky but **business rule** can be proven at a stable seam |
+| **Browser E2E** (Cypress/Playwright + Page Objects, Gherkin optional) — mode `e2e` | The journey through the UI **is** the agreed example; see [references/e2e-acceptance.md](references/e2e-acceptance.md) |
 
 Rules:
 
 - Prefer **one** failing acceptance check that proves the **next** agreed example — not a suite of ten scenarios upfront.
 - The check must **fail for the right reason** (missing behavior), not environment noise — see [references/quality-and-flake-control.md](references/quality-and-flake-control.md).
 - **Do not** block Distill on perfect Gherkin if code-first is the repo norm — keep the **catalog** as the human-readable source of truth.
+- Apply the mode's review checklist before calling Distill done: [api](references/api-acceptance.md#api-review-checklist-add-to-distill) / [e2e](references/e2e-acceptance.md#e2e-review-checklist-add-to-distill).
 
 See [references/discuss-distill-develop.md](references/discuss-distill-develop.md) and [references/gherkin-and-bdd-tooling.md](references/gherkin-and-bdd-tooling.md).
 
@@ -125,7 +147,7 @@ Adapt to the repository:
 - follow project layout for features, specs, and tags
 - run the **smallest** acceptance command that covers the current example
 
-Never assume Cucumber, Playwright, or a specific folder; inspect first.
+Never assume Cucumber, Playwright, or a specific folder; inspect first. When `e2e` is chosen and the repo has **no** E2E stack yet on a JS/TS web app, the Cypress + Gherkin reference stack in [references/e2e-acceptance.md](references/e2e-acceptance.md) is the default proposal.
 
 Tooling orientation: [references/gherkin-and-bdd-tooling.md](references/gherkin-and-bdd-tooling.md).
 
@@ -150,7 +172,9 @@ Inner **unit** cycles still follow `skills/tdd` micro-commits when that skill is
 ## Anti-patterns (summary)
 
 - Coding before **any** agreed example (surprise delivery).
-- **UI click scripts** masquerading as business scenarios (see Gherkin reference).
+- **UI click scripts** masquerading as business scenarios (see Gherkin reference); **HTTP scripts** (`When I POST "/api/…"`) are the same smell in `api` mode.
+- **Selectors in step definitions** — only Page Objects touch the DOM; `e2e` setup through UI clicks instead of API/seed/session.
+- **E2E by default** — browser tests for rules provable in `api` mode.
 - **One giant E2E** as the only acceptance test for a large story.
 - **Duplicating** every acceptance assertion in dozens of unit tests.
 - **Flaky** acceptance that the team ignores (definition of done erodes).
@@ -203,7 +227,7 @@ Checklists: [checklists/story-readiness.md](checklists/story-readiness.md), [che
 
 #### Distill (acceptance RED)
 - Check: <file::scenario or test name>
-- Layer: <e2e | api | contract | in-process>
+- Mode: <api | e2e> — seam: <http | cli | event | in-process | contract | browser>
 - Failure: <short message>
 
 #### Develop
@@ -231,6 +255,8 @@ Checklists: [checklists/story-readiness.md](checklists/story-readiness.md), [che
 - [references/executable-specifications.md](references/executable-specifications.md)
 - [references/gherkin-and-bdd-tooling.md](references/gherkin-and-bdd-tooling.md)
 - [references/environments-and-test-pyramid.md](references/environments-and-test-pyramid.md)
+- [references/api-acceptance.md](references/api-acceptance.md) — `api` mode
+- [references/e2e-acceptance.md](references/e2e-acceptance.md) — `e2e` mode (Cypress + Gherkin reference stack, Page Objects, selectors, credentials)
 - [references/quality-and-flake-control.md](references/quality-and-flake-control.md)
 - [references/anti-patterns.md](references/anti-patterns.md)
 
@@ -247,4 +273,4 @@ Checklists: [checklists/story-readiness.md](checklists/story-readiness.md), [che
 
 ## Resource usage
 
-Open reference files when layer choice, catalog format, Gherkin quality, or acceptance vs unit boundaries are unclear.
+Open `api-acceptance.md` or `e2e-acceptance.md` as soon as the mode is chosen. Open other reference files when layer choice, catalog format, Gherkin quality, or acceptance vs unit boundaries are unclear.

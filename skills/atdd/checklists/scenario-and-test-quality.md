@@ -1,6 +1,6 @@
 # ATDD checklist — scenario and test quality (Distill / before GREEN merge)
 
-Use when adding or changing **one** automated acceptance example.
+Use when adding or changing **one** automated acceptance example. Also run the mode-specific checklist: [api](../references/api-acceptance.md#api-review-checklist-add-to-distill) / [e2e](../references/e2e-acceptance.md#e2e-review-checklist-add-to-distill).
 
 ---
 
@@ -47,6 +47,7 @@ Use when adding or changing **one** automated acceptance example.
 ## Maintainability
 
 - [ ] Step definitions / helpers are domain-level (Gherkin) or shared fixtures (code-first)
+- [ ] Protocol details live in one driver: Page Objects (`e2e`) or a test API client (`api`) — never in steps/scenarios
 - [ ] No hard-coded `sleep` without condition-based wait
 - [ ] Test data isolated from other scenarios
 

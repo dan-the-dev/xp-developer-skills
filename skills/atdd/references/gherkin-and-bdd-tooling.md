@@ -28,7 +28,7 @@ Reference grammar: [Cucumber Gherkin reference](https://cucumber.io/docs/gherkin
 |-------|----------------|
 | JVM | Cucumber JVM, Serenity |
 | .NET | SpecFlow |
-| JavaScript/TS | `@cucumber/cucumber`, Cypress + preprocessor (if adopted) |
+| JavaScript/TS | `@cucumber/cucumber`; Cypress + `@badeball/cypress-cucumber-preprocessor` — reference E2E stack, see [e2e-acceptance.md](e2e-acceptance.md) |
 | Ruby | cucumber-ruby, Turnip |
 | Python | pytest-bdd, behave |
 | Go | godog |
@@ -47,6 +47,9 @@ Inspect the **project** first; never introduce a new runner without team alignme
 - **Background** only for shared **Given** that every scenario needs.
 - **Scenario Outline** + **Examples** for tables the business supplied in Discuss.
 - Tags (`@smoke`, `@billing`) for selective CI runs — align with pipeline-fit checklist.
+- **Declarative** over imperative steps — Cucumber's [Writing better Gherkin](https://cucumber.io/docs/bdd/better-gherkin/); Fowler's [GivenWhenThen](https://martinfowler.com/bliki/GivenWhenThen.html).
+- Scenarios and step text in **English** (keywords included), even when the product UI is in another language.
+- Step definitions delegate to a **protocol driver** — Page Objects in `e2e`, a test API client in `api` — never raw selectors or raw HTTP calls.
 
 ---
 

@@ -94,7 +94,7 @@ skills/tweak/
 
 **TDD** — strict RED → GREEN → REFACTOR with micro-commits (`test:` / `feat:` / `refactor:`), fast narrow test runs, and squash-to-one-commit before push (see `skills/tdd/SKILL.md`).
 
-**ATDD** — pragmatic Discuss → Distill → Develop: agree examples in an example catalog, automate at the right layer (contract, API, or E2E; Gherkin optional), then implement outside-in while composing with inner TDD (see `skills/atdd/SKILL.md`).
+**ATDD** — pragmatic Discuss → Distill → Develop: agree examples in an example catalog, automate at the right layer in **API-only** or **E2E** mode (contract/API/in-process, or browser with Page Objects; Gherkin optional), then implement outside-in while composing with inner TDD (see `skills/atdd/SKILL.md`).
 
 **Refactoring** — Fowler-style behavior-preserving changes: two hats, baby steps, green between steps, revert on red, named refactorings and clear commits (see `skills/refactoring/SKILL.md`).
 

@@ -30,6 +30,8 @@ Acceptance tests should prove **business outcomes** at the **highest layer that 
 | **In-process acceptance** | Module boundary in same deployable | acceptance test package, test server | Stable seam, no browser needed |
 | **E2E / UI** | Full user journey | Playwright, Cypress, WebDriver | UI **is** the capability or no lower seam exists |
 
+Mode mapping: Contract, API/HTTP and In-process → **`api`** mode ([api-acceptance.md](api-acceptance.md)); E2E/UI → **`e2e`** mode ([e2e-acceptance.md](e2e-acceptance.md)).
+
 ---
 
 ## Production-like environments (pragmatic)
