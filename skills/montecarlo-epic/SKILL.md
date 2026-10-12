@@ -29,6 +29,7 @@ Fonti possibili:
 2. **Testo o tabella incollati:** estrai i campi.
 3. **Link al gruppo/epic o alla board:** con i connettori/tool della sessione leggi i figli del gruppo (rimanenti = non completati, non annullati) e lo storico degli item completati dal team. Se manca la history degli stati, usa le date disponibili e dichiara il ripiego.
 4. **Solo numeri a mano** ("restano 24 item, negli ultimi 3 mesi abbiamo chiuso questi item…"): va bene se c'è una lista di completamenti datati. Un throughput medio ("facciamo 5 item a settimana") **non basta**: spiega che serve la serie storica e non inventarla.
+5. **Nessuno storico fornito:** **fermati e chiedilo** — da incollare in chat o come percorso di un file locale — insieme agli altri dati mancanti, in una sola domanda. Non lanciare lo script, non usare i dati di `tools/montecarlo/examples/` né altri sostituti, neanche come demo (solo se l'utente chiede esplicitamente una demo). Dettagli in `docs/montecarlo-forecasting.md` § *Storico mancante*.
 
 Regole: stato "iniziato"/"completato" chiesto una volta sola se ambiguo; solo item **foglia**; esclusi annullati/archiviati; tutto dichiarato nell'output.
 

@@ -23,7 +23,7 @@ Serve lo **storico dei work item completati** (almeno `id`, data di inizio, data
 1. **File caricato** (CSV, foglio di calcolo, export del sistema di tracking): mappa le colonne sullo schema; se il mapping non è ovvio, proponilo e chiedi conferma una volta.
 2. **Testo o tabella incollati:** estrai id, tipo, tag e date riga per riga.
 3. **Link a card, ticket o board:** usa i connettori/tool disponibili in sessione per leggere gli item completati e la history dei cambi di stato. Se la history non c'è, usa le date disponibili e **dichiara il ripiego**.
-4. **Nessun dato storico:** spiega cosa serve (lista di item completati con date di inizio e fine, idealmente 8–12 settimane e almeno ~20 item) e **non inventare numeri**.
+4. **Nessun dato storico:** **fermati e chiedilo** — da incollare in chat o come percorso di un file locale — spiegando cosa serve (item completati con date di inizio e fine, idealmente 8–12 settimane e almeno ~20 item). Non lanciare lo script, non usare i dati di `tools/montecarlo/examples/` né altri sostituti, neanche come demo (solo se l'utente chiede esplicitamente una demo). Dettagli in `docs/montecarlo-forecasting.md` § *Storico mancante*.
 
 Dell'item da prevedere servono: il **tipo** (per filtrare il campione, se ha senso) e, se è già in corso, **da quanti giorni** (work item age).
 

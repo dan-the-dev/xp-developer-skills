@@ -27,7 +27,22 @@ Date ISO 8601 (`2026-09-08T16:45:00Z` o `2026-09-08`). Cycle time = `completed_a
 | File caricato (CSV, foglio di calcolo, export) | Mappa le colonne sullo schema. Se il mapping non è ovvio (più colonne di data, nomi ambigui), proponilo e chiedi conferma una volta. Un foglio di calcolo si converte in CSV prima di lanciare lo script. |
 | Link a card, ticket, epic, board | Usa i connettori e i tool disponibili in sessione per leggere gli item e, se possibile, la **history dei cambi di stato** (è da lì che vengono `started_at` e `completed_at` affidabili). Se la history non è disponibile, usa le date che ci sono (es. creazione/risoluzione) e **dichiara il ripiego**. |
 | Numeri a mano | Vanno bene se sono una lista di completamenti datati. Una media ("5 a settimana") non è uno storico: spiega che serve la serie. |
-| Nessun dato storico | Spiega cosa serve (lista di item completati con date di inizio e fine, idealmente 8–12 settimane e ~20+ item) e **non inventare numeri**. |
+| Nessun dato storico | **Fermati e chiedilo** (vedi sotto). Non lanciare lo script. |
+
+## Storico mancante: fermati e chiedi
+
+Lo storico del team è l'unico input che rende la previsione significativa. Se l'utente non l'ha fornito (né in chat, né come file, né come link leggibile con i tool della sessione):
+
+1. **Non lanciare lo script** e non mostrare date.
+2. **Non usare sostituti:** niente dati di esempio (`tools/montecarlo/examples/`), dati sintetici, storici di altri team o throughput stimati — nemmeno come "demo" dichiarata. Una demo si fa solo se l'utente la chiede esplicitamente.
+3. **Chiedi lo storico in una sola domanda**, insieme agli altri dati indispensabili mancanti (item rimanenti, ordine dei gruppi, mappatura degli stati se nota come ambigua), offrendo due modi:
+   - **incollarlo in chat** (tabella o elenco: `id`, data di inizio, data di completamento; tipo/tag facoltativi);
+   - **indicare il percorso di un file locale** (CSV, foglio di calcolo, export del sistema di tracking).
+   Se in sessione ci sono connettori verso un sistema di tracking, cita anche la possibilità di dare un link a board/epic.
+4. Spiega in una riga cosa serve: item completati con date, idealmente 8–12 settimane e ~20+ item.
+5. Riprendi dal passo di raccolta quando arrivano i dati.
+
+Questa regola prevale sulle istruzioni generiche di "agire in autonomia": senza storico non c'è nulla da prevedere.
 
 ## Regole di normalizzazione
 

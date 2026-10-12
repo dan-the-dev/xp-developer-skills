@@ -31,7 +31,7 @@ Se l'input è ambiguo (es. un link che può essere un item o un gruppo e non puo
 
 ### 2. Dati essenziali mancanti
 
-Se manca qualcosa di indispensabile (lo storico dei completati; per i gruppi, gli item rimanenti; per la lista, l'ordine), chiedi **tutto in una sola domanda**. Se lo storico non esiste, spiega cosa serve e non inventare numeri.
+Se manca qualcosa di indispensabile (lo storico dei completati; per i gruppi, gli item rimanenti; per la lista, l'ordine), chiedi **tutto in una sola domanda** e **non delegare finché non arriva**. Lo storico si chiede sempre all'utente — da incollare in chat o come percorso di un file locale — e non si sostituisce mai con dati di esempio o sintetici, neanche come demo, salvo richiesta esplicita. Se lo storico non esiste, spiega cosa serve e non inventare numeri.
 
 ### 3. Delegare
 

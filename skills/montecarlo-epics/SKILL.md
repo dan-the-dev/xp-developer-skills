@@ -21,7 +21,9 @@ Script condiviso: **`<AMPD-root>/tools/montecarlo/montecarlo.py`** (modalità `e
 - **Storico dei work item completati** del team/sistema che lavorerà la lista (almeno `id` e `completed_at`).
 - **Lista ordinata dei gruppi**: nome e item rimanenti (numero o elenco di id) per ciascuno. **L'ordine conta**: se non è esplicito, chiedilo.
 
-Fonti: file caricato (mappa le colonne, chiedi conferma se non è ovvio); testo/tabella incollati; link a roadmap, iniziative o epic (con i connettori/tool della sessione leggi i figli non completati di ogni gruppo e lo storico del team; dichiara i ripieghi); numeri a mano con una lista di completamenti datati. Senza storico: spiega cosa serve e non inventare numeri.
+Fonti: file caricato (mappa le colonne, chiedi conferma se non è ovvio); testo/tabella incollati; link a roadmap, iniziative o epic (con i connettori/tool della sessione leggi i figli non completati di ogni gruppo e lo storico del team; dichiara i ripieghi); numeri a mano con una lista di completamenti datati.
+
+**Senza storico: fermati e chiedilo** — da incollare in chat o come percorso di un file locale — insieme agli altri dati mancanti, in una sola domanda. Non lanciare lo script, non usare i dati di `tools/montecarlo/examples/` né altri sostituti, neanche come demo (solo se l'utente chiede esplicitamente una demo). Dettagli in `docs/montecarlo-forecasting.md` § *Storico mancante*.
 
 Regole: stato "iniziato"/"completato" chiesto una volta sola se ambiguo; solo item **foglia** (un item figlio di due gruppi va contato una volta sola, nel primo gruppo dell'ordine — dichiaralo); esclusi annullati/archiviati; tutto dichiarato nell'output.
 
