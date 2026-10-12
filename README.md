@@ -81,6 +81,9 @@ skills/new-feature/
 skills/new-increment/
 skills/increment-review/
 skills/tweak/
+skills/montecarlo-single-item/
+skills/montecarlo-epic/
+skills/montecarlo-epics/
 ```
 
 **Bugfix** — a strict bugfix workflow enforcing:
@@ -108,11 +111,13 @@ skills/tweak/
 
 **Increment review** — fast, single-pass review (target under 60s) of one just-finished increment, driven by its mini-journal and `docs/code-review.md`; returns approved / changes-requested / bug-found (see `skills/increment-review/SKILL.md`).
 
+**Monte Carlo forecasting** — `montecarlo-single-item`, `montecarlo-epic`, `montecarlo-epics` plus the `montecarlo-simulator` agent: flow-based probabilistic forecasts (cycle time SLE for one item, "when / how many" for one group, ordered groups in sequence) from throughput and cycle-time history, via one shared, tool-agnostic script (see `tools/montecarlo/README.md`). Without the team's history they stop and ask for it (pasted in chat or as a local file) — never falling back to the bundled example data.
+
 **Tweak** — small, direct follow-up edit on the current branch (copy, style, a small logic change, or a small new file) with scoped tests and lint, one commit, no branch/backlog/PR ceremony (see `skills/tweak/SKILL.md`).
 
 ### Subagents
 
-Goal-oriented agents in **`agents/`** (also **`.claude/agents/`**): `new-feature`, `new-increment`, `increment-review`, `refactoring`, `tweak`, `bugfix`, `legacy-refactor`, `spike`, `pr-reviewer`. Each reads the matching skill under **`skills/`**. See **`AGENTS.md`**.
+Goal-oriented agents in **`agents/`** (also **`.claude/agents/`**): `new-feature`, `new-increment`, `increment-review`, `refactoring`, `tweak`, `bugfix`, `legacy-refactor`, `spike`, `pr-reviewer`, `montecarlo-simulator`. Each reads the matching skill under **`skills/`**. See **`AGENTS.md`**.
 
 - **`increment-review`** — default post-increment reviewer `new-feature` calls (fast, single-pass)
 - **`refactoring`** — dedicated tidy-up, executing an `increment-review` fix brief, **or** legacy manual post-increment review on direct request

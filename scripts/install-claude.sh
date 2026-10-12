@@ -57,7 +57,7 @@ done
 CLAUDE_HOME="$(expand_path "${CLAUDE_HOME}")"
 AMPD="${CLAUDE_HOME}/ampd"
 
-for dir in skills docs agents; do
+for dir in skills docs agents tools; do
   if [[ ! -d "${REPO}/${dir}" ]]; then
     echo "Missing ${REPO}/${dir}" >&2
     exit 1
@@ -67,10 +67,11 @@ done
 mkdir -p "${AMPD}" "${CLAUDE_HOME}/skills" "${CLAUDE_HOME}/agents"
 
 echo "Installing bundle to ${AMPD} ..."
-mkdir -p "${AMPD}/skills" "${AMPD}/docs" "${AMPD}/agents"
+mkdir -p "${AMPD}/skills" "${AMPD}/docs" "${AMPD}/agents" "${AMPD}/tools"
 rsync -a --delete "${REPO}/skills/" "${AMPD}/skills/"
 rsync -a --delete "${REPO}/docs/" "${AMPD}/docs/"
 rsync -a --delete "${REPO}/agents/" "${AMPD}/agents/"
+rsync -a --delete --exclude "__pycache__" "${REPO}/tools/" "${AMPD}/tools/"
 cp "${REPO}/AGENTS.md" "${AMPD}/AGENTS.md"
 
 install_skill() {

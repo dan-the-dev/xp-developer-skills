@@ -1,0 +1,5 @@
+# One ISO date per line; comments allowed
+2026-11-01
+2026-12-08
+2026-12-25
+2026-12-26

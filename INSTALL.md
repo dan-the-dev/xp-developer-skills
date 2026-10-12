@@ -35,7 +35,7 @@ For a non-default Claude home, the Claude Code process must use the **same** con
 
 | Path | Purpose |
 |------|---------|
-| `~/.cursor/ampd/` | Full AMPD bundle (`skills/`, `docs/`, `agents/`, `AGENTS.md`) — update by re-running the script |
+| `~/.cursor/ampd/` | Full AMPD bundle (`skills/`, `docs/`, `agents/`, `tools/`, `AGENTS.md`) — update by re-running the script |
 | `~/.cursor/skills/<name>/` | Symlink → `~/.cursor/ampd/skills/<name>/` (skill auto-discovery) |
 | `~/.cursor/agents/<name>.md` | Symlink → `~/.cursor/ampd/agents/<name>.md` (subagents) |
 | `~/.cursor/docs` | Symlink → `~/.cursor/ampd/docs` (bibliography links from skills) |
@@ -46,12 +46,14 @@ Paths are under **`<claude-home>`** (default `~/.claude`; override with `--home`
 
 | Path | Purpose |
 |------|---------|
-| `<claude-home>/ampd/` | Full AMPD bundle (`skills/`, `docs/`, `agents/`, `AGENTS.md`) — update by re-running the script |
+| `<claude-home>/ampd/` | Full AMPD bundle (`skills/`, `docs/`, `agents/`, `tools/`, `AGENTS.md`) — update by re-running the script |
 | `<claude-home>/skills/<name>/` | Symlink → `<claude-home>/ampd/skills/<name>/` (personal skill auto-discovery) |
 | `<claude-home>/agents/<name>.md` | Symlink → `<claude-home>/ampd/agents/<name>.md` (user-level subagents) |
 | `<claude-home>/docs` | Symlink → `<claude-home>/ampd/docs` (bibliography links from skills) |
 
 New agents (e.g. **`refactoring`**) appear under the discovery folders only after you **re-run the install script** following `git pull`.
+
+`tools/` is not linked into discovery folders: skills reach shared scripts through the bundle (e.g. `<ampd>/tools/montecarlo/montecarlo.py`, Python ≥ 3.11, standard library only).
 
 ### Project-local Claude Code (this repo)
 

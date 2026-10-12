@@ -1,0 +1,7 @@
+{
+  "groups": [
+    {"name": "Onboarding", "remaining": 8},
+    {"name": "Reporting", "remaining_ids": ["R-1", "R-2", "R-3", "R-4", "R-5", "R-6"]},
+    {"name": "Export", "remaining": 10, "split_rate": "1.0-1.5"}
+  ]
+}
