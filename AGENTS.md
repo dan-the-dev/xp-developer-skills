@@ -17,10 +17,15 @@ Location: **`agents/`** (symlinked at **`.claude/agents/`** for Claude Code in t
 | `legacy-refactor` | `skills/legacy-testing/` then `skills/refactoring/` — harness first on unprotected code, then structure |
 | `spike` | `skills/spike/` (`spike/` branch, disposable) |
 | `pr-reviewer` | `docs/manifesto.md` + applicable skills (`readonly`) |
+| `montecarlo-simulator` | routes to `skills/montecarlo-single-item/`, `skills/montecarlo-epic/` or `skills/montecarlo-epics/` — flow-based probabilistic forecasting; never computes by itself |
 
 ## Skills (delivery)
 
 `bugfix`, `tdd`, `atdd`, `refactoring`, `legacy-testing`, `spike`, `new-feature`, `new-increment`, `increment-review`, `tweak` — under `skills/`.
+
+## Skills (forecasting)
+
+`montecarlo-single-item`, `montecarlo-epic`, `montecarlo-epics` — under `skills/`; shared script **`tools/montecarlo/montecarlo.py`** (no network, normalized CSV/JSON only), shared rules in [`docs/montecarlo-forecasting.md`](docs/montecarlo-forecasting.md). See [`tools/montecarlo/README.md`](tools/montecarlo/README.md).
 
 ## Docs
 
@@ -32,6 +37,7 @@ Location: **`agents/`** (symlinked at **`.claude/agents/`** for Claude Code in t
 - [`docs/simple-design.md`](docs/simple-design.md) — Simple Design + YAGNI; **mandatory** Object Calisthenics; patterns as emerged destinations
 - [`docs/design-quality.md`](docs/design-quality.md) — agent playbook (smell → move → pattern)
 - [`docs/roadmap.md`](docs/roadmap.md)
+- [`docs/montecarlo-forecasting.md`](docs/montecarlo-forecasting.md) — data collection and communication rules for the Monte Carlo forecasting skills
 
 ## Install
 

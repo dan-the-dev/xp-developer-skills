@@ -1,0 +1,11 @@
+{
+  "history": "history.csv",
+  "holidays": "holidays.txt",
+  "as_of": "2026-10-12",
+  "window_weeks": 12,
+  "granularity": "day",
+  "calendar": "workdays",
+  "trials": 10000,
+  "seed": 42,
+  "percentiles": "50,70,85,95"
+}
