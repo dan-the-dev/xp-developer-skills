@@ -111,7 +111,7 @@ skills/montecarlo-epics/
 
 **Increment review** — fast, single-pass review (target under 60s) of one just-finished increment, driven by its mini-journal and `docs/code-review.md`; returns approved / changes-requested / bug-found (see `skills/increment-review/SKILL.md`).
 
-**Monte Carlo forecasting** — `montecarlo-single-item`, `montecarlo-epic`, `montecarlo-epics` plus the `montecarlo-simulator` agent: flow-based probabilistic forecasts (cycle time SLE for one item, "when / how many" for one group, ordered groups in sequence) from throughput and cycle-time history, via one shared, tool-agnostic script (see `tools/montecarlo/README.md`).
+**Monte Carlo forecasting** — `montecarlo-single-item`, `montecarlo-epic`, `montecarlo-epics` plus the `montecarlo-simulator` agent: flow-based probabilistic forecasts (cycle time SLE for one item, "when / how many" for one group, ordered groups in sequence) from throughput and cycle-time history, via one shared, tool-agnostic script (see `tools/montecarlo/README.md`). Without the team's history they stop and ask for it (pasted in chat or as a local file) — never falling back to the bundled example data.
 
 **Tweak** — small, direct follow-up edit on the current branch (copy, style, a small logic change, or a small new file) with scoped tests and lint, one commit, no branch/backlog/PR ceremony (see `skills/tweak/SKILL.md`).
 

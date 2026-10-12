@@ -34,7 +34,7 @@ Perché qui: le skill sono collegate una per una nelle cartelle di discovery, qu
 tools/montecarlo/
 ├── montecarlo.py          # CLI: single | epic | epics
 ├── examples/
-│   ├── history.csv        # 42 item sintetici (lug–ott 2026)
+│   ├── history.csv        # 42 item sintetici (lug–ott 2026) — solo test e demo, mai come storico reale
 │   ├── groups.json        # 3 gruppi ordinati, uno con split rate
 │   ├── holidays.txt       # festività, una data per riga
 │   └── config.json        # opzioni di default per gli esempi (seed 42, as_of 2026-10-12)
@@ -107,6 +107,7 @@ python3 montecarlo.py {single|epic|epics} [opzioni]
 | Opzione | Default | Note |
 |---------|---------|------|
 | `--history` | — | CSV/JSON dello storico |
+| `--demo` | off | consente lo storico di `examples/`; senza, lo script lo rifiuta (exit 2). Solo per demo richieste esplicitamente: il report è marcato `data.demo: true`, affidabilità `low` |
 | `--config` | — | JSON con le stesse opzioni (`window_weeks`, `as_of`, …); i path relativi partono dal file; la CLI vince |
 | `--as-of` | oggi | la finestra storica finisce il giorno prima |
 | `--window-weeks` | 12 | `0` = tutto lo storico |
@@ -133,20 +134,22 @@ Output in `--out-dir`:
 
 ## Esempi
 
+I dati di `examples/` sono **sintetici**: servono ai test e alle demo richieste esplicitamente, mai come sostituto dello storico di un team. Senza `--demo` lo script li rifiuta.
+
 ```bash
 cd tools/montecarlo
 
 # Singolo item di tipo feature
-python3 montecarlo.py single --config examples/config.json --type feature
+python3 montecarlo.py single --config examples/config.json --demo --type feature
 
 # Singolo item già aperto da 4 giorni lavorativi
-python3 montecarlo.py single --config examples/config.json --type feature --elapsed-days 4
+python3 montecarlo.py single --config examples/config.json --demo --type feature --elapsed-days 4
 
 # Un gruppo: 24 item rimanenti, partenza 12 ottobre, quanti entro il 30 novembre
-python3 montecarlo.py epic --config examples/config.json --remaining 24 --start 2026-10-12 --deadline 2026-11-30
+python3 montecarlo.py epic --config examples/config.json --demo --remaining 24 --start 2026-10-12 --deadline 2026-11-30
 
 # Lista di gruppi con split rate globale (il gruppo Export ha il suo)
-python3 montecarlo.py epics --config examples/config.json --groups examples/groups.json --split-rate 1.0-1.3
+python3 montecarlo.py epics --config examples/config.json --demo --groups examples/groups.json --split-rate 1.0-1.3
 ```
 
 ## Come le skill ottengono i dati
@@ -156,6 +159,6 @@ Lo script riceve sempre e solo il CSV normalizzato. Le skill lo costruiscono cos
 - **Testo incollato:** "abbiamo chiuso A-1 il 3/9 (iniziato il 1/9), A-2 il 5/9…" → una riga CSV per item, con date ISO.
 - **File** (CSV, foglio di calcolo, export): si mappano le colonne sullo schema; se il mapping non è ovvio (es. "Created", "In progress since", "Resolved"), la skill propone il mapping e chiede conferma una volta.
 - **Link** a card, epic o board: la skill usa i connettori e i tool disponibili in sessione per leggere gli item e la history dei cambi di stato, ne ricava `started_at`/`completed_at`, conta solo gli item foglia, esclude gli annullati e dichiara ogni ripiego (es. "history non disponibile: uso data di creazione e di chiusura").
-- **Nessuno storico:** la skill spiega cosa serve e non inventa numeri.
+- **Nessuno storico:** la skill **si ferma e lo chiede** all'utente (incollato in chat o come file locale), senza lanciare lo script e senza ripiegare sui dati di `examples/`. Lo script fa da rete di sicurezza: rifiuta lo storico di esempio se manca `--demo`.
 
 In ogni caso l'output riporta la fonte, quanti item sono entrati nel campione, la mappatura degli stati e le esclusioni.

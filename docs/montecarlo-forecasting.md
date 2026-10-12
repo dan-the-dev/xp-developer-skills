@@ -42,6 +42,8 @@ Lo storico del team è l'unico input che rende la previsione significativa. Se l
 4. Spiega in una riga cosa serve: item completati con date, idealmente 8–12 settimane e ~20+ item.
 5. Riprendi dal passo di raccolta quando arrivano i dati.
 
+Rete di sicurezza nello script: se `--history` punta a `tools/montecarlo/examples/`, `montecarlo.py` esce con errore. Lo accetta solo con `--demo`, che le skill passano **solo** su richiesta esplicita di una demo; in quel caso il report è marcato `data.demo: true` e va presentato come demo, non come previsione.
+
 Questa regola prevale sulle istruzioni generiche di "agire in autonomia": senza storico non c'è nulla da prevedere.
 
 ## Regole di normalizzazione

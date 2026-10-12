@@ -47,9 +47,11 @@ DEFAULTS = {
     "split_rate": None,
     "groups": None,
     "group": None,
+    "demo": False,
 }
 PATH_KEYS = ("history", "holidays", "groups", "out_dir")
 
+EXAMPLES_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "examples")
 MIN_SAMPLE_ITEMS = 20
 MIN_HISTORY_WEEKS = 8
 MIN_CONDITIONAL_ITEMS = 5
@@ -566,6 +568,7 @@ class Context:
     rng: random.Random
     seed: int
     warnings: list[str] = field(default_factory=list)
+    demo: bool = False
     assumptions: list[str] = field(default_factory=list)
 
     def period_date(self, period) -> date | None:
@@ -579,6 +582,7 @@ class Context:
 def build_context(mode: str, options: dict) -> Context:
     holidays = load_holidays(options.get("holidays"))
     calendar = Calendar.from_spec(options["calendar"], holidays)
+    demo = _guard_example_history(options)
     rows = read_history_rows(options.get("history"))
     items, rejected = build_items(rows, calendar)
     as_of = parse_date(options["as_of"], "--as-of") if options.get("as_of") else date.today()
@@ -604,8 +608,27 @@ def build_context(mode: str, options: dict) -> Context:
         rng=random.Random(seed),
         seed=seed,
     )
+    context.demo = demo
+    if demo:
+        context.warnings.append(
+            "DEMO su dati di esempio sintetici: non è una previsione per nessun team reale. Affidabilità bassa."
+        )
     _common_assumptions(context, window_weeks, holidays)
     return context
+
+
+def _guard_example_history(options: dict) -> bool:
+    history = options.get("history")
+    if not history:
+        return False
+    is_example = os.path.commonpath([os.path.realpath(history), os.path.realpath(EXAMPLES_DIR)]) == os.path.realpath(EXAMPLES_DIR)
+    if is_example and not options.get("demo"):
+        raise InputError(
+            "--history punta ai dati di esempio sintetici: non sono lo storico di nessun team. "
+            "Non usarli come sostituto: chiedi all'utente lo storico (incollato in chat o come file locale). "
+            "Per una demo esplicitamente richiesta, aggiungi --demo."
+        )
+    return is_example
 
 
 def _common_assumptions(ctx: Context, window_weeks: int, holidays: set[date]) -> None:
@@ -922,6 +945,7 @@ def build_report(ctx: Context, result: dict, outputs: dict) -> dict:
         "parameters": {k: v for k, v in sorted(ctx.options.items()) if v is not None} | {"seed": ctx.seed},
         "data": {
             "source": ctx.history_path,
+            "demo": ctx.demo,
             "records_total": ctx.rows_total,
             "records_valid": len(ctx.items),
             "rejected": {
@@ -1100,6 +1124,8 @@ def build_parser() -> argparse.ArgumentParser:
     common = argparse.ArgumentParser(add_help=False, argument_default=argparse.SUPPRESS)
     common.add_argument("--config", help="JSON file with default options (CLI wins)")
     common.add_argument("--history", help="CSV/JSON of completed work items")
+    common.add_argument("--demo", action="store_true",
+                        help="allow the bundled example history (explicitly requested demos only)")
     common.add_argument("--window-weeks", type=int, help="history window in weeks (0 = all; default 12)")
     common.add_argument("--as-of", help="reference date; history window ends the day before (default today)")
     common.add_argument("--granularity", choices=["day", "week"])

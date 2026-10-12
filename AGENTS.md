@@ -25,7 +25,7 @@ Location: **`agents/`** (symlinked at **`.claude/agents/`** for Claude Code in t
 
 ## Skills (forecasting)
 
-`montecarlo-single-item`, `montecarlo-epic`, `montecarlo-epics` — under `skills/`; shared script **`tools/montecarlo/montecarlo.py`** (no network, normalized CSV/JSON only), shared rules in [`docs/montecarlo-forecasting.md`](docs/montecarlo-forecasting.md). See [`tools/montecarlo/README.md`](tools/montecarlo/README.md).
+`montecarlo-single-item`, `montecarlo-epic`, `montecarlo-epics` — under `skills/`; shared script **`tools/montecarlo/montecarlo.py`** (no network, normalized CSV/JSON only; refuses the bundled example history unless `--demo`), shared rules in [`docs/montecarlo-forecasting.md`](docs/montecarlo-forecasting.md). See [`tools/montecarlo/README.md`](tools/montecarlo/README.md).
 
 ## Docs
 

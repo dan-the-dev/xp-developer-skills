@@ -219,7 +219,7 @@ class EndToEnd(unittest.TestCase):
     def run_mode(self, *args):
         with tempfile.TemporaryDirectory() as tmp:
             code, _, err = run_cli(*args, "--config", os.path.join(EXAMPLES, "config.json"),
-                                   "--trials", "2000", "--out-dir", tmp)
+                                   "--demo", "--trials", "2000", "--out-dir", tmp)
             self.assertEqual(code, 0, err)
             with open(os.path.join(tmp, "result.json"), encoding="utf-8") as handle:
                 report = json.load(handle)
@@ -263,9 +263,42 @@ class EndToEnd(unittest.TestCase):
     def test_empty_window_is_a_clear_error(self):
         with tempfile.TemporaryDirectory() as tmp:
             code, _, err = run_cli("epic", "--history", os.path.join(EXAMPLES, "history.csv"),
-                                   "--as-of", "2026-01-01", "--remaining", "3", "--out-dir", tmp)
+                                   "--as-of", "2026-01-01", "--remaining", "3", "--demo", "--out-dir", tmp)
         self.assertEqual(code, 2)
         self.assertIn("ERRORE", err)
+
+
+class ExampleDataGuard(unittest.TestCase):
+    def test_example_history_is_refused_without_demo(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            code, _, err = run_cli("epic", "--config", os.path.join(EXAMPLES, "config.json"),
+                                   "--remaining", "3", "--out-dir", tmp)
+            self.assertEqual(code, 2)
+            self.assertIn("dati di esempio", err)
+            self.assertIn("chiedi", err)
+            self.assertFalse(os.path.exists(os.path.join(tmp, "result.json")))
+
+    def test_demo_runs_on_example_history_and_is_flagged(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            code, out, err = run_cli("epic", "--config", os.path.join(EXAMPLES, "config.json"), "--demo",
+                                     "--remaining", "3", "--trials", "200", "--out-dir", tmp)
+            self.assertEqual(code, 0, err)
+            with open(os.path.join(tmp, "result.json"), encoding="utf-8") as handle:
+                report = json.load(handle)
+        self.assertTrue(report["data"]["demo"])
+        self.assertEqual(report["reliability"]["level"], "low")
+        self.assertTrue(any("DEMO" in w for w in report["reliability"]["warnings"]))
+        self.assertIn("DEMO", out)
+
+    def test_user_history_is_not_a_demo(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            with open(os.path.join(EXAMPLES, "history.csv"), encoding="utf-8") as handle:
+                path = write(tmp, "h.csv", handle.read())
+            code, _, err = run_cli("epic", "--history", path, "--as-of", "2026-10-12", "--remaining", "3",
+                                   "--trials", "200", "--out-dir", tmp)
+            self.assertEqual(code, 0, err)
+            with open(os.path.join(tmp, "result.json"), encoding="utf-8") as handle:
+                self.assertFalse(json.load(handle)["data"]["demo"])
 
 
 if __name__ == "__main__":
