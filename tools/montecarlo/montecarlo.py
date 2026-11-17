@@ -803,6 +803,80 @@ def _normalize_group(group, index: int) -> dict:
     return {"name": name, "remaining": remaining, "split_rate": group.get("split_rate")}
 
 
+@dataclass(frozen=True)
+class WorkSpec:
+    id: str
+    depends_on: tuple[str, ...]
+    split: tuple[float, float] | None
+
+
+def load_work(path: str, default_split=None) -> list[WorkSpec]:
+    if not os.path.isfile(path):
+        raise InputError(f"File del lavoro rimanente non trovato: {path}")
+    with open(path, encoding="utf-8") as handle:
+        try:
+            data = json.load(handle)
+        except json.JSONDecodeError as exc:
+            raise InputError(f"JSON non valido in {path}: {exc}")
+    return parse_work(data, default_split)
+
+
+def parse_work(data, default_split=None) -> list[WorkSpec]:
+    """Remaining items in priority order (file order), with dependencies inside the file.
+
+    Dependencies on ids listed in "done" are already satisfied and dropped.
+    """
+    if isinstance(data, list):
+        data = {"items": data}
+    if not isinstance(data, dict) or not isinstance(data.get("items", []), list):
+        raise InputError("--work: atteso un oggetto {\"items\": [...], \"done\": [...]}.")
+    raw = data.get("items") or []
+    if not raw:
+        raise InputError("--work: nessun item rimanente nel file.")
+    done = set(parse_list(data.get("done")))
+    ids = []
+    for index, entry in enumerate(raw, start=1):
+        item_id = str(entry.get("id") or "").strip() if isinstance(entry, dict) else ""
+        if not item_id:
+            raise InputError(f"--work: l'item #{index} non ha un 'id'.")
+        if item_id in ids:
+            raise InputError(f"--work: id duplicato {item_id!r}.")
+        ids.append(item_id)
+    known = set(ids)
+    specs = []
+    for item_id, entry in zip(ids, raw):
+        deps = parse_list(entry.get("depends_on"))
+        unknown = [d for d in deps if d not in known and d not in done]
+        if unknown:
+            raise InputError(
+                f"--work: {item_id!r} dipende da {', '.join(map(repr, unknown))}, che non è nel file. "
+                "Se è già completato, elencalo in \"done\"."
+            )
+        split = parse_split_rate(entry.get("split_rate")) if entry.get("split_rate") else default_split
+        specs.append(WorkSpec(item_id, tuple(dict.fromkeys(d for d in deps if d in known)), split))
+    _check_acyclic(specs)
+    return specs
+
+
+def _check_acyclic(specs: list[WorkSpec]) -> None:
+    deps = {s.id: s.depends_on for s in specs}
+    state: dict[str, int] = {}  # 1 = visiting, 2 = done
+
+    def visit(node: str, path: list[str]) -> None:
+        state[node] = 1
+        for dep in deps[node]:
+            if state.get(dep) == 1:
+                cycle = path[path.index(dep):] + [dep]
+                raise InputError(f"--work: dipendenze in ciclo: {' → '.join(reversed(cycle))}.")
+            if dep not in state:
+                visit(dep, path + [dep])
+        state[node] = 2
+
+    for spec in specs:
+        if spec.id not in state:
+            visit(spec.id, [spec.id])
+
+
 def forecast_epics(ctx: Context) -> dict:
     groups = load_groups(ctx.options)
     throughput = compute_throughput(ctx.sample, ctx.calendar, ctx.options["granularity"])
