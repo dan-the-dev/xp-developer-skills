@@ -4,6 +4,7 @@ Previsioni probabilistiche basate sul flusso (Vacanti, *When Will It Be Done?*) 
 
 - **un singolo work item** → Service Level Expectation dai percentili storici del cycle time (`single`)
 - **un gruppo** (epic, progetto, iniziativa) → "quando finisco N item" / "quanti entro una data" (`epic`)
+- **un gruppo lavorato da N stream paralleli con dipendenze tra item** (A blocca B) → fine complessiva, fine per catena, criticità (`epic --work`)
 - **una lista ordinata di gruppi**, fatti uno dopo l'altro → fine di ogni gruppo e del totale (`epics`)
 
 Componenti:
@@ -34,11 +35,15 @@ Perché qui: le skill sono collegate una per una nelle cartelle di discovery, qu
 tools/montecarlo/
 ├── montecarlo.py          # CLI: single | epic | epics
 ├── examples/
-│   ├── history.csv        # 42 item sintetici (lug–ott 2026) — solo test e demo, mai come storico reale
+│   ├── history.csv        # 42 item sintetici (lug–ott 2026), con colonna worker — solo test e demo
 │   ├── groups.json        # 3 gruppi ordinati, uno con split rate
+│   ├── work.json          # 10 item in 2 catene con dipendenze (per epic --work)
 │   ├── holidays.txt       # festività, una data per riga
 │   └── config.json        # opzioni di default per gli esempi (seed 42, as_of 2026-10-12)
-└── tests/test_montecarlo.py
+└── tests/
+    ├── test_montecarlo.py
+    ├── test_streams.py    # epic --work: dipendenze, stream, pool per worker
+    └── data/              # storico sintetico con worker + caso reale anonimizzato (2 catene)
 ```
 
 Test:
@@ -59,6 +64,7 @@ python3 -m unittest discover -s tools/montecarlo/tests
 | `ready_at` | no | inizio del lead time; se manca → ripiego su `started_at` con flag |
 | `type` | no | filtro `--type` |
 | `tags` | no | separati da `;` (in JSON anche array); filtro `--tag` |
+| `worker` | no | identificativo **anonimo** di chi ha completato l'item (`W1`, `W2`…, mai nomi o email); serve a `epic --work` con più stream |
 
 ```csv
 id,type,tags,ready_at,started_at,completed_at
@@ -84,6 +90,22 @@ A-103,feature,"reporting;export",,2026-09-07T09:10:00Z,2026-09-15T17:00:00Z
 
 In alternativa `--group "Nome:N"`, ripetibile.
 
+**Lavoro rimanente con dipendenze** (`epic --work`, anche come `"work"` nel `--config`):
+
+```json
+{"done": ["I0"],
+ "items": [
+  {"id": "I1", "depends_on": ["I0"]},
+  {"id": "I2", "depends_on": ["I1"]},
+  {"id": "I8", "depends_on": ["I1"], "split_rate": "1.0-1.5"}
+]}
+```
+
+- L'**ordine nel file è la priorità**: uno stream libero prende sempre il primo item pronto.
+- `depends_on` (facoltativo): id che devono essere completati prima. Ogni id deve essere nel file oppure in `done`, cioè già completato e quindi soddisfatto. Un id sconosciuto, un id duplicato o un ciclo producono `ERRORE: …` (exit 2); per il ciclo viene mostrato il percorso (`I1 → I2 → I1`).
+- `split_rate` per item (facoltativo): vince sul `--split-rate` globale, che fa da default.
+- Va bene anche un array di item senza `done`.
+
 ## Metodo
 
 - **Niente medie.** Si campiona il throughput storico vero, con reinserimento.
@@ -94,9 +116,40 @@ In alternativa `--group "Nome:N"`, ripetibile.
 - **Single:** nessuna simulazione; percentili (nearest rank) dei cycle time (o lead time con `--metric lead`). Con `--elapsed-days` i percentili si condizionano sugli item storici durati più dell'età attuale, e si segnala se ne restano meno di 5.
 - **Split rate** (`--split-rate 1.2` o `1.0-1.3`, o `split_rate` per gruppo): in ogni trial N viene moltiplicato per un fattore estratto nell'intervallo e arrotondato per eccesso.
 - **Campionamento** (`--sampling weekday`): un lunedì simulato usa solo i lunedì storici, come suggerito da Vacanti tra le tecniche di selezione degli input.
+- **Stream paralleli** (`epic --work`, vedi sotto).
 - **Affidabilità bassa** se il campione ha meno di ~20 item o meno di ~8 settimane di storico. Il risultato si mostra comunque.
 - **Riproducibilità:** `--seed`. Senza seed lo script ne sceglie uno e lo riporta nel JSON, così ogni esecuzione è ripetibile.
-- Fuori scope: punti, ore, capacity per persona, parallelismo.
+- Fuori scope: punti, ore, capacity per persona in ore/punti, Legge di Little come motore.
+
+### Stream paralleli con dipendenze (`epic --work`)
+
+Per un gruppo lavorato da **N stream** (persone o flussi) che rispettano le dipendenze tra item. In ogni trial e in ogni periodo:
+
+1. ogni stream libero prende il **prossimo item pronto** (tutte le dipendenze completate), nell'ordine del file, e lo tiene fino alla fine;
+2. ogni stream pesca il **suo** throughput del periodo (vedi sotto) e lo consuma sull'item. Se lo finisce, la capacità avanzata passa al prossimo item già pronto. Se non ci sono item pronti, lo stream resta fermo e il throughput pescato va perso;
+3. un item completato nel periodo *t* sblocca i dipendenti dal periodo **t+1**.
+
+Con lo **split** (`--split-rate` globale o `split_rate` per item), ogni item diventa `ceil(1 × U(min, max))` sotto-item, estratti a ogni trial. L'item è completo, e sblocca i dipendenti, solo quando lo sono tutti i suoi sotto-item.
+
+**Throughput per stream** (`--stream-throughput`):
+
+- `worker` (default quando lo storico ha la colonna `worker`): ogni stream pesca il throughput di **una persona/flusso**, non del team. Il campione è il **pool dei periodi-worker**: per ogni worker con almeno `--min-worker-items` completamenti nella finestra (default 10), un valore per ogni periodo della finestra, zeri inclusi. Gli item senza worker e quelli dei worker sotto soglia escono dal campione e sono contati (JSON, markdown, CSV di controllo). `--sampling weekday` campiona solo dai periodi-worker dello stesso giorno della settimana.
+- `team`: un throughput del team per periodo, diviso in parti uguali tra gli stream (il resto va a stream casuali). Va scelto esplicitamente, ed è dichiarato nelle assunzioni.
+- Con `--streams` > 1, senza colonna `worker` e senza `--stream-throughput team`, lo script esce con **errore esplicito**: niente ripieghi silenziosi. Con `--streams 1` e senza colonna `worker` usa il throughput del team (dichiarato), e il risultato coincide con `epic --remaining` (stessi percentili con lo stesso seed).
+
+**Risultato** (`result.json` → `result`):
+
+| Chiave | Contenuto |
+|--------|-----------|
+| `when` | percentili della fine complessiva, `spread` (distanza tra il percentile più basso e il più alto, es. 50%→95%), `probability_by_deadline` con `--deadline` |
+| `items[]` | per ogni item: `depends_on`, `leaf` (nessuno ne dipende: la fine di una catena), percentili di fine, `criticality` |
+| `criticality` | % dei trial in cui l'item è l'ultimo a finire (a pari merito contano tutti): mostra quale catena domina |
+| `utilization` | % media dei periodi-stream in cui si lavora (`busy_pct`), si aspetta una dipendenza (`idle_blocked_pct`: dipendenze che strozzano il parallelismo) o non resta nulla da iniziare (`idle_drained_pct`) |
+| `how_many` | con `--deadline`: "con l'85% completiamo almeno N item" (item del file, dalla stessa simulazione) |
+
+In `data.workers`: worker nel campione con i loro completamenti, periodi-worker, quota di zeri, item senza worker esclusi, worker sotto soglia. `reliability.level` usa gli stessi criteri delle altre modalità, applicati al campione per-worker.
+
+**Perché un'estensione di `epic` e non una modalità nuova.** La domanda è la stessa ("quando finisce questo gruppo?", "quanti entro la data?") e così il formato del risultato (`when`, `how_many`), la skill (`montecarlo-epic`) e le regole di presentazione. Cambia solo il modello del lavoro rimanente: da un conteggio a un grafo di item lavorato da N stream. `--work` attiva il modello a grafo. Senza `--work` la modalità è identica a prima, output compreso, e `--streams` & co. danno errore.
 
 ## CLI
 
@@ -124,6 +177,10 @@ python3 montecarlo.py {single|epic|epics} [opzioni]
 | `--format` | `both` | `json`, `markdown`, `both` |
 | `single`: `--metric`, `--elapsed-days` | `cycle` | |
 | `epic`: `--remaining` \| `--remaining-ids`, `--deadline`, `--split-rate` | | almeno uno tra rimanenti e scadenza |
+| `epic`: `--work` | — | JSON del lavoro rimanente con dipendenze (alternativo a `--remaining`) |
+| `epic`: `--streams` | 1 | stream paralleli (solo con `--work`) |
+| `epic`: `--stream-throughput` | `worker` | `worker` (pool dei periodi-worker) o `team` (throughput del team diviso tra gli stream) |
+| `epic`: `--min-worker-items` | 10 | completamenti minimi nella finestra perché un worker entri nel pool |
 | `epics`: `--groups`, `--group`, `--deadline`, `--split-rate` | | |
 
 Output in `--out-dir`:
@@ -148,6 +205,9 @@ python3 montecarlo.py single --config examples/config.json --demo --type feature
 # Un gruppo: 24 item rimanenti, partenza 12 ottobre, quanti entro il 30 novembre
 python3 montecarlo.py epic --config examples/config.json --demo --remaining 24 --start 2026-10-12 --deadline 2026-11-30
 
+# Un gruppo con dipendenze (2 catene: I1→…→I7 e I8→I9→I10, I8 dipende da I1) su 2 stream paralleli
+python3 montecarlo.py epic --config examples/config.json --demo --work examples/work.json --streams 2 --deadline 2026-11-30
+
 # Lista di gruppi con split rate globale (il gruppo Export ha il suo)
 python3 montecarlo.py epics --config examples/config.json --demo --groups examples/groups.json --split-rate 1.0-1.3
 ```
@@ -158,7 +218,7 @@ Lo script riceve sempre e solo il CSV normalizzato. Le skill lo costruiscono cos
 
 - **Testo incollato:** "abbiamo chiuso A-1 il 3/9 (iniziato il 1/9), A-2 il 5/9…" → una riga CSV per item, con date ISO.
 - **File** (CSV, foglio di calcolo, export): si mappano le colonne sullo schema; se il mapping non è ovvio (es. "Created", "In progress since", "Resolved"), la skill propone il mapping e chiede conferma una volta.
-- **Link** a card, epic o board: la skill usa i connettori e i tool disponibili in sessione per leggere gli item e la history dei cambi di stato, ne ricava `started_at`/`completed_at`, conta solo gli item foglia, esclude gli annullati e dichiara ogni ripiego (es. "history non disponibile: uso data di creazione e di chiusura").
+- **Link** a card, epic o board: la skill usa i connettori e i tool disponibili in sessione per leggere gli item e la history dei cambi di stato, ne ricava `started_at`/`completed_at`, conta solo gli item foglia, esclude gli annullati e dichiara ogni ripiego (es. "history non disponibile: uso data di creazione e di chiusura"). Per gli stream paralleli legge anche l'owner primario (anonimizzato in `W1`, `W2`… → colonna `worker`) e i link di blocco tra gli item rimanenti (`blocks` / `is blocked by` → `depends_on` in `--work`).
 - **Nessuno storico:** la skill **si ferma e lo chiede** all'utente (incollato in chat o come file locale), senza lanciare lo script e senza ripiegare sui dati di `examples/`. Lo script fa da rete di sicurezza: rifiuta lo storico di esempio se manca `--demo`.
 
 In ogni caso l'output riporta la fonte, quanti item sono entrati nel campione, la mappatura degli stati e le esclusioni.

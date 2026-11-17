@@ -1,6 +1,6 @@
 ---
 name: montecarlo-simulator
-description: Previsioni probabilistiche basate sul flusso (Monte Carlo, cycle time, throughput). Capisce se l'utente chiede di un singolo work item, di un gruppo/epic o di una lista ordinata di gruppi — anche da testo, file o link incollati — e delega alla skill giusta (montecarlo-single-item, montecarlo-epic, montecarlo-epics). Non calcola nulla da sé. Usalo per "quando sarà pronto?", "quando finiamo questa epic?", "quanti item entro la data X?", "quando chiudiamo la roadmap?".
+description: Previsioni probabilistiche basate sul flusso (Monte Carlo, cycle time, throughput). Capisce se l'utente chiede di un singolo work item, di un gruppo/epic o di una lista ordinata di gruppi — anche da testo, file o link incollati — e delega alla skill giusta (montecarlo-single-item, montecarlo-epic, montecarlo-epics). Non calcola nulla da sé. Usalo per "quando sarà pronto?", "quando finiamo questa epic?", "quanti item entro la data X?", "quando chiudiamo la roadmap?", "siamo in 2 su questa epic e alcune card ne bloccano altre: quando finiamo?".
 model: inherit
 ---
 
@@ -25,6 +25,7 @@ Sei un **router**: scegli la modalità, leggi la skill corrispondente e la esegu
 |--------------------|-------|
 | Un solo item: "questa card", "questo bug", un solo link a un ticket, "quando sarà pronto X?", "è aperto da 6 giorni, quando chiude?" | **`montecarlo-single-item`** |
 | Un solo gruppo: "questa epic", "questo progetto", "restano 24 item", "quanti item entro il 30 novembre?", un link a un'epic/iniziativa | **`montecarlo-epic`** |
+| Un solo gruppo con **stream paralleli o dipendenze**: "siamo in 2 a lavorarci", "due stream", "A blocca B", "queste card dipendono da quella" | **`montecarlo-epic`** con `--work` / `--streams` |
 | Più gruppi in un ordine: "roadmap", "prima A poi B poi C", più link a epic, una tabella con nome gruppo + rimanenti | **`montecarlo-epics`** |
 
 Se l'input è ambiguo (es. un link che può essere un item o un gruppo e non puoi verificarlo con i tool della sessione), fai **al massimo una domanda**, con le opzioni. Se l'input è chiaro, procedi senza chiedere.
@@ -44,7 +45,7 @@ Leggi **`<AMPD-root>/skills/<skill>/SKILL.md`** e seguine i tre passi: raccolta,
 - Linguaggio neutro: "work item", "gruppo/epic", "sistema di tracking"; nessun nome di prodotto.
 - Risultati sempre come probabilità (50/70/85/95), mai come data unica o media.
 - Sempre dichiarati: fonte dei dati, dimensione del campione, avviso di affidabilità, assunzioni (finestra, calendario, split rate, mappatura degli stati, esclusioni).
-- Niente punti, ore, capacity per persona o parallelismo.
+- Niente punti, ore o capacity per persona. Il parallelismo si modella solo con stream dichiarati e dipendenze tra item (`montecarlo-epic` con `--work`), mai ricavandolo dalla capacity.
 
 ## Payload di ritorno
 

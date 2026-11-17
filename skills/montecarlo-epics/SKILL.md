@@ -8,7 +8,7 @@ allowed-tools: Read, Write, Bash, Grep, Glob
 
 ## Missione
 
-Prevedere la data di fine di **ogni gruppo** di una sequenza e del **totale**, con probabilità. I gruppi si fanno uno dopo l'altro e gli item uno alla volta (nessun parallelismo). In ogni trial una **sola serie** di throughput attraversa tutta la lista: il gruppo 1 finisce quando il cumulato raggiunge N1, il gruppo 2 a N1+N2, e così via. **Non si sommano mai i percentili dei singoli gruppi**: i percentili non si sommano.
+Prevedere la data di fine di **ogni gruppo** di una sequenza e del **totale**, con probabilità. I gruppi si fanno uno dopo l'altro, con un'unica serie di throughput del team (nessun parallelismo esplicito). Se la domanda riguarda **un solo gruppo** lavorato da più stream in parallelo, o con dipendenze tra item, usa invece `montecarlo-epic` con `--work`. Se più gruppi si sovrappongono con dipendenze tra item, mettili tutti in un solo file `--work`, nell'ordine di priorità. In ogni trial una **sola serie** di throughput attraversa tutta la lista: il gruppo 1 finisce quando il cumulato raggiunge N1, il gruppo 2 a N1+N2, e così via. **Non si sommano mai i percentili dei singoli gruppi**: i percentili non si sommano.
 
 Script condiviso: **`<AMPD-root>/tools/montecarlo/montecarlo.py`** (modalità `epics`). Regole comuni di raccolta dati: **`<AMPD-root>/docs/montecarlo-forecasting.md`** (leggilo prima del passo 1).
 
