@@ -1,0 +1,15 @@
+{
+  "done": ["I0"],
+  "items": [
+    {"id": "I1", "depends_on": ["I0"]},
+    {"id": "I2", "depends_on": ["I1"]},
+    {"id": "I3", "depends_on": ["I2"]},
+    {"id": "I4", "depends_on": ["I3"]},
+    {"id": "I5", "depends_on": ["I4"]},
+    {"id": "I6", "depends_on": ["I5"]},
+    {"id": "I7", "depends_on": ["I6"]},
+    {"id": "I8", "depends_on": ["I1"], "split_rate": "1.0-1.5"},
+    {"id": "I9", "depends_on": ["I8"]},
+    {"id": "I10", "depends_on": ["I9"]}
+  ]
+}

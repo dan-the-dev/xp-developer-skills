@@ -1,3 +1,6 @@
+import contextlib
+import io
+import json
 import math
 import os
 import random
@@ -188,6 +191,140 @@ class WorkerPool(unittest.TestCase):
         sample = sample_from("id,completed_at\nA,2026-09-07\n", date(2026, 9, 11))
         with self.assertRaisesRegex(mc.InputError, "worker"):
             mc.worker_pool(sample, ALL_DAYS, "day", 1)
+
+
+EXAMPLES = os.path.join(os.path.dirname(HERE), "examples")
+DATA = os.path.join(HERE, "data")
+STREAMS_HISTORY = os.path.join(DATA, "streams_history.csv")
+REAL_CASE = os.path.join(DATA, "real_case_work.json")
+
+
+def run_cli(*args):
+    stdout, stderr = io.StringIO(), io.StringIO()
+    with contextlib.redirect_stdout(stdout), contextlib.redirect_stderr(stderr):
+        code = mc.main(list(args))
+    return code, stdout.getvalue(), stderr.getvalue()
+
+
+def example_history_with_worker(tmp, worker):
+    """examples/history.csv with the worker column dropped (worker=None) or set to one value for every row."""
+    with open(os.path.join(EXAMPLES, "history.csv"), encoding="utf-8") as handle:
+        lines = [line.rsplit(",", 1)[0] for line in handle.read().splitlines()]
+    if worker:
+        lines = [lines[0] + ",worker"] + [line + "," + worker for line in lines[1:]]
+    path = os.path.join(tmp, "h.csv")
+    with open(path, "w", encoding="utf-8") as handle:
+        handle.write("\n".join(lines) + "\n")
+    return path
+
+
+def write_work(tmp, count):
+    path = os.path.join(tmp, "work.json")
+    with open(path, "w", encoding="utf-8") as handle:
+        json.dump({"items": [{"id": f"X{n}"} for n in range(count)]}, handle)
+    return path
+
+
+class StreamsEndToEnd(unittest.TestCase):
+    def report(self, *args, expect=0):
+        with tempfile.TemporaryDirectory() as tmp:
+            code, out, err = run_cli("epic", *args, "--as-of", "2026-10-12", "--seed", "7", "--trials", "2000",
+                                     "--out-dir", tmp)
+            self.assertEqual(code, expect, err)
+            if code:
+                return err
+            with open(os.path.join(tmp, "result.json"), encoding="utf-8") as handle:
+                report = json.load(handle)
+            report["markdown"] = out
+        return report
+
+    def assert_matches_epic(self, worker):
+        with tempfile.TemporaryDirectory() as tmp:
+            history = example_history_with_worker(tmp, worker)
+            epic = self.report("--history", history, "--remaining", "10")
+            streams = self.report("--history", history, "--work", write_work(tmp, 10), "--streams", "1")
+        self.assertEqual(streams["result"]["when"]["percentiles"], epic["result"]["when"]["percentiles"])
+
+    def test_one_stream_without_worker_column_matches_epic(self):
+        self.assert_matches_epic(worker=None)
+
+    def test_one_stream_with_a_single_worker_matches_epic(self):
+        self.assert_matches_epic(worker="W1")
+
+    def test_two_streams_without_worker_column_is_an_explicit_error(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            history = example_history_with_worker(tmp, None)
+            err = self.report("--history", history, "--work", REAL_CASE, "--streams", "2", expect=2)
+        self.assertIn("worker", err)
+        self.assertIn("--stream-throughput team", err)
+
+    def test_team_throughput_can_be_chosen_explicitly_and_is_declared(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            history = example_history_with_worker(tmp, None)
+            report = self.report("--history", history, "--work", REAL_CASE, "--streams", "2",
+                                 "--stream-throughput", "team")
+        self.assertEqual(report["result"]["stream_throughput"], "team")
+        self.assertTrue(any("diviso" in a for a in report["assumptions"]))
+
+    def test_streams_without_work_is_an_error(self):
+        err = self.report("--history", STREAMS_HISTORY, "--remaining", "3", "--streams", "2", expect=2)
+        self.assertIn("--work", err)
+
+    def test_work_and_remaining_together_is_an_error(self):
+        err = self.report("--history", STREAMS_HISTORY, "--remaining", "3", "--work", REAL_CASE, expect=2)
+        self.assertIn("--work", err)
+
+    def test_real_case_two_chains_on_two_streams(self):
+        report = self.report("--history", STREAMS_HISTORY, "--work", REAL_CASE, "--streams", "2",
+                             "--deadline", "2026-11-30")
+        result = report["result"]
+        items = {i["id"]: i for i in result["items"]}
+        self.assertEqual(result["streams"], 2)
+        self.assertGreater(items["I7"]["criticality"], items["I10"]["criticality"])
+        self.assertGreater(items["I10"]["criticality"], 0)
+        self.assertEqual([i for i, item in items.items() if item["leaf"]], ["I7", "I10"])
+        self.assertEqual(len(items["I7"]["percentiles"]), 4)
+        self.assertEqual(result["when"]["spread"]["from_p"], 50)
+        self.assertEqual(result["when"]["spread"]["to_p"], 95)
+        utilization = result["utilization"]
+        self.assertGreater(utilization["idle_blocked_pct"], 0)
+        self.assertAlmostEqual(utilization["busy_pct"] + utilization["idle_blocked_pct"]
+                               + utilization["idle_drained_pct"], 100, delta=0.2)
+        self.assertIn("probability_by_deadline", result["when"])
+        self.assertEqual(result["how_many"]["percentiles"][2]["p"], 85)
+        workers = report["data"]["workers"]
+        self.assertEqual(sorted(workers["workers"]), ["W1", "W2"])
+        self.assertEqual(workers["items_without_worker"], 2)
+        self.assertEqual(workers["below_threshold"], {"W3": 2})
+        self.assertEqual(workers["worker_periods"], result["throughput"]["periods"])
+        self.assertGreater(workers["zero_share_pct"], 0)
+        self.assertTrue(any("t+1" in a for a in report["assumptions"]))
+        self.assertTrue(any("ordine del file" in a for a in report["assumptions"]))
+        for text in ("Criticità", "Utilizzo degli stream", "I10", "periodi-worker"):
+            self.assertIn(text, report["markdown"])
+
+    def test_readme_example_runs_with_demo(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            code, out, err = run_cli("epic", "--config", os.path.join(EXAMPLES, "config.json"), "--demo",
+                                     "--work", os.path.join(EXAMPLES, "work.json"), "--streams", "2",
+                                     "--trials", "500", "--out-dir", tmp)
+        self.assertEqual(code, 0, err)
+        self.assertIn("DEMO", out)
+
+    def test_work_and_streams_are_accepted_in_the_config_with_relative_paths(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            config = os.path.join(tmp, "config.json")
+            with open(config, "w", encoding="utf-8") as handle:
+                json.dump({"history": STREAMS_HISTORY, "work": "work.json", "streams": 2}, handle)
+            write_work(tmp, 4)
+            report = self.report("--config", config)
+        self.assertEqual(report["result"]["streams"], 2)
+        self.assertEqual(len(report["result"]["items"]), 4)
+
+    def test_epic_remaining_report_has_no_stream_sections(self):
+        report = self.report("--history", STREAMS_HISTORY, "--remaining", "5")
+        self.assertEqual(set(report["result"]), {"throughput", "when"})
+        self.assertNotIn("workers", report["data"])
 
 
 if __name__ == "__main__":

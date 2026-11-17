@@ -3,7 +3,8 @@
 
 Modes:
   single  -- cycle/lead time percentiles for one work item (Service Level Expectation)
-  epic    -- "when will N items be done" (and optionally "how many by a deadline")
+  epic    -- "when will N items be done" (and optionally "how many by a deadline");
+             with --work: N parallel streams over a dependency graph of the remaining items
   epics   -- ordered groups done one after the other; one continuous simulation per trial
 
 Reads normalized history only (CSV or JSON). No network calls, no tokens, no secrets.
@@ -18,6 +19,7 @@ import json
 import math
 import os
 import random
+import re
 import sys
 from bisect import bisect_right
 from collections import Counter
@@ -47,9 +49,14 @@ DEFAULTS = {
     "split_rate": None,
     "groups": None,
     "group": None,
+    "work": None,
+    "streams": None,
+    "min_worker_items": None,
+    "stream_throughput": None,
     "demo": False,
 }
-PATH_KEYS = ("history", "holidays", "groups", "out_dir")
+PATH_KEYS = ("history", "holidays", "groups", "work", "out_dir")
+DEFAULT_MIN_WORKER_ITEMS = 10
 
 EXAMPLES_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "examples")
 MIN_SAMPLE_ITEMS = 20
@@ -70,6 +77,10 @@ REJECT_REASONS_IT = {
     "invalid_ready_at": "ready_at non è una data ISO 8601 valida",
     "started_after_completed": "started_at successivo a completed_at",
     "ready_after_completed": "ready_at successivo a completed_at",
+}
+FILTER_REASONS_IT = {
+    "no_worker": "item senza worker (esclusi dal throughput per stream)",
+    "worker_below_threshold": "item di worker sotto la soglia --min-worker-items",
 }
 
 
@@ -712,6 +723,7 @@ class Context:
     warnings: list[str] = field(default_factory=list)
     demo: bool = False
     assumptions: list[str] = field(default_factory=list)
+    data_extra: dict = field(default_factory=dict)
 
     def period_date(self, period) -> date | None:
         if period == math.inf:
@@ -865,6 +877,11 @@ def _single_point(ctx: Context, p: float, days, elapsed) -> dict:
 
 
 def forecast_epic(ctx: Context) -> dict:
+    if ctx.options.get("work"):
+        return forecast_streams(ctx)
+    for option in ("streams", "stream_throughput", "min_worker_items"):
+        if ctx.options.get(option) is not None:
+            raise InputError(f"--{option.replace('_', '-')} si usa solo con --work (lavoro rimanente con dipendenze).")
     remaining = _epic_remaining(ctx.options)
     deadline = ctx.options.get("deadline")
     if remaining is None and not deadline:
@@ -904,6 +921,159 @@ def _epic_remaining(options: dict) -> int | None:
     if value < 0:
         raise InputError("--remaining non può essere negativo.")
     return value
+
+
+def forecast_streams(ctx: Context) -> dict:
+    options = ctx.options
+    if _epic_remaining(options) is not None:
+        raise InputError("Usa --work oppure --remaining/--remaining-ids, non entrambi.")
+    default_split = parse_split_rate(options.get("split_rate"))
+    specs = load_work(options["work"], default_split)
+    streams = int(options.get("streams") or 1)
+    if streams < 1:
+        raise InputError("--streams deve essere almeno 1.")
+    source = options.get("stream_throughput")
+    has_worker = any(i.worker for i in ctx.sample.items)
+    auto_team = source is None and streams == 1 and not has_worker
+    source = source or ("team" if auto_team else "worker")
+    granularity = options["granularity"]
+    if source == "worker":
+        min_items = options.get("min_worker_items")
+        min_items = DEFAULT_MIN_WORKER_ITEMS if min_items in (None, "") else int(min_items)
+        pool = worker_pool(ctx.sample, ctx.calendar, granularity, min_items)
+        ctx.sample = pool.sample
+        throughput = pool.throughput
+        draws = per_stream(make_draw(throughput, options["sampling"], ctx.period_date))
+        ctx.data_extra["workers"] = _workers_data(pool, min_items)
+        _anonymity_warning(ctx, list(pool.workers) + list(pool.below_threshold))
+        label = "item completati dai worker nel campione"
+    else:
+        throughput = compute_throughput(ctx.sample, ctx.calendar, granularity)
+        draws = team_split(make_draw(throughput, options["sampling"], ctx.period_date))
+        label = "item completati"
+    _sample_warnings(ctx, len(ctx.sample.items), label)
+    _throughput_assumptions(ctx)
+    _stream_assumptions(ctx, specs, streams, source, auto_team, default_split)
+    deadline = options.get("deadline")
+    deadline_periods = _deadline_periods(ctx, deadline) if deadline else None
+    runs = simulate_streams(specs, streams, draws, int(options["trials"]), ctx.rng)
+    when = when_summary(ctx, [r.end for r in runs], deadline_periods)
+    when.update(remaining=len(specs), split_rate=list(default_split) if default_split else None,
+                spread=_spread(when))
+    critical = criticality(runs, len(specs))
+    blockers = {d for s in specs for d in s.depends_on}
+    items = []
+    for index, spec in enumerate(specs):
+        summary = when_summary(ctx, [r.finished[index] for r in runs], deadline_periods)
+        del summary["histogram"]
+        items.append({"id": spec.id, "depends_on": list(spec.depends_on), "leaf": spec.id not in blockers,
+                      "split_rate": list(spec.split) if spec.split else None, "criticality": critical[index]}
+                     | summary)
+    result = {
+        "throughput": throughput_summary(throughput),
+        "streams": streams,
+        "stream_throughput": source,
+        "when": when,
+        "items": items,
+        "criticality": {s["id"]: s["criticality"] for s in sorted(items, key=lambda i: -i["criticality"])},
+        "utilization": _utilization(runs, streams),
+    }
+    if deadline:
+        outcomes = [sum(1 for f in r.finished if f <= deadline_periods) for r in runs]
+        result["how_many"] = how_many_summary(ctx, outcomes, deadline, deadline_periods)
+    return result
+
+
+def _workers_data(pool: WorkerPool, min_items: int) -> dict:
+    values = pool.throughput.values
+    return {
+        "min_worker_items": min_items,
+        "workers": pool.workers,
+        "worker_periods": len(values),
+        "zero_share_pct": round(100 * values.count(0) / len(values), 1) if values else 0.0,
+        "items_without_worker": len(pool.without_worker),
+        "items_without_worker_ids": pool.without_worker,
+        "below_threshold": pool.below_threshold,
+    }
+
+
+def _anonymity_warning(ctx: Context, workers: list[str]) -> None:
+    suspicious = [w for w in workers if not re.fullmatch(r"[A-Za-z]{0,6}[-_]?\d{1,4}", w)]
+    if suspicious:
+        ctx.warnings.append(
+            f"{len(suspicious)} valori di 'worker' non sembrano identificativi anonimi (W1, W2…): "
+            "nello storico non vanno nomi, email o username."
+        )
+
+
+def _stream_assumptions(ctx: Context, specs, streams: int, source: str, auto_team: bool, default_split) -> None:
+    links = sum(len(s.depends_on) for s in specs)
+    ctx.assumptions.append(
+        f"Lavoro rimanente: {len(specs)} item con {links} dipendenze; priorità = ordine del file."
+    )
+    ctx.assumptions.append(
+        f"{streams} stream paralleli: in ogni periodo ogni stream libero prende il prossimo item pronto "
+        "(tutte le dipendenze completate) nell'ordine del file e lo tiene fino alla fine."
+    )
+    ctx.assumptions.append(
+        "Regola di sblocco: un item sbloccato nel periodo t è disponibile dal periodo t+1. La capacità avanzata "
+        "dopo aver finito un item passa al prossimo item già pronto; quella di uno stream senza item pronti va persa."
+    )
+    if source == "worker":
+        ctx.assumptions.append(
+            "Throughput per stream: ogni stream pesca dal pool dei periodi-worker (una persona/flusso, non il team): "
+            "un valore per periodo della finestra per ogni worker sopra soglia, periodi a zero inclusi."
+        )
+    else:
+        reason = " (lo storico non ha la colonna worker; con 1 stream coincide con epic --remaining)" if auto_team else ""
+        ctx.assumptions.append(
+            "Throughput per stream: throughput del team pescato una volta per periodo e diviso in parti uguali "
+            f"tra gli stream, resto a stream casuali{reason}."
+        )
+    own = [s for s in specs if s.split and s.split != default_split]
+    if default_split or own:
+        detail = f"default {_split_text(default_split)}" if default_split else "nessun default"
+        if own:
+            detail += "; propri: " + ", ".join(f"{s.id} {_split_text(s.split)}" for s in own)
+        ctx.assumptions.append(
+            f"Split per item ({detail}): ogni item diventa ceil(1 × U(min, max)) sotto-item, estratti a ogni trial; "
+            "l'item è completo, e sblocca i dipendenti, quando lo sono tutti i suoi sotto-item."
+        )
+    ctx.assumptions.append(
+        "Criticità: quota di trial in cui l'item finisce per ultimo (a pari merito contano tutti, la somma può superare 100%)."
+    )
+    if ctx.options.get("deadline"):
+        ctx.assumptions.append(
+            "Quanti entro la scadenza: item del file completati entro la data nella stessa simulazione (stream e dipendenze inclusi)."
+        )
+
+
+def _split_text(split) -> str:
+    lo, hi = split
+    return f"×{lo:g}" if lo == hi else f"×{lo:g}–{hi:g}"
+
+
+def _spread(summary: dict) -> dict | None:
+    points = summary["percentiles"]
+    if len(points) < 2:
+        return None
+    lo, hi = points[0], points[-1]
+    gap = None if lo["periods"] is None or hi["periods"] is None else hi["periods"] - lo["periods"]
+    return {"from_p": lo["p"], "to_p": hi["p"], "periods": gap}
+
+
+def _utilization(runs: list[StreamRun], streams: int) -> dict:
+    blocked = drained = 0.0
+    for run in runs:
+        slots = streams * (run.end if run.end != math.inf else MAX_PERIODS) or 1
+        blocked += run.idle_blocked / slots
+        drained += run.idle_drained / slots
+    blocked, drained = 100 * blocked / len(runs), 100 * drained / len(runs)
+    return {
+        "busy_pct": round(100 - blocked - drained, 1),
+        "idle_blocked_pct": round(blocked, 1),
+        "idle_drained_pct": round(drained, 1),
+    }
 
 
 def load_groups(options: dict) -> list[dict]:
@@ -1177,7 +1347,7 @@ def build_report(ctx: Context, result: dict, outputs: dict) -> dict:
                 "end_exclusive": sample.window_end.isoformat(),
                 "weeks_effective": sample.weeks_effective,
             },
-        },
+        } | ctx.data_extra,
         "reliability": _reliability(ctx),
         "assumptions": ctx.assumptions,
         "result": result,
@@ -1203,10 +1373,13 @@ def render_markdown(report: dict) -> str:
         lines.append("")
     renderer = {"single": _md_single, "epic": _md_epic, "epics": _md_epics}[report["mode"]]
     lines += renderer(result)
+    if data.get("workers"):
+        lines += _md_workers(data["workers"])
     lines += ["## Assunzioni", ""] + [f"- {a}" for a in report["assumptions"]] + [""]
     if data["filtered_out"]:
         lines += ["## Esclusi dal campione", ""]
-        lines += [f"- {reason}: {count}" for reason, count in sorted(data["filtered_out"].items())] + [""]
+        lines += [f"- {FILTER_REASONS_IT.get(reason, reason)}: {count}"
+                  for reason, count in sorted(data["filtered_out"].items())] + [""]
     if data["rejected"]["count"]:
         lines += ["## Record scartati", ""]
         lines += [f"- riga {r['row']} (`{r['id'] or '—'}`): {REJECT_REASONS_IT.get(r['reason'], r['reason'])}"
@@ -1276,20 +1449,75 @@ def _md_throughput(throughput: dict) -> list[str]:
 
 
 def _md_epic(result: dict) -> list[str]:
-    lines = _md_throughput(result["throughput"])
+    if result.get("stream_throughput") == "worker":
+        tp = result["throughput"]
+        lines = [f"Throughput per stream (pool dei periodi-worker): {tp['items']} item in {tp['periods']} "
+                 f"periodi-worker, di cui {tp['zero_periods']} a zero.", ""]
+    else:
+        lines = _md_throughput(result["throughput"])
     if "when" in result:
         when = result["when"]
-        lines += [f"## Quando finiscono {when['remaining']} item", ""] + _md_when(when)
+        on_streams = f" su {result['streams']} stream" if "streams" in result else ""
+        lines += [f"## Quando finiscono {when['remaining']} item{on_streams}", ""] + _md_when(when)
+        spread = when.get("spread")
+        if spread and spread["periods"] is not None:
+            unit = "giorni lavorativi" if when["unit"] == "working_days" else "settimane"
+            lines += [f"Distanza tra {fmt_p(spread['from_p'])} e {fmt_p(spread['to_p'])}: "
+                      f"**{spread['periods']} {unit}**.", ""]
         p85 = next((pt for pt in when["percentiles"] if pt["p"] == 85), None)
         if p85:
             lines += [f"**C'è l'85% di probabilità di finire entro {fmt_date(p85['date'])}.**", ""]
         lines += _md_histogram(when["histogram"], "periodi per finire | trial")
+    if "items" in result:
+        lines += _md_streams(result)
     if "how_many" in result:
         how = result["how_many"]
         lines += [f"## Quanti item entro {fmt_date(how['deadline'])}", "",
                   "| Probabilità | Item completati (almeno) |", "|---|---|"]
         lines += [f"| {fmt_p(pt['p'])} | {pt['at_least']} o più |" for pt in how["percentiles"]] + [""]
     return lines
+
+
+def _md_streams(result: dict) -> list[str]:
+    items = result["items"]
+    leaves = [i for i in items if i["leaf"]]
+    lines = ["## Fine per catena (item foglia)", ""]
+    for leaf in leaves:
+        p85 = next((pt for pt in leaf["percentiles"] if pt["p"] == 85), leaf["percentiles"][-1])
+        lines.append(f"- **{leaf['id']}**: {fmt_p(p85['p'])} entro {fmt_date(p85['date'])} "
+                     f"(ultimo a finire nel {leaf['criticality']:g}% dei trial)")
+    lines.append("")
+    header = [fmt_p(pt["p"]) for pt in items[0]["percentiles"]]
+    lines += ["## Fine per item", "",
+              "| Item | Dipende da | " + " | ".join(header) + " | Criticità |",
+              "|---|---|" + "---|" * len(header) + "---|"]
+    for item in items:
+        name = f"{item['id']} (foglia)" if item["leaf"] else item["id"]
+        dates = " | ".join(fmt_date(pt["date"]) for pt in item["percentiles"])
+        lines.append(f"| {name} | {', '.join(item['depends_on']) or '—'} | {dates} | {item['criticality']:g}% |")
+    lines += ["", "## Criticità", "",
+              "Quota di trial in cui l'item è l'ultimo a finire: mostra quale catena domina la data di fine.", ""]
+    lines += [f"- {item_id}: {pct:g}%" for item_id, pct in result["criticality"].items() if pct > 0] + [""]
+    use = result["utilization"]
+    lines += ["## Utilizzo degli stream", "",
+              f"In media gli stream lavorano il {use['busy_pct']:g}% dei periodi; sono fermi il "
+              f"{use['idle_blocked_pct']:g}% in attesa di dipendenze e il {use['idle_drained_pct']:g}% "
+              "perché non resta nulla da iniziare.", ""]
+    if use["idle_blocked_pct"] >= 20:
+        lines += ["⚠️ Molti periodi a vuoto per dipendenze: le dipendenze strozzano il parallelismo, "
+                  "uno stream in più non accorcia la data.", ""]
+    return lines
+
+
+def _md_workers(workers: dict) -> list[str]:
+    lines = ["## Dati per worker", "",
+             f"- Worker nel campione: {', '.join(f'{w} ({n} item)' for w, n in workers['workers'].items())}",
+             f"- Periodi-worker campionabili: {workers['worker_periods']}, di cui a zero il {workers['zero_share_pct']:g}%",
+             f"- Item senza worker esclusi: {workers['items_without_worker']}"]
+    if workers["below_threshold"]:
+        below = ", ".join(f"{w} ({n} item)" for w, n in workers["below_threshold"].items())
+        lines.append(f"- Worker sotto la soglia di {workers['min_worker_items']} item, esclusi: {below}")
+    return lines + [""]
 
 
 def _md_epics(result: dict) -> list[str]:
@@ -1366,6 +1594,12 @@ def build_parser() -> argparse.ArgumentParser:
     epic.add_argument("--remaining-ids", help="comma list of remaining item ids")
     epic.add_argument("--deadline", help="also simulate how many items by this date")
     epic.add_argument("--split-rate", help="multiplier (1.2) or range (1.0-1.3) for not-yet-split work")
+    epic.add_argument("--work", help="JSON of remaining items with dependencies, in priority order")
+    epic.add_argument("--streams", type=int, help="parallel streams working --work (default 1)")
+    epic.add_argument("--stream-throughput", choices=["worker", "team"],
+                      help="per-stream throughput: worker-periods pool (default) or team throughput split")
+    epic.add_argument("--min-worker-items", type=int,
+                      help=f"min completions for a worker to enter the pool (default {DEFAULT_MIN_WORKER_ITEMS})")
 
     epics = sub.add_parser("epics", parents=[common], help="ordered groups, one after the other")
     epics.add_argument("--groups", help="JSON file with the ordered groups")
@@ -1376,7 +1610,7 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 def resolve_options(args: argparse.Namespace) -> dict:
-    cli = {k: v for k, v in vars(args).items() if k not in ("mode", "config")}
+    cli = {k: v for k, v in vars(args).items() if k not in ("mode", "config") and v is not None}
     config = {}
     config_path = getattr(args, "config", None)
     if config_path:
