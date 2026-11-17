@@ -533,6 +533,105 @@ def simulate_sequence(remaining, draw, trials: int, rng: random.Random, splits=N
     return results
 
 
+@dataclass
+class StreamRun:
+    finished: list  # completion period per item (file order), math.inf beyond the horizon
+    end: float
+    idle_blocked: int  # free stream-periods while unstarted items wait on dependencies
+    idle_drained: int  # free stream-periods with no unstarted item left
+
+
+def per_stream(draw):
+    """Each stream draws its own throughput (one person/flow) every period."""
+    def draws(rng: random.Random, period: int, streams: int) -> list[int]:
+        return [draw(rng, period) for _ in range(streams)]
+    return draws
+
+
+def team_split(draw):
+    """One team throughput per period, divided evenly; the remainder goes to random streams."""
+    def draws(rng: random.Random, period: int, streams: int) -> list[int]:
+        total = draw(rng, period)
+        shares = [total // streams] * streams
+        extra = total % streams
+        if extra:
+            for index in rng.sample(range(streams), extra):
+                shares[index] += 1
+        return shares
+    return draws
+
+
+def simulate_streams(specs, streams: int, draws, trials: int, rng: random.Random, max_periods: int = MAX_PERIODS):
+    """N streams pull the next ready item in priority order; an item unblocked in period t is ready from t+1.
+
+    Each stream holds its item until done. Capacity left after finishing an item moves on to the next
+    item already ready; capacity of a stream with nothing ready is lost.
+    """
+    index_of = {s.id: i for i, s in enumerate(specs)}
+    deps = [[index_of[d] for d in s.depends_on] for s in specs]
+    dependents = [[] for _ in specs]
+    for item, item_deps in enumerate(deps):
+        for dep in item_deps:
+            dependents[dep].append(item)
+    runs = []
+    for _ in range(trials):
+        size = [apply_split(1, s.split, rng) for s in specs]
+        finished = [math.inf] * len(specs)
+        waiting = [len(d) for d in deps]
+        ready_from = [1 if not d else math.inf for d in deps]
+        unstarted = list(range(len(specs)))
+        holding = [None] * streams
+        left = len(specs)
+        idle_blocked = idle_drained = period = 0
+
+        def pick(now: int):
+            for position, item in enumerate(unstarted):
+                if ready_from[item] <= now:
+                    del unstarted[position]
+                    return item
+            return None
+
+        while left and period < max_periods:
+            period += 1
+            for stream in range(streams):
+                if holding[stream] is None:
+                    holding[stream] = pick(period)
+                    if holding[stream] is None:
+                        if unstarted:
+                            idle_blocked += 1
+                        else:
+                            idle_drained += 1
+            capacity = draws(rng, period, streams)
+            for stream in range(streams):
+                budget = capacity[stream]
+                while holding[stream] is not None and budget > 0:
+                    item = holding[stream]
+                    used = min(budget, size[item])
+                    size[item] -= used
+                    budget -= used
+                    if size[item]:
+                        break
+                    finished[item] = period
+                    left -= 1
+                    for child in dependents[item]:
+                        waiting[child] -= 1
+                        if not waiting[child]:
+                            ready_from[child] = period + 1
+                    holding[stream] = pick(period)
+        runs.append(StreamRun(finished, max(finished), idle_blocked, idle_drained))
+    return runs
+
+
+def criticality(runs: list[StreamRun], items: int) -> list[float]:
+    """Share of trials in which each item is among the last to finish (ties all count)."""
+    counts = [0] * items
+    for run in runs:
+        for index, value in enumerate(run.finished):
+            if value == run.end:
+                counts[index] += 1
+    return [round(100 * c / len(runs), 1) for c in counts]
+
+
 def simulate_how_many(periods: int, draw, trials: int, rng: random.Random) -> list[int]:
     return [sum(draw(rng, p) for p in range(1, periods + 1)) for _ in range(trials)]
 
