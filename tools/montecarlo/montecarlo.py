@@ -21,7 +21,7 @@ import random
 import sys
 from bisect import bisect_right
 from collections import Counter
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from datetime import date, datetime, time, timedelta, timezone
 
 DEFAULTS = {
@@ -250,6 +250,7 @@ class WorkItem:
     cycle_time: float | None = None
     lead_fallback: bool = False
     flags: list[str] = field(default_factory=list)
+    worker: str = ""
 
 
 @dataclass
@@ -359,6 +360,7 @@ def _build_item(index: int, item_id: str, row: dict, calendar: Calendar, seen: s
         ready_at=ready,
         started_at=started,
         completed_at=completed,
+        worker=str(row.get("worker") or "").strip(),
     )
     _compute_times(item, calendar)
     return item
@@ -470,6 +472,47 @@ def _weekly_throughput(sample: Sample) -> Throughput:
             counts[weeks - 1 - back] += 1
     starts = [sample.window_end - timedelta(weeks=weeks - i) for i in range(weeks)]
     return Throughput("week", list(zip(starts, counts)))
+
+
+@dataclass
+class WorkerPool:
+    throughput: Throughput  # every worker-period of the window, concatenated
+    sample: Sample  # items of eligible workers only
+    workers: dict[str, int]  # eligible worker -> completions in the window
+    below_threshold: dict[str, int]
+    without_worker: list[str]
+
+
+def worker_pool(sample: Sample, calendar: Calendar, granularity: str, min_items: int) -> WorkerPool:
+    """Throughput of one person/flow: one value per period per eligible worker, zeros included."""
+    by_worker: dict[str, list[WorkItem]] = {}
+    for item in sample.items:
+        by_worker.setdefault(item.worker, []).append(item)
+    without = [i.id for i in by_worker.pop("", [])]
+    if not by_worker:
+        raise InputError(
+            "Throughput per stream: lo storico non ha la colonna 'worker' (o è vuota per tutti gli item nel campione). "
+            "Aggiungi a ogni item un identificativo anonimo di chi l'ha completato (W1, W2…, mai nomi), "
+            "oppure usa --stream-throughput team per dividere il throughput del team tra gli stream, "
+            "oppure --streams 1."
+        )
+    eligible = {w: items for w, items in sorted(by_worker.items()) if len(items) >= min_items}
+    below = {w: len(items) for w, items in sorted(by_worker.items()) if w not in eligible}
+    if not eligible:
+        raise InputError(
+            f"Throughput per stream: nessun worker ha almeno {min_items} item completati nella finestra "
+            f"({', '.join(f'{w}: {n}' for w, n in below.items())}). Allarga la finestra o abbassa --min-worker-items."
+        )
+    reasons = dict(sample.filter_reason)
+    reasons.update({i: "no_worker" for i in without})
+    reasons.update({i.id: "worker_below_threshold" for w in below for i in by_worker[w]})
+    chosen = [i for i in sample.items if i.worker in eligible]
+    periods = []
+    for items in eligible.values():
+        periods += compute_throughput(replace(sample, items=items), calendar, granularity).periods
+    pooled = Sample(chosen, dict(Counter(reasons.values())), reasons, sample.window_start, sample.window_end,
+                    sample.weeks_effective)
+    return WorkerPool(Throughput(granularity, periods), pooled, {w: len(i) for w, i in eligible.items()}, below, without)
 
 
 def make_draw(throughput: Throughput, sampling: str, period_date):

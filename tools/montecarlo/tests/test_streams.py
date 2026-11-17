@@ -2,7 +2,9 @@ import math
 import os
 import random
 import sys
+import tempfile
 import unittest
+from datetime import date
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.dirname(HERE))
@@ -130,6 +132,62 @@ class StreamSimulation(unittest.TestCase):
         shares = draws(random.Random(1), 1, 2)
         self.assertEqual(sorted(shares), [2, 3])
         self.assertEqual(mc.team_split(lambda rng, period: 4)(random.Random(1), 1, 2), [2, 2])
+
+
+ALL_DAYS = mc.Calendar.from_spec("all")
+
+
+def sample_from(csv_text, as_of):
+    with tempfile.TemporaryDirectory() as tmp:
+        path = os.path.join(tmp, "h.csv")
+        with open(path, "w", encoding="utf-8") as handle:
+            handle.write(csv_text)
+        items, _ = mc.build_items(mc.read_history_rows(path), ALL_DAYS)
+    return mc.select_sample(items, as_of, 0, [], [])
+
+
+# 2026-09-07 is a Monday; window Mon 7 → Thu 10 (as_of Fri 11).
+WORKER_HISTORY = (
+    "id,worker,completed_at\n"
+    "A,W1,2026-09-07\nB,W1,2026-09-07\nC,W1,2026-09-09\n"
+    "D,W2,2026-09-08\n"
+    "E,W3,2026-09-10\n"
+    "F,,2026-09-08\n"
+)
+
+
+class WorkerPool(unittest.TestCase):
+    def pool(self, min_items=1):
+        sample = sample_from(WORKER_HISTORY, date(2026, 9, 11))
+        return mc.worker_pool(sample, ALL_DAYS, "day", min_items)
+
+    def test_one_sample_per_period_per_worker_zeros_included(self):
+        pool = self.pool()
+        self.assertEqual(pool.throughput.values, [2, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1])
+        self.assertEqual(pool.workers, {"W1": 3, "W2": 1, "W3": 1})
+
+    def test_workers_below_the_threshold_are_left_out_and_reported(self):
+        pool = self.pool(min_items=2)
+        self.assertEqual(pool.workers, {"W1": 3})
+        self.assertEqual(pool.below_threshold, {"W2": 1, "W3": 1})
+        self.assertEqual(pool.throughput.values, [2, 0, 1, 0])
+
+    def test_items_without_worker_are_excluded_and_counted(self):
+        pool = self.pool()
+        self.assertEqual(pool.without_worker, ["F"])
+        self.assertNotIn("F", [i.id for i in pool.sample.items])
+        self.assertEqual(pool.sample.filter_reason["F"], "no_worker")
+
+    def test_weekday_sampling_uses_worker_periods_of_the_same_weekday(self):
+        pool = self.pool()
+        draw = mc.make_draw(pool.throughput, "weekday", lambda period: date(2026, 9, 14))  # a Monday
+        values = {draw(random.Random(seed), 1) for seed in range(50)}
+        self.assertEqual(values, {2, 0})
+
+    def test_no_worker_column_is_an_explicit_error(self):
+        sample = sample_from("id,completed_at\nA,2026-09-07\n", date(2026, 9, 11))
+        with self.assertRaisesRegex(mc.InputError, "worker"):
+            mc.worker_pool(sample, ALL_DAYS, "day", 1)
 
 
 if __name__ == "__main__":
